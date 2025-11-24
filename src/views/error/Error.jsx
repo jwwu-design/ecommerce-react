@@ -7,17 +7,16 @@ const Error = ({ history }) => {
 
   return (
     <div className="page-not-found">
-      <h1>:( An error has occured. Please try again.</h1>
+      <h1>:( 發生錯誤，請再試一次。</h1>
       <br />
       <button
         className="button"
         onClick={() => history.push('/')}
         type="button"
       >
-        Try Again
+        再試一次
       </button>
     </div>
-
   );
 };
 

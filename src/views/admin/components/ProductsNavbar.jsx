@@ -12,17 +12,17 @@ const ProductsNavbar = (props) => {
   return (
     <div className="product-admin-header">
       <h3 className="product-admin-header-title">
-        Products &nbsp;
+        商品管理 &nbsp;
         (
         {`${productsCount} / ${totalProductsCount}`}
         )
       </h3>
       <SearchBar />
-            &nbsp;
+      &nbsp;
       <FiltersToggle>
         <button className="button-muted button-small" type="button">
           <FilterOutlined />
-          &nbsp;More Filters
+          &nbsp;更多篩選條件
         </button>
       </FiltersToggle>
       <button
@@ -31,7 +31,7 @@ const ProductsNavbar = (props) => {
         type="button"
       >
         <PlusOutlined />
-        &nbsp; Add New Product
+        &nbsp;新增商品
       </button>
     </div>
   );

@@ -58,8 +58,8 @@ BasketItemControl.propTypes = {
     image: PropType.string,
     imageUrl: PropType.string,
     isFeatured: PropType.bool,
-    isRecommended: PropType.bool,
-    availableColors: PropType.arrayOf(PropType.string)
+    isRecommended: PropType.bool
+    // availableColors: PropType.arrayOf(PropType.string)
   }).isRequired
 };
 

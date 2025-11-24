@@ -23,7 +23,7 @@ const ProductItem = ({ product }) => {
 
   const onConfirmDelete = () => {
     dispatch(removeProduct(product.id));
-    displayActionMessage('Item successfully deleted');
+    displayActionMessage('商品已成功刪除');
     productRef.current.classList.remove('item-active');
   };
 
@@ -32,10 +32,7 @@ const ProductItem = ({ product }) => {
   };
 
   return (
-    <SkeletonTheme
-      color="#e1e1e1"
-      highlightColor="#f2f2f2"
-    >
+    <SkeletonTheme color="#e1e1e1" highlightColor="#f2f2f2">
       <div
         className={`item item-products ${!product.id && 'item-loading'}`}
         ref={productRef}
@@ -48,16 +45,22 @@ const ProductItem = ({ product }) => {
                 className="item-img"
                 src={product.image}
               />
-            ) : <Skeleton width={50} height={30} />}
+            ) : (
+              <Skeleton width={50} height={30} />
+            )}
           </div>
           <div className="grid-col">
-            <span className="text-overflow-ellipsis">{product.name || <Skeleton width={50} />}</span>
+            <span className="text-overflow-ellipsis">
+              {product.name || <Skeleton width={50} />}
+            </span>
           </div>
           <div className="grid-col">
             <span>{product.brand || <Skeleton width={50} />}</span>
           </div>
           <div className="grid-col">
-            <span>{product.price ? displayMoney(product.price) : <Skeleton width={30} />}</span>
+            <span>
+              {product.price ? displayMoney(product.price) : <Skeleton width={30} />}
+            </span>
           </div>
           <div className="grid-col">
             <span>
@@ -75,7 +78,7 @@ const ProductItem = ({ product }) => {
               onClick={onClickEdit}
               type="button"
             >
-              Edit
+              編輯
             </button>
             &nbsp;
             <button
@@ -83,16 +86,16 @@ const ProductItem = ({ product }) => {
               onClick={onDeleteProduct}
               type="button"
             >
-              Delete
+              刪除
             </button>
             <div className="item-action-confirm">
-              <h5>Are you sure you want to delete this?</h5>
+              <h5>確定要刪除此商品嗎？</h5>
               <button
                 className="button button-small button-border"
                 onClick={onCancelDelete}
                 type="button"
               >
-                No
+                否
               </button>
               &nbsp;
               <button
@@ -100,7 +103,7 @@ const ProductItem = ({ product }) => {
                 onClick={onConfirmDelete}
                 type="button"
               >
-                Yes
+                是
               </button>
             </div>
           </div>
@@ -125,8 +128,8 @@ ProductItem.propTypes = {
     imageUrl: PropType.string,
     isFeatured: PropType.bool,
     isRecommended: PropType.bool,
-    dateAdded: PropType.number,
-    availableColors: PropType.arrayOf(PropType.string)
+    dateAdded: PropType.number
+    // availableColors: PropType.arrayOf(PropType.string)
   }).isRequired
 };
 

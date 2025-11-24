@@ -11,11 +11,44 @@ const SideNavigation = () => (
           className="sidenavigation-menu"
           to={ADMIN_PRODUCTS}
         >
-          Products
+        產品管理
         </NavLink>
       </div>
       <div className="sidenavigation-item">
-        <h4 className="sidenavigation-menu my-0">Users</h4>
+        <NavLink
+          activeClassName="sidenavigation-menu-active"
+          className="sidenavigation-menu"
+          to={ADMIN_PRODUCTS}
+        >
+        訂單管理
+        </NavLink>
+      </div>
+      <div className="sidenavigation-item">
+        <NavLink
+          activeClassName="sidenavigation-menu-active"
+          className="sidenavigation-menu"
+          to={ADMIN_PRODUCTS}
+        >
+        用戶管理
+        </NavLink>
+      </div>
+      <div className="sidenavigation-item">
+        <NavLink
+          activeClassName="sidenavigation-menu-active"
+          className="sidenavigation-menu"
+          to={ADMIN_PRODUCTS}
+        >
+        首頁圖片管理
+        </NavLink>
+      </div>
+      <div className="sidenavigation-item">
+        <NavLink
+          activeClassName="sidenavigation-menu-active"
+          className="sidenavigation-menu"
+          to={ADMIN_PRODUCTS}
+        >
+        報名表單管理
+        </NavLink>
       </div>
     </div>
   </aside>

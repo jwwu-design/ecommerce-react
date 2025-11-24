@@ -5,7 +5,7 @@ import bannerImg from '@/images/banner-guy.png';
 import React from 'react';
 
 const FeaturedProducts = () => {
-  useDocumentTitle('Featured Products | Salinaka');
+  useDocumentTitle('精選商品 | Ares');
   useScrollTop();
 
   const {
@@ -20,10 +20,10 @@ const FeaturedProducts = () => {
       <div className="featured">
         <div className="banner">
           <div className="banner-desc">
-            <h1>Featured Products</h1>
+            <h1>精選商品</h1>
           </div>
           <div className="banner-img">
-            <img src={bannerImg} alt="" />
+            <img src={bannerImg} alt="精選商品橫幅" />
           </div>
         </div>
         <div className="display">
@@ -32,7 +32,7 @@ const FeaturedProducts = () => {
               <MessageDisplay
                 message={error}
                 action={fetchFeaturedProducts}
-                buttonLabel="Try Again"
+                buttonLabel="重新嘗試"
               />
             ) : (
               <ProductShowcaseGrid

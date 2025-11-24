@@ -11,27 +11,27 @@ const UserOrdersTab = lazy(() => import('../components/UserOrdersTab'));
 const Loader = () => (
   <div className="loader" style={{ minHeight: '80vh' }}>
     <LoadingOutlined />
-    <h6>Loading ... </h6>
+    <h6>載入中 ... </h6>
   </div>
 );
 
 const UserAccount = () => {
   useScrollTop();
-  useDocumentTitle('My Account | Salinaka');
+  useDocumentTitle('我的帳號 | Ares');
 
   return (
     <UserTab>
-      <div index={0} label="Account">
+      <div index={0} label="帳號資訊">
         <Suspense fallback={<Loader />}>
           <UserAccountTab />
         </Suspense>
       </div>
-      <div index={1} label="My Wish List">
+      <div index={1} label="我的願望清單">
         <Suspense fallback={<Loader />}>
           <UserWishListTab />
         </Suspense>
       </div>
-      <div index={2} label="My Orders">
+      <div index={2} label="我的訂單">
         <Suspense fallback={<Loader />}>
           <UserOrdersTab />
         </Suspense>

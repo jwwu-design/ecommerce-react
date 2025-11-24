@@ -18,28 +18,28 @@ import ShippingTotal from './ShippingTotal';
 
 const FormSchema = Yup.object().shape({
   fullname: Yup.string()
-    .required('Full name is required.')
-    .min(2, 'Full name must be at least 2 characters long.')
-    .max(60, 'Full name must only be less than 60 characters.'),
+    .required('請輸入姓名。')
+    .min(2, '姓名至少需 2 個字元。')
+    .max(60, '姓名不可超過 60 個字元。'),
   email: Yup.string()
-    .email('Email is not valid.')
-    .required('Email is required.'),
+    .email('Email 格式不正確。')
+    .required('請輸入 Email。'),
   address: Yup.string()
-    .required('Shipping address is required.'),
+    .required('請輸入收件地址。'),
   mobile: Yup.object()
     .shape({
       country: Yup.string(),
       countryCode: Yup.string(),
-      dialCode: Yup.string().required('Mobile number is required'),
-      value: Yup.string().required('Mobile number is required')
+      dialCode: Yup.string().required('請輸入手機號碼。'),
+      value: Yup.string().required('請輸入手機號碼。')
     })
-    .required('Mobile number is required.'),
+    .required('請輸入手機號碼。'),
   isInternational: Yup.boolean(),
   isDone: Yup.boolean()
 });
 
 const ShippingDetails = ({ profile, shipping, subtotal }) => {
-  useDocumentTitle('Check Out Step 2 | Salinaka');
+  useDocumentTitle('結帳步驟 2 | Ares');
   useScrollTop();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -70,7 +70,7 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
       <div className="checkout">
         <StepTracker current={2} />
         <div className="checkout-step-2">
-          <h3 className="text-center">Shipping Details</h3>
+          <h3 className="text-center">運送資訊</h3>
           <Formik
             initialValues={initFormikValues}
             validateOnChange
@@ -93,13 +93,13 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
                   >
                     <ArrowLeftOutlined />
                     &nbsp;
-                    Go Back
+                    上一步
                   </button>
                   <button
                     className="button button-icon"
                     type="submit"
                   >
-                    Next Step
+                    下一步
                     &nbsp;
                     <ArrowRightOutlined />
                   </button>

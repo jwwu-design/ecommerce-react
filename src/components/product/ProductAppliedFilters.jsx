@@ -33,14 +33,14 @@ const ProductAppliedFilters = ({ filteredProductsCount }) => {
         <div className="product-list-header-title">
           <h5>
             {filteredProductsCount > 0
-              && `Found ${filteredProductsCount} ${filteredProductsCount > 1 ? 'products' : 'product'}`}
+              && `找到 ${filteredProductsCount} 件 ${filteredProductsCount > 1 ? '商品' : '商品'}`}
           </h5>
         </div>
       </div>
       <div className="product-applied-filters">
         {filter.keyword && (
           <div className="pill-wrapper">
-            <span className="d-block">Keyword</span>
+            <span className="d-block">關鍵字</span>
             <div className="pill padding-right-l">
               <h5 className="pill-content margin-0">{filter.keyword}</h5>
               <div className="pill-remove" onClick={onRemoveKeywordFilter} role="presentation">
@@ -53,7 +53,7 @@ const ProductAppliedFilters = ({ filteredProductsCount }) => {
         )}
         {filter.brand && (
           <div className="pill-wrapper">
-            <span className="d-block">Brand</span>
+            <span className="d-block">品牌</span>
             <div className="pill padding-right-l">
               <h5 className="pill-content margin-0">{filter.brand}</h5>
               <div className="pill-remove" onClick={onRemoveBrandFilter} role="presentation">
@@ -66,13 +66,10 @@ const ProductAppliedFilters = ({ filteredProductsCount }) => {
         )}
         {(!!filter.minPrice || !!filter.maxPrice) && (
           <div className="pill-wrapper">
-            <span className="d-block">Price Range</span>
+            <span className="d-block">價格區間</span>
             <div className="pill padding-right-l">
               <h5 className="pill-content margin-0">
-                $
-                {filter.minPrice}
-                - $
-                {filter.maxPrice}
+                ${filter.minPrice} - ${filter.maxPrice}
               </h5>
               <div
                 className="pill-remove"
@@ -88,16 +85,16 @@ const ProductAppliedFilters = ({ filteredProductsCount }) => {
         )}
         {filter.sortBy && (
           <div className="pill-wrapper">
-            <span className="d-block">Sort By</span>
+            <span className="d-block">排序方式</span>
             <div className="pill padding-right-l">
               <h5 className="pill-content margin-0">
                 {filter.sortBy === 'price-desc'
-                  ? 'Price High - Low'
+                  ? '價格高 → 低'
                   : filter.sortBy === 'price-asc'
-                    ? 'Price Low - High'
+                    ? '價格低 → 高'
                     : filter.sortBy === 'name-desc'
-                      ? 'Name Z - A'
-                      : 'Name A - Z'}
+                      ? '名稱 Z → A'
+                      : '名稱 A → Z'}
               </h5>
               <div
                 className="pill-remove"

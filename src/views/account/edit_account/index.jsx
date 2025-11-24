@@ -14,12 +14,12 @@ import EditForm from './EditForm';
 
 const FormSchema = Yup.object().shape({
   fullname: Yup.string()
-    .min(4, 'Full name should be at least 4 characters.')
-    .max(60, 'Full name should be only be 4 characters long.')
-    .required('Full name is required'),
+    .min(4, '姓名至少需要 4 個字元。')
+    .max(60, '姓名長度不能超過 60 個字元。')
+    .required('姓名為必填欄位'),
   email: Yup.string()
-    .email('Email is not valid.')
-    .required('Email is required.'),
+    .email('電子郵件格式不正確。')
+    .required('電子郵件為必填欄位。'),
   address: Yup.string(),
   mobile: Yup.object()
     .shape({
@@ -31,7 +31,7 @@ const FormSchema = Yup.object().shape({
 });
 
 const EditProfile = () => {
-  useDocumentTitle('Edit Account | Salinaka');
+  useDocumentTitle('編輯帳號資料 | Ares');
   useScrollTop();
 
   const modal = useModal();
@@ -85,7 +85,7 @@ const EditProfile = () => {
   };
 
   const onSubmitUpdate = (form) => {
-    // check if data has changed
+    // 檢查資料是否有變更
     const fieldsChanged = Object.keys(form).some((key) => profile[key] !== form[key]);
 
     if (fieldsChanged || (Boolean(imageFile.banner.file || imageFile.avatar.file))) {
@@ -100,7 +100,7 @@ const EditProfile = () => {
   return (
     <Boundary>
       <div className="edit-user">
-        <h3 className="text-center">Edit Account Details</h3>
+        <h3 className="text-center">編輯帳號資料</h3>
         <Formik
           initialValues={initFormikValues}
           validateOnChange
@@ -112,7 +112,7 @@ const EditProfile = () => {
               <div className="user-profile-banner">
                 <div className="user-profile-banner-wrapper">
                   <ImageLoader
-                    alt="Banner"
+                    alt="橫幅圖片"
                     className="user-profile-banner-img"
                     src={imageFile.banner.url || profile.banner}
                   />
@@ -139,7 +139,7 @@ const EditProfile = () => {
                 </div>
                 <div className="user-profile-avatar-wrapper">
                   <ImageLoader
-                    alt="Avatar"
+                    alt="大頭貼"
                     className="user-profile-img"
                     src={imageFile.avatar.url || profile.avatar}
                   />

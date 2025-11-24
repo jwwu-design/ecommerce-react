@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import firebase from '@/services/firebase';
 
 const useProduct = (id) => {
-  // get and check if product exists in store
+  // 從 store 取得並檢查產品是否存在
   const storeProduct = useSelector((state) => state.products.items.find((item) => item.id === id));
 
   const [product, setProduct] = useState(storeProduct);
@@ -27,13 +27,13 @@ const useProduct = (id) => {
               setLoading(false);
             }
           } else {
-            setError('Product not found.');
+            setError('找不到產品。');
           }
         }
       } catch (err) {
         if (didMount) {
           setLoading(false);
-          setError(err?.message || 'Something went wrong.');
+          setError(err?.message || '發生錯誤。');
         }
       }
     })();

@@ -14,7 +14,6 @@ class Boundary extends Component {
     };
   }
 
-
   componentDidCatch(error) {
     console.log(error);
   }
@@ -26,7 +25,7 @@ class Boundary extends Component {
     if (hasError) {
       return (
         <div className="loader">
-          <h3>:( Something went wrong.</h3>
+          <h3>:( 發生錯誤，請稍後再試。</h3>
         </div>
       );
     }

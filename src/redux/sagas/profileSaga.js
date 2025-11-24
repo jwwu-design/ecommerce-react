@@ -16,7 +16,7 @@ function* profileSaga({ type, payload }) {
 
         yield put(setLoading(false));
         yield call(history.push, '/profile');
-        yield call(displayActionMessage, 'Email Updated Successfully!', 'success');
+        yield call(displayActionMessage, '電子郵件更新成功！', 'success');
       } catch (e) {
         console.log(e.message);
       }
@@ -50,20 +50,20 @@ function* profileSaga({ type, payload }) {
 
         yield put(setLoading(false));
         yield call(history.push, ACCOUNT);
-        yield call(displayActionMessage, 'Profile Updated Successfully!', 'success');
+        yield call(displayActionMessage, '個人資料更新成功！', 'success');
       } catch (e) {
         console.log(e);
         yield put(setLoading(false));
         if (e.code === 'auth/wrong-password') {
-          yield call(displayActionMessage, 'Wrong password, profile update failed :(', 'error');
+          yield call(displayActionMessage, '密碼錯誤，個人資料更新失敗', 'error');
         } else {
-          yield call(displayActionMessage, `:( Failed to update profile. ${e.message ? e.message : ''}`, 'error');
+          yield call(displayActionMessage, `更新個人資料失敗：${e.message ? e.message : ''}`, 'error');
         }
       }
       break;
     }
     default: {
-      throw new Error('Unexpected action type.');
+      throw new Error('發生未預期的操作類型。');
     }
   }
 }

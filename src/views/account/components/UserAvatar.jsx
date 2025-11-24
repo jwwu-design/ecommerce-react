@@ -8,6 +8,7 @@ import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { signOut } from '@/redux/actions/authActions';
+import defaultAvatar from '@/images/defaultAvatar.jpg';
 
 const UserNav = () => {
   const { profile, isAuthenticating } = useSelector((state) => ({
@@ -31,7 +32,6 @@ const UserNav = () => {
 
   useEffect(() => {
     document.addEventListener('click', toggleDropdown);
-
     return () => document.removeEventListener('click', toggleDropdown);
   }, []);
 
@@ -41,7 +41,7 @@ const UserNav = () => {
 
   return isAuthenticating ? (
     <div className="user-nav">
-      <span>Signing Out</span>
+      <span>登出中</span>
       &nbsp;
       <LoadingOutlined />
     </div>
@@ -57,9 +57,9 @@ const UserNav = () => {
       <h5 className="text-overflow-ellipsis">{profile.fullname && profile.fullname.split(' ')[0]}</h5>
       <div className="user-nav-img-wrapper">
         <img
-          alt=""
+          alt="使用者頭像"
           className="user-nav-img"
-          src={profile.avatar}
+          src={defaultAvatar}
         />
       </div>
       <DownOutlined style={{ fontSize: '1.2rem', marginLeft: '1rem' }} />
@@ -69,7 +69,7 @@ const UserNav = () => {
             to={ACCOUNT}
             className="user-nav-sub-link"
           >
-            View Account
+            檢視帳號
             <UserOutlined />
           </Link>
         )}
@@ -78,7 +78,7 @@ const UserNav = () => {
           onClick={() => dispatch(signOut())}
           role="presentation"
         >
-          Sign Out
+          登出
           <LogoutOutlined />
         </h6>
       </div>

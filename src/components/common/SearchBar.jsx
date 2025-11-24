@@ -73,7 +73,7 @@ const SearchBar = () => {
           onChange={onSearchChange}
           onKeyUp={onKeyUp}
           onFocus={onFocusInput}
-          placeholder="Search product..."
+          placeholder="搜尋商品..."
           readOnly={isLoading}
           type="text"
           value={searchInput}
@@ -81,13 +81,13 @@ const SearchBar = () => {
         {filter.recent.length !== 0 && (
           <div className="searchbar-recent">
             <div className="searchbar-recent-header">
-              <h5>Recent Search</h5>
+              <h5>近期搜尋</h5>
               <h5
                 className="searchbar-recent-clear text-subtle"
                 onClick={onClearRecent}
                 role="presentation"
               >
-                Clear
+                清除
               </h5>
             </div>
             {filter.recent.map((item, index) => (

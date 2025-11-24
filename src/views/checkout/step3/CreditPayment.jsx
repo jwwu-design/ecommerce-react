@@ -47,9 +47,9 @@ const CreditPayment = () => {
 
   return (
     <>
-      <h3 className="text-center">Payment</h3>
+      <h3 className="text-center">付款方式</h3>
       <br />
-      <span className="d-block padding-s">Payment Option</span>
+      <span className="d-block padding-s">付款選項</span>
       <div
         ref={containerRef}
         className={`checkout-fieldset-collapse ${values.type === 'credit' ? 'is-selected-payment' : ''}`}
@@ -69,9 +69,9 @@ const CreditPayment = () => {
               htmlFor="modeCredit"
             >
               <div className="d-flex-grow-1 margin-left-s">
-                <h4 className="margin-0">Credit Card</h4>
+                <h4 className="margin-0">信用卡付款</h4>
                 <span className="text-subtle d-block margin-top-s">
-                  Pay with Visa, Master Card and other debit or credit card
+                  支援 Visa、Master Card 及其他信用卡或金融卡
                 </span>
               </div>
               <div className="d-flex">
@@ -83,7 +83,7 @@ const CreditPayment = () => {
           </div>
         </div>
         <div className="checkout-collapse-sub" ref={collapseContainerRef}>
-          <span className="d-block padding-s text-center">Accepted Cards</span>
+          <span className="d-block padding-s text-center">可接受的卡別</span>
           <div className="checkout-cards-accepted d-flex-center">
             <div className="payment-img payment-img-visa" title="Visa" />
             <div className="payment-img payment-img-express" title="American Express" />
@@ -98,7 +98,7 @@ const CreditPayment = () => {
                 <Field
                   name="name"
                   type="text"
-                  label="* Name on Card"
+                  label="* 卡片持有人姓名"
                   placeholder="Jane Doe"
                   component={CustomInput}
                   style={{ textTransform: 'capitalize' }}
@@ -111,8 +111,8 @@ const CreditPayment = () => {
                   type="text"
                   maxLength={19}
                   onKeyDown={handleOnlyNumberInput}
-                  label="* Card Number"
-                  placeholder="Enter your card number"
+                  label="* 卡號"
+                  placeholder="輸入您的卡號"
                   component={CustomInput}
                 />
               </div>
@@ -122,8 +122,8 @@ const CreditPayment = () => {
                 <Field
                   name="expiry"
                   type="date"
-                  label="* Expiry Date"
-                  placeholder="Enter your expiry date"
+                  label="* 有效期限"
+                  placeholder="輸入卡片有效期限"
                   component={CustomInput}
                 />
               </div>

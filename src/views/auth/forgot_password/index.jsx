@@ -13,10 +13,11 @@ const ForgotPassword = () => {
   const didMount = useDidMount();
   const [forgotPWStatus, setForgotPWStatus] = useState({});
   const [isSendingForgotPWRequest, setIsSending] = useState(false);
-  const [field, setField] = useState({});
+  const [field, setField] = useState({ email: '', error: '' });
 
   useScrollTop();
-  useDocumentTitle('Forgot Password | Salinaka');
+  useDocumentTitle('忘記密碼 | Ares');
+
   useEffect(() => {
     if (didMount) {
       setForgotPWStatus(authStatus);
@@ -24,7 +25,9 @@ const ForgotPassword = () => {
     }
   }, [authStatus, isAuthenticating]);
 
-  const onEmailChange = (value, error) => {
+  const onEmailChange = (e) => {
+    const value = e.target.value.trim();
+    const error = !/\S+@\S+\.\S+/.test(value) ? 'Invalid email format' : '';
     setField({ email: value, error });
   };
 
@@ -41,21 +44,22 @@ const ForgotPassword = () => {
           {authStatus.message}
         </h5>
       )}
-      <h2>Forgot Your Password?</h2>
-      <p>Enter your email address and we will send you a password reset email.</p>
+      <h2>忘記密碼？</h2>
+      <p>請輸入您的電子郵件地址，我們將寄送密碼重設連結。</p>
       <br />
       <input
-        field="email"
+        name="email"
         required
         className="input-form"
-        label="* Email"
         maxLength={40}
         onChange={onEmailChange}
-        placeholder="Enter your email"
+        placeholder="請輸入您的電子郵件"
         readOnly={isSendingForgotPWRequest || authStatus?.success}
         type="email"
         style={{ width: '100%' }}
+        value={field.email}
       />
+      {field.error && <small className="text-danger">{field.error}</small>}
       <br />
       <br />
       <button
@@ -66,7 +70,7 @@ const ForgotPassword = () => {
       >
         {isSendingForgotPWRequest ? <LoadingOutlined /> : <CheckOutlined />}
         &nbsp;
-        {isSendingForgotPWRequest ? 'Sending Password Reset Email' : 'Send Password Reset Email'}
+        {isSendingForgotPWRequest ? '寄送中...' : '寄送密碼重設信'}
       </button>
     </div>
   );

@@ -50,6 +50,11 @@
   padding: .5rem $l-size;
   display: flex;
   justify-content: space-between;
+
+  li{
+    padding: 1rem;
+    margin-left: 2rem;
+  }
 }
 
 .navigation-menu {

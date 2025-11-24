@@ -28,8 +28,8 @@ function* initRequest() {
 
 function* handleError(e) {
   yield put(setLoading(false));
-  yield put(setRequestStatus(e?.message || 'Failed to fetch products'));
-  console.log('ERROR: ', e);
+  yield put(setRequestStatus(e?.message || '取得商品失敗'));
+  console.log('錯誤：', e);
 }
 
 function* handleAction(location, message, status) {
@@ -46,7 +46,7 @@ function* productSaga({ type, payload }) {
         const result = yield call(firebase.getProducts, payload);
 
         if (result.products.length === 0) {
-          handleError('No items found.');
+          yield handleError({ message: '查無商品。' });
         } else {
           yield put(getProductsSuccess({
             products: result.products,
@@ -93,11 +93,11 @@ function* productSaga({ type, payload }) {
           id: key,
           ...product
         }));
-        yield handleAction(ADMIN_PRODUCTS, 'Item succesfully added', 'success');
+        yield handleAction(ADMIN_PRODUCTS, '商品已成功新增', 'success');
         yield put(setLoading(false));
       } catch (e) {
         yield handleError(e);
-        yield handleAction(undefined, `Item failed to add: ${e?.message}`, 'error');
+        yield handleAction(undefined, `新增商品失敗：${e?.message}`, 'error');
       }
       break;
     }
@@ -112,7 +112,7 @@ function* productSaga({ type, payload }) {
           try {
             yield call(firebase.deleteImage, payload.id);
           } catch (e) {
-            console.error('Failed to delete image ', e);
+            console.error('刪除圖片失敗：', e);
           }
 
           const url = yield call(firebase.storeImage, payload.id, 'products', image);
@@ -152,11 +152,11 @@ function* productSaga({ type, payload }) {
           id: payload.id,
           updates: newUpdates
         }));
-        yield handleAction(ADMIN_PRODUCTS, 'Item succesfully edited', 'success');
+        yield handleAction(ADMIN_PRODUCTS, '商品已成功更新', 'success');
         yield put(setLoading(false));
       } catch (e) {
         yield handleError(e);
-        yield handleAction(undefined, `Item failed to edit: ${e.message}`, 'error');
+        yield handleAction(undefined, `編輯商品失敗：${e.message}`, 'error');
       }
       break;
     }
@@ -166,10 +166,10 @@ function* productSaga({ type, payload }) {
         yield call(firebase.removeProduct, payload);
         yield put(removeProductSuccess(payload));
         yield put(setLoading(false));
-        yield handleAction(ADMIN_PRODUCTS, 'Item succesfully removed', 'success');
+        yield handleAction(ADMIN_PRODUCTS, '商品已成功移除', 'success');
       } catch (e) {
         yield handleError(e);
-        yield handleAction(undefined, `Item failed to remove: ${e.message}`, 'error');
+        yield handleAction(undefined, `移除商品失敗：${e.message}`, 'error');
       }
       break;
     }
@@ -183,7 +183,7 @@ function* productSaga({ type, payload }) {
         const result = yield call(firebase.searchProducts, payload.searchKey);
 
         if (result.products.length === 0) {
-          yield handleError({ message: 'No product found.' });
+          yield handleError({ message: '查無產品。' });
           yield put(clearSearchState());
         } else {
           yield put(searchProductSuccess({
@@ -200,7 +200,7 @@ function* productSaga({ type, payload }) {
       break;
     }
     default: {
-      throw new Error(`Unexpected action type ${type}`);
+      throw new Error(`發生未預期的操作類型：${type}`);
     }
   }
 }

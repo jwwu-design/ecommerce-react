@@ -13,8 +13,8 @@ const ShippingForm = () => {
             <Field
               name="fullname"
               type="text"
-              label="* Full Name"
-              placeholder="Enter your full name"
+              label="* 姓名"
+              placeholder="輸入您的全名"
               component={CustomInput}
               style={{ textTransform: 'capitalize' }}
             />
@@ -23,8 +23,8 @@ const ShippingForm = () => {
             <Field
               name="email"
               type="email"
-              label="* Email Address"
-              placeholder="Enter your email address"
+              label="* 電子郵件"
+              placeholder="輸入您的電子郵件"
               component={CustomInput}
             />
           </div>
@@ -34,8 +34,8 @@ const ShippingForm = () => {
             <Field
               name="address"
               type="text"
-              label="* Shipping Address"
-              placeholder="Enter full shipping address"
+              label="* 收件地址"
+              placeholder="輸入完整收件地址"
               component={CustomInput}
             />
           </div>
@@ -55,7 +55,7 @@ const ShippingForm = () => {
                     className="label-input"
                     htmlFor={field.name}
                   >
-                    Shipping Option
+                    運送選項
                   </label>
                 )}
                 <div className="checkout-checkbox-field">
@@ -70,8 +70,8 @@ const ShippingForm = () => {
                   />
                   <label className="d-flex w-100" htmlFor={field.name}>
                     <h5 className="d-flex-grow-1 margin-0">
-                      &nbsp; International Shipping &nbsp;
-                      <span className="text-subtle">7-14 days</span>
+                      &nbsp; 國際運送 &nbsp;
+                      <span className="text-subtle">7-14 天</span>
                     </h5>
                     <h4 className="margin-0">$50.00</h4>
                   </label>

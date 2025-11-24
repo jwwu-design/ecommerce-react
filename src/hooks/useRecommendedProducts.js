@@ -17,7 +17,7 @@ const useRecommendedProducts = (itemsCount) => {
 
       if (docs.empty) {
         if (didMount) {
-          setError('No recommended products found.');
+          setError('查無推薦商品。');
           setLoading(false);
         }
       } else {
@@ -35,7 +35,7 @@ const useRecommendedProducts = (itemsCount) => {
       }
     } catch (e) {
       if (didMount) {
-        setError('Failed to fetch recommended products');
+        setError('取得推薦商品失敗。');
         setLoading(false);
       }
     }

@@ -14,23 +14,23 @@ import Total from './Total';
 
 const FormSchema = Yup.object().shape({
   name: Yup.string()
-    .min(4, 'Name should be at least 4 characters.')
-    .required('Name is required'),
+    .min(4, '姓名至少需 4 個字元')
+    .required('請輸入姓名'),
   cardnumber: Yup.string()
-    .min(13, 'Card number should be 13-19 digits long')
-    .max(19, 'Card number should only be 13-19 digits long')
-    .required('Card number is required.'),
+    .min(13, '卡號長度需 13-19 位數字')
+    .max(19, '卡號長度需 13-19 位數字')
+    .required('請輸入卡號'),
   expiry: Yup.date()
-    .required('Credit card expiry is required.'),
+    .required('請輸入信用卡有效期限'),
   ccv: Yup.string()
-    .min(3, 'CCV length should be 3-4 digit')
-    .max(4, 'CCV length should only be 3-4 digit')
-    .required('CCV is required.'),
-  type: Yup.string().required('Please select paymend mode')
+    .min(3, 'CCV 長度需為 3-4 位數字')
+    .max(4, 'CCV 長度需為 3-4 位數字')
+    .required('請輸入 CCV'),
+  type: Yup.string().required('請選擇付款方式')
 });
 
 const Payment = ({ shipping, payment, subtotal }) => {
-  useDocumentTitle('Check Out Final Step | Salinaka');
+  useDocumentTitle('結帳最後一步 | Ares');
   useScrollTop();
 
   const initFormikValues = {
@@ -42,12 +42,13 @@ const Payment = ({ shipping, payment, subtotal }) => {
   };
 
   const onConfirm = () => {
-    displayActionMessage('Feature not ready yet :)', 'info');
+    displayActionMessage('功能尚未開放 :)', 'info');
   };
 
   if (!shipping || !shipping.isDone) {
     return <Redirect to={CHECKOUT_STEP_1} />;
   }
+
   return (
     <div className="checkout">
       <StepTracker current={3} />
@@ -57,7 +58,7 @@ const Payment = ({ shipping, payment, subtotal }) => {
         validationSchema={FormSchema}
         validate={(form) => {
           if (form.type === 'paypal') {
-            displayActionMessage('Feature not ready yet :)', 'info');
+            displayActionMessage('功能尚未開放 :)', 'info');
           }
         }}
         onSubmit={onConfirm}

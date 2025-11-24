@@ -13,7 +13,7 @@ const ShippingTotal = ({ subtotal }) => {
           <tr>
             <td>
               <span className="d-block margin-0 padding-right-s text-right">
-                International Shipping: &nbsp;
+                國際運費: &nbsp;
               </span>
             </td>
             <td>
@@ -25,7 +25,7 @@ const ShippingTotal = ({ subtotal }) => {
           <tr>
             <td>
               <span className="d-block margin-0 padding-right-s text-right">
-                Subtotal: &nbsp;
+                小計: &nbsp;
               </span>
             </td>
             <td>
@@ -37,7 +37,7 @@ const ShippingTotal = ({ subtotal }) => {
           <tr>
             <td>
               <span className="d-block margin-0 padding-right-s text-right">
-                Total: &nbsp;
+                總計: &nbsp;
               </span>
             </td>
             <td>

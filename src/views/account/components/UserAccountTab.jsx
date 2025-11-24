@@ -6,26 +6,27 @@ import PropType from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-
+import defaultAvatar from '@/images/defaultAvatar.jpg';
+import defaultBanner from '@/images/defaultBanner.jpg';
 const UserProfile = (props) => {
   const profile = useSelector((state) => state.profile);
-
+  
   return (
     <div className="user-profile">
       <div className="user-profile-block">
         <div className="user-profile-banner">
           <div className="user-profile-banner-wrapper">
             <ImageLoader
-              alt="Banner"
+              alt="橫幅圖片"
               className="user-profile-banner-img"
-              src={profile.banner}
+              src={defaultBanner}
             />
           </div>
           <div className="user-profile-avatar-wrapper">
             <ImageLoader
-              alt="Avatar"
+              alt="頭像"
               className="user-profile-img"
-              src={profile.avatar}
+              src={defaultAvatar}
             />
           </div>
           <button
@@ -33,34 +34,34 @@ const UserProfile = (props) => {
             onClick={() => props.history.push(ACCOUNT_EDIT)}
             type="button"
           >
-            Edit Account
+            編輯帳號
           </button>
         </div>
         <div className="user-profile-details">
           <h2 className="user-profile-name">{profile.fullname}</h2>
-          <span>Email</span>
+          <span>電子郵件</span>
           <br />
           <h5>{profile.email}</h5>
-          <span>Address</span>
+          <span>地址</span>
           <br />
           {profile.address ? (
             <h5>{profile.address}</h5>
           ) : (
-            <h5 className="text-subtle text-italic">Address not set</h5>
+            <h5 className="text-subtle text-italic">尚未設定地址</h5>
           )}
-          <span>Mobile</span>
+          <span>手機號碼</span>
           <br />
           {profile.mobile ? (
             <h5>{profile.mobile.value}</h5>
           ) : (
-            <h5 className="text-subtle text-italic">Mobile not set</h5>
+            <h5 className="text-subtle text-italic">尚未設定手機號碼</h5>
           )}
-          <span>Date Joined</span>
+          <span>加入日期</span>
           <br />
           {profile.dateJoined ? (
             <h5>{displayDate(profile.dateJoined)}</h5>
           ) : (
-            <h5 className="text-subtle text-italic">Not available</h5>
+            <h5 className="text-subtle text-italic">無可用資料</h5>
           )}
         </div>
       </div>

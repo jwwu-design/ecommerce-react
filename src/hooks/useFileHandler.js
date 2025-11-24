@@ -23,10 +23,10 @@ const useFileHandler = (initState) => {
 
     setFileLoading(true);
     if (!regex.exec(val)) {
-      alert('File type must be JPEG or PNG', 'error');
+      alert('檔案類型必須為 JPEG 或 PNG', 'error');
       setFileLoading(false);
     } else if (size > 0.5) {
-      alert('File size exceeded 500kb, consider optimizing your image', 'error');
+      alert('檔案大小超過 500KB，請考慮優化圖片', 'error');
       setFileLoading(false);
     } else if (type === 'multiple') {
       Array.from(event.target.files).forEach((file) => {
@@ -41,7 +41,7 @@ const useFileHandler = (initState) => {
       });
 
       setFileLoading(false);
-    } else { // type is single
+    } else { // type 為 single
       const reader = new FileReader();
 
       reader.addEventListener('load', (e) => {

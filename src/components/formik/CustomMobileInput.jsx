@@ -30,7 +30,7 @@ const CustomMobileInput = (props) => {
       )}
       <PhoneInput
         name={field.name}
-        country="ph"
+        country="tw"
         inputClass="input-form d-block"
         style={{
           border: touched && error ? '1px solid red' : '1px solid #cacaca'

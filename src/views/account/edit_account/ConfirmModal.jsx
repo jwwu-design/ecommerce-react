@@ -14,18 +14,18 @@ const ConfirmModal = ({ onConfirmUpdate, modal }) => {
       onRequestClose={modal.onCloseModal}
     >
       <div className="text-center padding-l">
-        <h4>Confirm Update</h4>
+        <h4>確認更新</h4>
         <p>
-          To continue updating profile including your &nbsp;
-          <strong>email</strong>
-          ,
+          若要繼續更新個人資料（包含您的&nbsp;
+          <strong>電子郵件</strong>
+          ），
           <br />
-          please confirm by entering your password
+          請輸入密碼以進行確認。
         </p>
         <input
           className="input-form d-block"
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter your password"
+          placeholder="請輸入您的密碼"
           required
           type="password"
           value={password}
@@ -43,7 +43,7 @@ const ConfirmModal = ({ onConfirmUpdate, modal }) => {
         >
           <CheckOutlined />
           &nbsp;
-          Confirm
+          確認
         </button>
       </div>
       <button

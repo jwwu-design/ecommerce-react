@@ -25,19 +25,19 @@ function* handleError(e) {
 
   switch (e.code) {
     case 'auth/network-request-failed':
-      yield put(setAuthStatus({ ...obj, message: 'Network error has occured. Please try again.' }));
+      yield put(setAuthStatus({ ...obj, message: '網路錯誤，請稍後再試。' }));
       break;
     case 'auth/email-already-in-use':
-      yield put(setAuthStatus({ ...obj, message: 'Email is already in use. Please use another email' }));
+      yield put(setAuthStatus({ ...obj, message: '該電子郵件已被使用，請使用其他電子郵件。' }));
       break;
     case 'auth/wrong-password':
-      yield put(setAuthStatus({ ...obj, message: 'Incorrect email or password' }));
+      yield put(setAuthStatus({ ...obj, message: '電子郵件或密碼不正確。' }));
       break;
     case 'auth/user-not-found':
-      yield put(setAuthStatus({ ...obj, message: 'Incorrect email or password' }));
+      yield put(setAuthStatus({ ...obj, message: '電子郵件或密碼不正確。' }));
       break;
     case 'auth/reset-password-error':
-      yield put(setAuthStatus({ ...obj, message: 'Failed to send password reset email. Did you type your email correctly?' }));
+      yield put(setAuthStatus({ ...obj, message: '重設密碼郵件傳送失敗，請確認您輸入的電子郵件是否正確。' }));
       break;
     default:
       yield put(setAuthStatus({ ...obj, message: e.message }));
@@ -132,7 +132,7 @@ function* authSaga({ type, payload }) {
         yield put(setAuthStatus({
           success: true,
           type: 'reset',
-          message: 'Password reset email has been sent to your provided email.'
+          message: '重設密碼的郵件已發送到您提供的電子郵件信箱。'
         }));
         yield put(setAuthenticating(false));
       } catch (e) {
@@ -157,7 +157,7 @@ function* authSaga({ type, payload }) {
       } else if (payload.providerData[0].providerId !== 'password' && !snapshot.data()) {
         // add the user if auth provider is not password
         const user = {
-          fullname: payload.displayName ? payload.displayName : 'User',
+          fullname: payload.displayName ? payload.displayName : '使用者',
           avatar: payload.photoURL ? payload.photoURL : defaultAvatar,
           banner: defaultBanner,
           email: payload.email,
@@ -180,7 +180,7 @@ function* authSaga({ type, payload }) {
         success: true,
         type: 'auth',
         isError: false,
-        message: 'Successfully signed in. Redirecting...'
+        message: '登入成功，正在導向中...'
       }));
       yield put(setAuthenticating(false));
       break;
@@ -199,7 +199,7 @@ function* authSaga({ type, payload }) {
       break;
     }
     default: {
-      throw new Error('Unexpected Action Type.');
+      throw new Error('發生未預期的 Action 類型。');
     }
   }
 }

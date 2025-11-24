@@ -14,10 +14,10 @@ import * as Yup from 'yup';
 
 const SignInSchema = Yup.object().shape({
   email: Yup.string()
-    .email('Email is not valid.')
-    .required('Email is required.'),
+    .email('電子郵件格式不正確。')
+    .required('請輸入電子郵件。'),
   password: Yup.string()
-    .required('Password is required.')
+    .required('請輸入密碼。')
 });
 
 const SignIn = ({ history }) => {
@@ -29,7 +29,7 @@ const SignIn = ({ history }) => {
   const dispatch = useDispatch();
 
   useScrollTop();
-  useDocumentTitle('Sign In | Salinaka');
+  useDocumentTitle('登入 | Ares');
 
   useEffect(() => () => {
     dispatch(setAuthStatus(null));
@@ -65,7 +65,7 @@ const SignIn = ({ history }) => {
           )}
           <div className={`auth ${authStatus?.message && (!authStatus?.success && 'input-error')}`}>
             <div className="auth-main">
-              <h3>Sign in to Salinaka</h3>
+              <h3>登入 Ares 帳號</h3>
               <br />
               <div className="auth-wrapper">
                 <Formik
@@ -84,7 +84,7 @@ const SignIn = ({ history }) => {
                           disabled={isAuthenticating}
                           name="email"
                           type="email"
-                          label="Email"
+                          label="電子郵件"
                           placeholder="test@example.com"
                           component={CustomInput}
                         />
@@ -94,8 +94,8 @@ const SignIn = ({ history }) => {
                           disabled={isAuthenticating}
                           name="password"
                           type="password"
-                          label="Password"
-                          placeholder="Your Password"
+                          label="密碼"
+                          placeholder="請輸入密碼"
                           component={CustomInput}
                         />
                       </div>
@@ -106,14 +106,14 @@ const SignIn = ({ history }) => {
                           style={{ textDecoration: 'underline' }}
                           to={FORGOT_PASSWORD}
                         >
-                          <span>Forgot password?</span>
+                          <span>忘記密碼？</span>
                         </Link>
                         <button
                           className="button auth-button"
                           disabled={isAuthenticating}
                           type="submit"
                         >
-                          {isAuthenticating ? 'Signing In' : 'Sign In'}
+                          {isAuthenticating ? '登入中' : '登入'}
                           &nbsp;
                           {isAuthenticating ? <LoadingOutlined /> : <ArrowRightOutlined />}
                         </button>
@@ -123,14 +123,14 @@ const SignIn = ({ history }) => {
                 </Formik>
               </div>
             </div>
-            <div className="auth-divider">
-              <h6>OR</h6>
+            {/* <div className="auth-divider">
+              <h6>或</h6>
             </div>
-            <SocialLogin isLoading={isAuthenticating} />
+            <SocialLogin isLoading={isAuthenticating} /> */}
           </div>
           <div className="auth-message">
             <span className="auth-info">
-              <strong>Don&apos;t have an account?</strong>
+              <strong>還沒有帳號嗎？</strong>
             </span>
             <button
               className="button button-small button-border button-border-gray button-icon"
@@ -138,7 +138,7 @@ const SignIn = ({ history }) => {
               onClick={onSignUp}
               type="button"
             >
-              Sign Up
+              註冊帳號
             </button>
           </div>
         </>

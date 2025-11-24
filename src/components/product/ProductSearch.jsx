@@ -55,7 +55,7 @@ const ProductSearch = () => {
             className="product-search-input"
             onChange={onSearchChange}
             onKeyUp={onKeyUp}
-            placeholder="Search for product..."
+            placeholder="搜尋商品..."
             ref={searchInput}
             type="text"
           />
@@ -65,9 +65,9 @@ const ProductSearch = () => {
       <div className="product-search-body">
         <div className="product-search-recent">
           <div className="product-search-recent-header">
-            <h5>Recent Searches</h5>
+            <h5>最近搜尋</h5>
             <h5 onClick={onClearRecentSearch} style={{ color: 'red' }} role="presentation">
-              Clear
+              清除
             </h5>
           </div>
           {filter.recent.map((item, index) => (
@@ -95,11 +95,11 @@ const ProductSearch = () => {
             </div>
           ))}
           {filter.recent.length === 0 && (
-            <h5 className="text-subtle">No recent searches</h5>
+            <h5 className="text-subtle">沒有最近搜尋紀錄</h5>
           )}
         </div>
         <div className="product-search-filter">
-          <h5 className="margin-0">Choose Filters</h5>
+          <h5 className="margin-0">選擇篩選條件</h5>
         </div>
         <div className="product-search-filter-sub">
           <Filters

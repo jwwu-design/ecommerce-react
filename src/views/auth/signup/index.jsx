@@ -11,17 +11,17 @@ import { signUp } from '@/redux/actions/authActions';
 import { setAuthenticating, setAuthStatus } from '@/redux/actions/miscActions';
 import * as Yup from 'yup';
 
-const SignInSchema = Yup.object().shape({
+const SignUpSchema = Yup.object().shape({
   email: Yup.string()
-    .email('Email is not valid.')
-    .required('Email is required.'),
+    .email('電子郵件格式不正確。')
+    .required('請輸入電子郵件。'),
   password: Yup.string()
-    .required('Password is required.')
-    .min(8, 'Password length should be at least 8 characters.')
-    .matches(/[A-Z\W]/g, 'Password should contain at least 1 uppercase letter.'),
+    .required('請輸入密碼。')
+    .min(8, '密碼長度至少需 8 個字元。')
+    .matches(/[A-Z\W]/g, '密碼需至少包含 1 個大寫字母或特殊字元。'),
   fullname: Yup.string()
-    .required('Full name is required.')
-    .min(4, 'Name should be at least 4 characters.')
+    .required('請輸入全名。')
+    .min(4, '姓名至少需 4 個字元。')
 });
 
 const SignUp = ({ history }) => {
@@ -32,7 +32,7 @@ const SignUp = ({ history }) => {
   const dispatch = useDispatch();
 
   useScrollTop();
-  useDocumentTitle('Sign Up | Salinaka');
+  useDocumentTitle('註冊 | Ares');
 
   useEffect(() => () => {
     dispatch(setAuthStatus(null));
@@ -68,7 +68,7 @@ const SignUp = ({ history }) => {
           )}
           <div className={`auth ${authStatus?.message && (!authStatus?.success && 'input-error')}`}>
             <div className="auth-main">
-              <h3>Sign up to Salinaka</h3>
+              <h3>註冊 Ares 帳號</h3>
               <Formik
                 initialValues={{
                   fullname: '',
@@ -76,7 +76,7 @@ const SignUp = ({ history }) => {
                   password: ''
                 }}
                 validateOnChange
-                validationSchema={SignInSchema}
+                validationSchema={SignUpSchema}
                 onSubmit={onFormSubmit}
               >
                 {() => (
@@ -86,8 +86,8 @@ const SignUp = ({ history }) => {
                         disabled={isAuthenticating}
                         name="fullname"
                         type="text"
-                        label="* Full Name"
-                        placeholder="John Doe"
+                        label="* 全名"
+                        placeholder="王小明"
                         style={{ textTransform: 'capitalize' }}
                         component={CustomInput}
                       />
@@ -97,7 +97,7 @@ const SignUp = ({ history }) => {
                         disabled={isAuthenticating}
                         name="email"
                         type="email"
-                        label="* Email"
+                        label="* 電子郵件"
                         placeholder="test@example.com"
                         component={CustomInput}
                       />
@@ -107,8 +107,8 @@ const SignUp = ({ history }) => {
                         disabled={isAuthenticating}
                         name="password"
                         type="password"
-                        label="* Password"
-                        placeholder="Your Password"
+                        label="* 密碼"
+                        placeholder="請輸入密碼"
                         component={CustomInput}
                       />
                     </div>
@@ -119,7 +119,7 @@ const SignUp = ({ history }) => {
                         disabled={isAuthenticating}
                         type="submit"
                       >
-                        {isAuthenticating ? 'Signing Up' : 'Sign Up'}
+                        {isAuthenticating ? '註冊中' : '註冊'}
                         &nbsp;
                         {isAuthenticating ? <LoadingOutlined /> : <ArrowRightOutlined />}
                       </button>
@@ -129,13 +129,13 @@ const SignUp = ({ history }) => {
               </Formik>
             </div>
             <div className="auth-divider">
-              <h6>OR</h6>
+              <h6>或</h6>
             </div>
             <SocialLogin isLoading={isAuthenticating} />
           </div>
           <div className="auth-message">
             <span className="auth-info">
-              <strong>Already have an account?</strong>
+              <strong>已經有帳號了嗎？</strong>
             </span>
             <button
               className="button button-small button-border button-border-gray"
@@ -143,7 +143,7 @@ const SignUp = ({ history }) => {
               onClick={onClickSignIn}
               type="button"
             >
-              Sign In
+              登入
             </button>
           </div>
         </>

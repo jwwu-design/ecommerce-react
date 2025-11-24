@@ -29,7 +29,7 @@ const InputColor = (props) => {
             <span className="label-input label-error">{form.errors[name]}</span>
           ) : (
             <label className="label-input" htmlFor={name}>
-              Available Colors
+              可選顏色
             </label>
           )}
           {selectedColor && (
@@ -42,7 +42,7 @@ const InputColor = (props) => {
                 role="presentation"
               >
                 <i className="fa fa-check" />
-                Add Selected Color
+                新增選擇的顏色
               </h4>
             </>
           )}
@@ -55,14 +55,14 @@ const InputColor = (props) => {
         />
       </div>
       <div className="product-form-field">
-        <span className="d-block padding-s">Selected Color(s)</span>
+        <span className="d-block padding-s">已選顏色</span>
         <div className="color-chooser">
           {form.values[name]?.map((color, index) => (
             <div
               key={color}
               onClick={() => remove(index)}
               className="color-item color-item-deletable"
-              title={`Remove ${color}`}
+              title={`移除 ${color}`}
               style={{ backgroundColor: color }}
               role="presentation"
             />

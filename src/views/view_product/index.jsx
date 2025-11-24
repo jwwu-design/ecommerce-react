@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined, LoadingOutlined } from '@ant-design/icons';
-import { ColorChooser, ImageLoader, MessageDisplay } from '@/components/common';
+import { /* ColorChooser, */ ImageLoader, MessageDisplay } from '@/components/common';
 import { ProductShowcaseGrid } from '@/components/product';
 import { RECOMMENDED_PRODUCTS, SHOP } from '@/constants/routes';
 import { displayMoney } from '@/helpers/utils';
@@ -19,11 +19,11 @@ const ViewProduct = () => {
   const { product, isLoading, error } = useProduct(id);
   const { addToBasket, isItemOnBasket } = useBasket(id);
   useScrollTop();
-  useDocumentTitle(`View ${product?.name || 'Item'}`);
+  useDocumentTitle(`查看商品：${product?.name || '商品'}`);
 
   const [selectedImage, setSelectedImage] = useState(product?.image || '');
   const [selectedSize, setSelectedSize] = useState('');
-  const [selectedColor, setSelectedColor] = useState('');
+  // const [selectedColor, setSelectedColor] = useState('');
 
   const {
     recommendedProducts,
@@ -41,22 +41,22 @@ const ViewProduct = () => {
     setSelectedSize(newValue.value);
   };
 
-  const onSelectedColorChange = (color) => {
-    setSelectedColor(color);
-    if (colorOverlay.current) {
-      colorOverlay.current.value = color;
-    }
-  };
+  // const onSelectedColorChange = (color) => {
+  //   setSelectedColor(color);
+  //   if (colorOverlay.current) {
+  //     colorOverlay.current.value = color;
+  //   }
+  // };
 
   const handleAddToBasket = () => {
-    addToBasket({ ...product, selectedColor, selectedSize: selectedSize || product.sizes[0] });
+    addToBasket({ ...product, /* selectedColor, */ selectedSize: selectedSize || product.sizes[0] });
   };
 
   return (
     <main className="content">
       {isLoading && (
         <div className="loader">
-          <h4>Loading Product...</h4>
+          <h4>正在載入商品資料...</h4>
           <br />
           <LoadingOutlined style={{ fontSize: '3rem' }} />
         </div>
@@ -69,7 +69,7 @@ const ViewProduct = () => {
           <Link to={SHOP}>
             <h3 className="button-link d-inline-flex">
               <ArrowLeftOutlined />
-              &nbsp; Back to shop
+              &nbsp; 返回商店
             </h3>
           </Link>
           <div className="product-modal">
@@ -91,7 +91,7 @@ const ViewProduct = () => {
               </div>
             )}
             <div className="product-modal-image-wrapper">
-              {selectedColor && <input type="color" disabled ref={colorOverlay} id="color-overlay" />}
+              {/* {selectedColor && <input type="color" disabled ref={colorOverlay} id="color-overlay" />} */}
               <ImageLoader
                 alt={product.name}
                 className="product-modal-image"
@@ -108,20 +108,20 @@ const ViewProduct = () => {
               <div className="divider" />
               <br />
               <div>
-                <span className="text-subtle">Lens Width and Frame Size</span>
+                <span className="text-subtle">鏡片寬度與鏡框尺寸</span>
                 <br />
                 <br />
                 <Select
-                  placeholder="--Select Size--"
+                  placeholder="--選擇尺寸--"
                   onChange={onSelectedSizeChange}
                   options={product.sizes.sort((a, b) => (a < b ? -1 : 1)).map((size) => ({ label: `${size} mm`, value: size }))}
                   styles={{ menu: (provided) => ({ ...provided, zIndex: 10 }) }}
                 />
               </div>
               <br />
-              {product.availableColors.length >= 1 && (
+              {/* {product.availableColors.length >= 1 && (
                 <div>
-                  <span className="text-subtle">Choose Color</span>
+                  <span className="text-subtle">選擇顏色</span>
                   <br />
                   <br />
                   <ColorChooser
@@ -129,7 +129,7 @@ const ViewProduct = () => {
                     onSelectedColorChange={onSelectedColorChange}
                   />
                 </div>
-              )}
+              )} */}
               <h1>{displayMoney(product.price)}</h1>
               <div className="product-modal-action">
                 <button
@@ -137,21 +137,21 @@ const ViewProduct = () => {
                   onClick={handleAddToBasket}
                   type="button"
                 >
-                  {isItemOnBasket(product.id) ? 'Remove From Basket' : 'Add To Basket'}
+                  {isItemOnBasket(product.id) ? '從購物車移除' : '加入購物車'}
                 </button>
               </div>
             </div>
           </div>
           <div style={{ marginTop: '10rem' }}>
             <div className="display-header">
-              <h1>Recommended</h1>
-              <Link to={RECOMMENDED_PRODUCTS}>See All</Link>
+              <h1>推薦商品</h1>
+              <Link to={RECOMMENDED_PRODUCTS}>查看全部</Link>
             </div>
             {errorFeatured && !isLoadingFeatured ? (
               <MessageDisplay
-                message={error}
+                message={errorFeatured}
                 action={fetchRecommendedProducts}
-                buttonLabel="Try Again"
+                buttonLabel="重新嘗試"
               />
             ) : (
               <ProductShowcaseGrid products={recommendedProducts} skeletonCount={3} />

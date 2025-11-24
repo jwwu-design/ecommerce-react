@@ -9,34 +9,36 @@ const ProductsTable = ({ filteredProducts }) => (
       <div className="grid grid-product grid-count-6">
         <div className="grid-col" />
         <div className="grid-col">
-          <h5>Name</h5>
+          <h5>商品名稱</h5>
         </div>
         <div className="grid-col">
-          <h5>Brand</h5>
+          <h5>品牌</h5>
         </div>
         <div className="grid-col">
-          <h5>Price</h5>
+          <h5>價格</h5>
         </div>
         <div className="grid-col">
-          <h5>Date Added</h5>
+          <h5>新增日期</h5>
         </div>
         <div className="grid-col">
-          <h5>Qty</h5>
+          <h5>數量</h5>
         </div>
       </div>
     )}
-    {filteredProducts.length === 0 ? new Array(10).fill({}).map((product, index) => (
-      <ProductItem
-        // eslint-disable-next-line react/no-array-index-key
-        key={`product-skeleton ${index}`}
-        product={product}
-      />
-    )) : filteredProducts.map((product) => (
-      <ProductItem
-        key={product.id}
-        product={product}
-      />
-    ))}
+    {filteredProducts.length === 0
+      ? new Array(10).fill({}).map((product, index) => (
+        <ProductItem
+          // eslint-disable-next-line react/no-array-index-key
+          key={`product-skeleton ${index}`}
+          product={product}
+        />
+      ))
+      : filteredProducts.map((product) => (
+        <ProductItem
+          key={product.id}
+          product={product}
+        />
+      ))}
   </div>
 );
 

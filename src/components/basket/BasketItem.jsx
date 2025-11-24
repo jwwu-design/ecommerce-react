@@ -31,19 +31,19 @@ const BasketItem = ({ product }) => {
           </Link>
           <div className="basket-item-specs">
             <div>
-              <span className="spec-title">Quantity</span>
+              <span className="spec-title">數量</span>
               <h5 className="my-0">{product.quantity}</h5>
             </div>
             <div>
-              <span className="spec-title">Size</span>
+              <span className="spec-title">尺寸</span>
               <h5 className="my-0">
                 {product.selectedSize}
                 {' '}
                 mm
               </h5>
             </div>
-            <div>
-              <span className="spec-title">Color</span>
+            {/* <div>
+              <span className="spec-title">顏色</span>
               <div style={{
                 backgroundColor: product.selectedColor || product.availableColors[0],
                 width: '15px',
@@ -51,7 +51,7 @@ const BasketItem = ({ product }) => {
                 borderRadius: '50%'
               }}
               />
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="basket-item-price">
@@ -86,8 +86,8 @@ BasketItem.propTypes = {
     image: PropType.string,
     imageUrl: PropType.string,
     isFeatured: PropType.bool,
-    isRecommended: PropType.bool,
-    availableColors: PropType.arrayOf(PropType.string)
+    isRecommended: PropType.bool
+    // availableColors: PropType.arrayOf(PropType.string)
   }).isRequired
 };
 

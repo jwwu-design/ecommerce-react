@@ -38,14 +38,12 @@ const Filters = ({ closeModal }) => {
     window.scrollTo(0, 0);
   }, [filter]);
 
-
   const onPriceChange = (minVal, maxVal) => {
     setFilter({ ...field, minPrice: minVal, maxPrice: maxVal });
   };
 
   const onBrandFilterChange = (e) => {
     const val = e.target.value;
-
     setFilter({ ...field, brand: val });
   };
 
@@ -80,11 +78,11 @@ const Filters = ({ closeModal }) => {
   return (
     <div className="filters">
       <div className="filters-field">
-        <span>Brand</span>
+        <span>品牌</span>
         <br />
         <br />
         {products.length === 0 && isLoading ? (
-          <h5 className="text-subtle">Loading Filter</h5>
+          <h5 className="text-subtle">載入篩選中</h5>
         ) : (
           <select
             className="filters-brand"
@@ -92,16 +90,17 @@ const Filters = ({ closeModal }) => {
             disabled={isLoading || products.length === 0}
             onChange={onBrandFilterChange}
           >
-            <option value="">All Brands</option>
-            <option value="salt">Salt Maalat</option>
+            <option value="">所有品牌</option>
+            <option value="ares">Ares</option>
+            {/* <option value="salt">Salt Maalat</option>
             <option value="betsin">Betsin Maalat</option>
             <option value="black">Black Kibal</option>
-            <option value="sexbomb">Sexbomb</option>
+            <option value="sexbomb">Sexbomb</option> */}
           </select>
         )}
       </div>
       <div className="filters-field">
-        <span>Sort By</span>
+        <span>排序方式</span>
         <br />
         <br />
         <select
@@ -110,21 +109,21 @@ const Filters = ({ closeModal }) => {
           disabled={isLoading || products.length === 0}
           onChange={onSortFilterChange}
         >
-          <option value="">None</option>
-          <option value="name-asc">Name Ascending A - Z</option>
-          <option value="name-desc">Name Descending Z - A</option>
-          <option value="price-desc">Price High - Low</option>
-          <option value="price-asc">Price Low - High</option>
+          <option value="">無</option>
+          {/* <option value="name-asc">名稱 A → Z</option>
+          <option value="name-desc">名稱 Z → A</option> */}
+          <option value="price-desc">價格 高 → 低</option>
+          <option value="price-asc">價格 低 → 高</option>
         </select>
       </div>
       <div className="filters-field">
-        <span>Price Range</span>
+        <span>價格範圍</span>
         <br />
         <br />
         {(products.length === 0 && isLoading) || max === 0 ? (
-          <h5 className="text-subtle">Loading Filter</h5>
+          <h5 className="text-subtle">載入篩選中</h5>
         ) : products.length === 1 ? (
-          <h5 className="text-subtle">No Price Range</h5>
+          <h5 className="text-subtle">無價格範圍</h5>
         ) : (
           <PriceRange
             min={min}
@@ -144,7 +143,7 @@ const Filters = ({ closeModal }) => {
           onClick={onApplyFilter}
           type="button"
         >
-          Apply filters
+          套用篩選
         </button>
         <button
           className="filters-button button button-border button-small"
@@ -152,7 +151,7 @@ const Filters = ({ closeModal }) => {
           onClick={onResetFilter}
           type="button"
         >
-          Reset filters
+          重設篩選
         </button>
       </div>
     </div>

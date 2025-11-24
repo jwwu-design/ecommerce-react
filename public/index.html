@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+    <title>歡迎使用 Firebase Hosting</title>
 
     <!-- update the version number as needed -->
     <script defer src="/__/firebase/6.5.0/firebase-app.js"></script>
@@ -32,12 +32,12 @@
   </head>
   <body>
     <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
+      <h2>歡迎</h2>
+      <h1>Firebase Hosting 設定完成</h1>
+      <p>若你看到此頁，表示已成功設定 Firebase Hosting，可以開始建置你的應用程式！</p>
+      <a target="_blank" href="https://firebase.google.com/docs/hosting/">開啟託管文件</a>
     </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
+    <p id="load">Firebase SDK 載入中&hellip;</p>
 
     <script>
       document.addEventListener('DOMContentLoaded', function() {
@@ -54,10 +54,10 @@
         try {
           let app = firebase.app();
           let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function');
-          document.getElementById('load').innerHTML = `Firebase SDK loaded with ${features.join(', ')}`;
+          document.getElementById('load').innerHTML = `Firebase SDK 已載入：${features.join(', ')}`;
         } catch (e) {
           console.error(e);
-          document.getElementById('load').innerHTML = 'Error loading the Firebase SDK, check the console.';
+          document.getElementById('load').innerHTML = '載入 Firebase SDK 發生錯誤，請查看主控台。';
         }
       });
     </script>

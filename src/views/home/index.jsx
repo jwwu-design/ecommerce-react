@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 
 
 const Home = () => {
-  useDocumentTitle('Salinaka | Home');
+  useDocumentTitle('首頁 | Ares');
   useScrollTop();
 
   const {
@@ -31,34 +31,32 @@ const Home = () => {
     <main className="content">
       <div className="home">
         <div className="banner">
-          <div className="banner-desc">
+          {/* <div className="banner-desc">
             <h1 className="text-thin">
-              <strong>See</strong>
-              &nbsp;everything with&nbsp;
-              <strong>Clarity</strong>
+              <strong>看見一切的清晰度</strong>
             </h1>
             <p>
-              Buying eyewear should leave you happy and good-looking, with money in your pocket.
-              Glasses, sunglasses, and contacts—we’ve got your eyes covered.
+              購買眼鏡讓你既開心又時尚，還能省錢。
+              眼鏡、太陽眼鏡與隱形眼鏡，我們都替你的雙眼照顧周全。
             </p>
             <br />
             <Link to={SHOP} className="button">
-              Shop Now &nbsp;
+              立即購買 &nbsp;
               <ArrowRightOutlined />
             </Link>
-          </div>
-          <div className="banner-img"><img src={bannerImg} alt="" /></div>
+          </div> */}
+          <div className="banner-img"><img src={bannerImg} alt="橫幅" /></div>
         </div>
         <div className="display">
           <div className="display-header">
-            <h1>Featured Products</h1>
-            <Link to={FEATURED_PRODUCTS}>See All</Link>
+            <h1>精選課程</h1>
+            <Link to={FEATURED_PRODUCTS}>查看全部</Link>
           </div>
           {(errorFeatured && !isLoadingFeatured) ? (
             <MessageDisplay
               message={errorFeatured}
               action={fetchFeaturedProducts}
-              buttonLabel="Try Again"
+              buttonLabel="重新嘗試"
             />
           ) : (
             <ProductShowcaseGrid
@@ -69,14 +67,14 @@ const Home = () => {
         </div>
         <div className="display">
           <div className="display-header">
-            <h1>Recommended Products</h1>
-            <Link to={RECOMMENDED_PRODUCTS}>See All</Link>
+            <h1>推薦課程</h1>
+            <Link to={RECOMMENDED_PRODUCTS}>查看全部</Link>
           </div>
           {(errorRecommended && !isLoadingRecommended) ? (
             <MessageDisplay
               message={errorRecommended}
               action={fetchRecommendedProducts}
-              buttonLabel="Try Again"
+              buttonLabel="重新嘗試"
             />
           ) : (
             <ProductShowcaseGrid

@@ -35,7 +35,7 @@ const Search = ({ match }) => {
       <main className="content">
         <MessageDisplay
           message={store.requestStatus}
-          desc="Try using correct filters or keyword."
+          desc="請使用正確的篩選或關鍵字。"
         />
       </main>
     );
@@ -50,7 +50,7 @@ const Search = ({ match }) => {
               <div className="product-list-header">
                 <div className="product-list-header-title">
                   <h5>
-                    {`Found ${store.products.length} ${store.products.length > 1 ? 'products' : 'product'} with keyword ${searchKey}`}
+                    {`找到 ${store.products.length} 個商品（關鍵字：${searchKey}）`}
                   </h5>
                 </div>
               </div>
@@ -65,7 +65,7 @@ const Search = ({ match }) => {
   return (
     <main className="content">
       <div className="loader">
-        <h4>Searching Product...</h4>
+        <h4>正在搜尋商品…</h4>
         <br />
         <LoadingOutlined style={{ fontSize: '3rem' }} />
       </div>

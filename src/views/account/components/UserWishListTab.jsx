@@ -1,11 +1,11 @@
 import React from 'react';
 
-// Just add this feature if you want :P
+// 你可以視需要新增這個功能 :P
 
 const UserWishListTab = () => (
   <div className="loader" style={{ minHeight: '80vh' }}>
-    <h3>My Wish List</h3>
-    <strong><span className="text-subtle">You don&apos;t have a wish list</span></strong>
+    <h3>我的願望清單</h3>
+    <strong><span className="text-subtle">您目前沒有任何願望清單項目</span></strong>
   </div>
 );
 

@@ -2,7 +2,8 @@
 import { CheckOutlined, LoadingOutlined } from '@ant-design/icons';
 import { ImageLoader } from '@/components/common';
 import {
-  CustomColorInput, CustomCreatableSelect, CustomInput, CustomTextarea
+  // CustomColorInput,
+  CustomCreatableSelect, CustomInput, CustomTextarea
 } from '@/components/formik';
 import {
   Field, FieldArray, Form, Formik
@@ -12,7 +13,7 @@ import PropType from 'prop-types';
 import React from 'react';
 import * as Yup from 'yup';
 
-// Default brand names that I used. You can use what you want
+// 預設品牌選項，可自行調整
 const brandOptions = [
   { value: 'Salt Maalat', label: 'Salt Maalat' },
   { value: 'Betsin Maalat', label: 'Betsin Maalat' },
@@ -22,31 +23,31 @@ const brandOptions = [
 
 const FormSchema = Yup.object().shape({
   name: Yup.string()
-    .required('Product name is required.')
-    .max(60, 'Product name must only be less than 60 characters.'),
+    .required('產品名稱為必填。')
+    .max(60, '產品名稱長度必須少於 60 個字元。'),
   brand: Yup.string()
-    .required('Brand name is required.'),
+    .required('品牌為必填。'),
   price: Yup.number()
-    .positive('Price is invalid.')
-    .integer('Price should be an integer.')
-    .required('Price is required.'),
+    .positive('價格無效。')
+    .integer('價格必須為整數。')
+    .required('價格為必填。'),
   description: Yup.string()
-    .required('Description is required.'),
+    .required('產品描述為必填。'),
   maxQuantity: Yup.number()
-    .positive('Max quantity is invalid.')
-    .integer('Max quantity should be an integer.')
-    .required('Max quantity is required.'),
+    .positive('最大庫存數量無效。')
+    .integer('最大庫存必須為整數。')
+    .required('最大庫存為必填。'),
   keywords: Yup.array()
     .of(Yup.string())
-    .min(1, 'Please enter at least 1 keyword for this product.'),
+    .min(1, '請至少輸入 1 個關鍵字。'),
   sizes: Yup.array()
     .of(Yup.number())
-    .min(1, 'Please enter a size for this product.'),
+    .min(1, '請輸入產品尺寸。'),
   isFeatured: Yup.boolean(),
-  isRecommended: Yup.boolean(),
-  availableColors: Yup.array()
-    .of(Yup.string().required())
-    .min(1, 'Please add a default color for this product.')
+  isRecommended: Yup.boolean()
+  // availableColors: Yup.array()
+  //   .of(Yup.string().required())
+  //   .min(1, '請至少新增 1 個顏色。')
 });
 
 const ProductForm = ({ product, onSubmit, isLoading }) => {
@@ -59,8 +60,8 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
     keywords: product?.keywords || [],
     sizes: product?.sizes || [],
     isFeatured: product?.isFeatured || false,
-    isRecommended: product?.isRecommended || false,
-    availableColors: product?.availableColors || []
+    isRecommended: product?.isRecommended || false
+    // availableColors: product?.availableColors || []
   };
 
   const {
@@ -71,20 +72,20 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
   } = useFileHandler({ image: {}, imageCollection: product?.imageCollection || [] });
 
   const onSubmitForm = (form) => {
-    if (imageFile.image.file || product.imageUrl) {
+    if (imageFile.image.file || product.image) {
       onSubmit({
         ...form,
         quantity: 1,
-        // due to firebase function billing policy, let's add lowercase version
-        // of name here instead in firebase functions
+        // 為了避免 firebase function 計費，在此處新增小寫版本的名稱
+        // 而非在 firebase functions 中處理
         name_lower: form.name.toLowerCase(),
         dateAdded: new Date().getTime(),
-        image: imageFile?.image?.file || product.imageUrl,
+        image: imageFile?.image?.file || product.image,
         imageCollection: imageFile.imageCollection
       });
     } else {
       // eslint-disable-next-line no-alert
-      alert('Product thumbnail image is required.');
+      alert('請上傳產品縮圖。');
     }
   };
 
@@ -105,8 +106,8 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                     disabled={isLoading}
                     name="name"
                     type="text"
-                    label="* Product Name"
-                    placeholder="Gago"
+                    label="* 產品名稱"
+                    placeholder="請輸入產品名稱"
                     style={{ textTransform: 'capitalize' }}
                     component={CustomInput}
                   />
@@ -119,8 +120,8 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                     iid="brand"
                     options={brandOptions}
                     disabled={isLoading}
-                    placeholder="Select/Create Brand"
-                    label="* Brand"
+                    placeholder="選擇或建立品牌"
+                    label="* 品牌"
                   />
                 </div>
               </div>
@@ -130,7 +131,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                   name="description"
                   id="description"
                   rows={3}
-                  label="* Product Description"
+                  label="* 產品描述"
                   component={CustomTextarea}
                 />
               </div>
@@ -141,7 +142,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                     name="price"
                     id="price"
                     type="number"
-                    label="* Price"
+                    label="* 價格"
                     component={CustomInput}
                   />
                 </div>
@@ -152,7 +153,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                     name="maxQuantity"
                     type="number"
                     id="maxQuantity"
-                    label="* Max Quantity"
+                    label="* 最大庫存數量"
                     component={CustomInput}
                   />
                 </div>
@@ -165,8 +166,8 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                     iid="keywords"
                     isMulti
                     disabled={isLoading}
-                    placeholder="Create/Select Keywords"
-                    label="* Keywords"
+                    placeholder="建立或選擇關鍵字"
+                    label="* 關鍵字"
                   />
                 </div>
                 &nbsp;
@@ -178,20 +179,20 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                     type="number"
                     isMulti
                     disabled={isLoading}
-                    placeholder="Create/Select Sizes"
-                    label="* Sizes (Millimeter)"
+                    placeholder="建立或選擇尺寸"
+                    label="* 尺寸（毫米）"
                   />
                 </div>
               </div>
-              <div className="product-form-field">
+              {/* <div className="product-form-field">
                 <FieldArray
                   name="availableColors"
                   disabled={isLoading}
                   component={CustomColorInput}
                 />
-              </div>
+              </div> */}
               <div className="product-form-field">
-                <span className="d-block padding-s">Image Collection</span>
+                <span className="d-block padding-s">圖片集</span>
                 {!isFileLoading && (
                   <label htmlFor="product-input-file-collection">
                     <input
@@ -203,7 +204,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                       readOnly={isLoading}
                       type="file"
                     />
-                    Choose Images
+                    選擇圖片
                   </label>
                 )}
               </div>
@@ -222,7 +223,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                         <button
                           className="product-form-delete-image"
                           onClick={() => removeImage({ id: image.id, name: 'imageCollection' })}
-                          title="Delete Image"
+                          title="刪除圖片"
                           type="button"
                         >
                           <i className="fa fa-times-circle" />
@@ -244,7 +245,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                   />
                   <label htmlFor="featured">
                     <h5 className="d-flex-grow-1 margin-0">
-                      &nbsp; Add to Featured &nbsp;
+                      &nbsp; 加入精選產品 &nbsp;
                     </h5>
                   </label>
                 </div>
@@ -258,7 +259,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                   />
                   <label htmlFor="recommended">
                     <h5 className="d-flex-grow-1 margin-0">
-                      &nbsp; Add to Recommended &nbsp;
+                      &nbsp; 加入推薦產品 &nbsp;
                     </h5>
                   </label>
                 </div>
@@ -274,14 +275,14 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                 >
                   {isLoading ? <LoadingOutlined /> : <CheckOutlined />}
                   &nbsp;
-                  {isLoading ? 'Saving Product' : 'Save Product'}
+                  {isLoading ? '儲存中...' : '儲存產品'}
                 </button>
               </div>
             </div>
-            {/* ----THUBMNAIL ---- */}
+            {/* ----縮圖上傳區 ---- */}
             <div className="product-form-file">
               <div className="product-form-field">
-                <span className="d-block padding-s">* Thumbnail</span>
+                <span className="d-block padding-s">* 產品縮圖</span>
                 {!isFileLoading && (
                   <label htmlFor="product-input-file">
                     <input
@@ -292,7 +293,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                       readOnly={isLoading}
                       type="file"
                     />
-                    Choose Image
+                    選擇圖片
                   </label>
                 )}
               </div>
@@ -326,8 +327,8 @@ ProductForm.propTypes = {
     image: PropType.string,
     imageUrl: PropType.string,
     isFeatured: PropType.bool,
-    isRecommended: PropType.bool,
-    availableColors: PropType.arrayOf(PropType.string)
+    isRecommended: PropType.bool
+    // availableColors: PropType.arrayOf(PropType.string)
   }).isRequired,
   onSubmit: PropType.func.isRequired,
   isLoading: PropType.bool.isRequired

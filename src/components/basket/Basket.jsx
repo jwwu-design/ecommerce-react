@@ -25,7 +25,7 @@ const Basket = () => {
     if (didMount && firebase.auth.currentUser && basket.length !== 0) {
       firebase.saveBasketItems(basket, firebase.auth.currentUser.uid)
         .then(() => {
-          console.log('Item saved to basket');
+          console.log('商品已儲存到購物車');
         })
         .catch((e) => {
           console.log(e);
@@ -60,7 +60,7 @@ const Basket = () => {
         isOpen={isOpenModal}
         onRequestClose={onCloseModal}
       >
-        <p className="text-center">You must sign in to continue checking out</p>
+        <p className="text-center">您必須登入才能進行結帳</p>
         <br />
         <div className="d-flex-center">
           <button
@@ -68,7 +68,7 @@ const Basket = () => {
             onClick={onCloseModal}
             type="button"
           >
-            Continue shopping
+            繼續購物
           </button>
           &nbsp;
           <button
@@ -76,7 +76,7 @@ const Basket = () => {
             onClick={onSignInClick}
             type="button"
           >
-            Sign in to checkout
+            登入以結帳
           </button>
         </div>
       </Modal>
@@ -84,10 +84,10 @@ const Basket = () => {
         <div className="basket-list">
           <div className="basket-header">
             <h3 className="basket-header-title">
-              My Basket &nbsp;
+              我的購物車 &nbsp;
               <span>
                 (
-                {` ${basket.length} ${basket.length > 1 ? 'items' : 'item'}`}
+                {` ${basket.length} ${basket.length > 1 ? '件商品' : '件商品'}`}
                 )
               </span>
             </h3>
@@ -98,7 +98,7 @@ const Basket = () => {
                   onClick={onClickToggle}
                   role="presentation"
                 >
-                  Close
+                  關閉
                 </span>
               )}
             </BasketToggle>
@@ -108,12 +108,12 @@ const Basket = () => {
               onClick={onClearBasket}
               type="button"
             >
-              <span>Clear Basket</span>
+              <span>清空購物車</span>
             </button>
           </div>
           {basket.length <= 0 && (
             <div className="basket-empty">
-              <h5 className="basket-empty-msg">Your basket is empty</h5>
+              <h5 className="basket-empty-msg">您的購物車是空的</h5>
             </div>
           )}
           {basket.map((product, i) => (
@@ -128,7 +128,7 @@ const Basket = () => {
         </div>
         <div className="basket-checkout">
           <div className="basket-total">
-            <p className="basket-total-title">Subtotal Amout:</p>
+            <p className="basket-total-title">小計金額：</p>
             <h2 className="basket-total-amount">
               {displayMoney(calculateTotal(basket.map((product) => product.price * product.quantity)))}
             </h2>
@@ -139,7 +139,7 @@ const Basket = () => {
             onClick={onCheckOut}
             type="button"
           >
-            Check Out
+            結帳
           </button>
         </div>
       </div>

@@ -54,9 +54,11 @@ const Navigation = () => {
     ROUTE.FORGOT_PASSWORD
   ];
 
-  if (store.user && store.user.role === 'ADMIN') {
+  // 只在 admin 介面路徑（例如 /admin/...）時隱藏一般導覽列
+  if (store.user && store.user.role === 'ADMIN' && pathname.startsWith('/admin')) {
     return null;
-  } if (window.screen.width <= 800) {
+  }
+  if (window.screen.width <= 800) {
     return (
       <MobileNavigation
         // eslint-disable-next-line react/jsx-props-no-spreading
@@ -72,15 +74,16 @@ const Navigation = () => {
         <Link onClick={onClickLink} to="/"><img alt="Logo" src={logo} /></Link>
       </div>
       <ul className="navigation-menu-main">
-        <li><NavLink activeClassName="navigation-menu-active" exact to={ROUTE.HOME}>Home</NavLink></li>
-        <li><NavLink activeClassName="navigation-menu-active" to={ROUTE.SHOP}>Shop</NavLink></li>
-        <li><NavLink activeClassName="navigation-menu-active" to={ROUTE.FEATURED_PRODUCTS}>Featured</NavLink></li>
-        <li><NavLink activeClassName="navigation-menu-active" to={ROUTE.RECOMMENDED_PRODUCTS}>Recommended</NavLink></li>
+        <li><NavLink activeClassName="navigation-menu-active" exact to={ROUTE.HOME}>首頁</NavLink></li>
+        <li><NavLink activeClassName="navigation-menu-active" to={ROUTE.SHOP}>商店</NavLink></li>
+        {store.user && store.user.role === 'ADMIN' && <li><NavLink activeClassName="navigation-menu-active" to={ROUTE.ADMIN_DASHBOARD}>管理後臺</NavLink></li>}
+        {/* <li><NavLink activeClassName="navigation-menu-active" to={ROUTE.FEATURED_PRODUCTS}>Featured</NavLink></li> */}
+        {/* <li><NavLink activeClassName="navigation-menu-active" to={ROUTE.RECOMMENDED_PRODUCTS}>Recommended</NavLink></li> */}
       </ul>
       {(pathname === ROUTE.SHOP || pathname === ROUTE.SEARCH) && (
         <FiltersToggle>
           <button className="button-muted button-small" type="button">
-            Filters &nbsp;
+            篩選 &nbsp;
             <FilterOutlined />
           </button>
         </FiltersToggle>
@@ -116,7 +119,7 @@ const Navigation = () => {
                 onClick={onClickLink}
                 to={ROUTE.SIGNUP}
               >
-                Sign Up
+                註冊
               </Link>
             )}
             {pathname !== ROUTE.SIGNIN && (
@@ -125,7 +128,7 @@ const Navigation = () => {
                 onClick={onClickLink}
                 to={ROUTE.SIGNIN}
               >
-                Sign In
+                登入
               </Link>
             )}
           </li>

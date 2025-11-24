@@ -33,14 +33,14 @@ const ProductList = (props) => {
 
   if (filteredProducts.length === 0 && !isLoading) {
     return (
-      <MessageDisplay message={requestStatus?.message || 'No products found.'} />
+      <MessageDisplay message={requestStatus?.message || '找不到任何商品。'} />
     );
   } if (filteredProducts.length === 0 && requestStatus) {
     return (
       <MessageDisplay
-        message={requestStatus?.message || 'Something went wrong :('}
+        message={requestStatus?.message || '發生錯誤 :('}
         action={fetchProducts}
-        buttonLabel="Try Again"
+        buttonLabel="重試"
       />
     );
   }
@@ -56,7 +56,7 @@ const ProductList = (props) => {
             onClick={fetchProducts}
             type="button"
           >
-            {isFetching ? 'Fetching Items...' : 'Show More Items'}
+            {isFetching ? '正在載入商品...' : '顯示更多商品'}
           </button>
         </div>
       )}

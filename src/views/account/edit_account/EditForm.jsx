@@ -16,8 +16,8 @@ const EditForm = ({ isLoading, authProvider }) => {
         disabled={isLoading}
         name="fullname"
         type="text"
-        label="* Full Name"
-        placeholder="Enter your full name"
+        label="* 姓名"
+        placeholder="請輸入您的姓名"
         component={CustomInput}
         style={{ textTransform: 'capitalize' }}
       />
@@ -25,7 +25,7 @@ const EditForm = ({ isLoading, authProvider }) => {
         disabled={authProvider !== 'password' || isLoading}
         name="email"
         type="email"
-        label="* Email Address"
+        label="* 電子郵件地址"
         placeholder="test@example.com"
         component={CustomInput}
       />
@@ -33,8 +33,8 @@ const EditForm = ({ isLoading, authProvider }) => {
         disabled={isLoading}
         name="address"
         type="text"
-        label="Address (Will be used for checkout)"
-        placeholder="#245 Brgy. Maligalig, Arayat Pampanga, Philippines"
+        label="地址（將用於結帳）"
+        placeholder="例：台北市信義區松高路 11 號"
         component={CustomInput}
         style={{ textTransform: 'capitalize' }}
       />
@@ -42,7 +42,7 @@ const EditForm = ({ isLoading, authProvider }) => {
         defaultValue={values.mobile}
         name="mobile"
         disabled={isLoading}
-        label="Mobile Number (Will be used for checkout)"
+        label="手機號碼（將用於結帳）"
       />
       <br />
       <div className="edit-user-action">
@@ -54,7 +54,7 @@ const EditForm = ({ isLoading, authProvider }) => {
         >
           <ArrowLeftOutlined />
           &nbsp;
-          Back to Profile
+          返回個人資料
         </button>
         <button
           className="button w-100-mobile"
@@ -63,8 +63,8 @@ const EditForm = ({ isLoading, authProvider }) => {
           type="button"
         >
           {isLoading ? <LoadingOutlined /> : <CheckOutlined />}
-                    &nbsp;
-          {isLoading ? 'Updating Profile' : 'Update Profile'}
+          &nbsp;
+          {isLoading ? '正在更新個人資料…' : '更新個人資料'}
         </button>
       </div>
     </div>

@@ -48,7 +48,7 @@ class Firebase {
           user
             .updatePassword(newPassword)
             .then(() => {
-              resolve("Password updated successfully!");
+              resolve("密碼已成功更新！");
             })
             .catch((error) => reject(error));
         })
@@ -73,7 +73,7 @@ class Firebase {
           user
             .updateEmail(newEmail)
             .then(() => {
-              resolve("Email Successfully updated");
+              resolve("電子郵件已成功更新");
             })
             .catch((error) => reject(error));
         })
@@ -89,7 +89,7 @@ class Firebase {
         if (user) {
           resolve(user);
         } else {
-          reject(new Error("Auth State Changed failed"));
+          reject(new Error("驗證狀態變更失敗"));
         }
       });
     });
@@ -126,12 +126,12 @@ class Firebase {
 
             resolve({ products, lastKey });
           } catch (e) {
-            reject(e?.message || ":( Failed to fetch products.");
+            reject(e?.message || ":( 取得商品失敗。");
           }
         } else {
           const timeout = setTimeout(() => {
             didTimeout = true;
-            reject(new Error("Request timeout, please try again"));
+            reject(new Error("請求逾時，請稍後再試"));
           }, 15000);
 
           try {
@@ -155,7 +155,7 @@ class Firebase {
             }
           } catch (e) {
             if (didTimeout) return;
-            reject(e?.message || ":( Failed to fetch products.");
+            reject(e?.message || ":( 取得商品失敗。");
           }
         }
       })();
@@ -171,7 +171,7 @@ class Firebase {
 
         const timeout = setTimeout(() => {
           didTimeout = true;
-          reject(new Error("Request timeout, please try again"));
+          reject(new Error("請求逾時，請稍後再試"));
         }, 15000);
 
         try {
