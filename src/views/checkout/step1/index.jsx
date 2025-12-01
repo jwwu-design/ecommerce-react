@@ -11,7 +11,7 @@ import { StepTracker } from '../components';
 import withCheckout from '../hoc/withCheckout';
 
 const OrderSummary = ({ basket, subtotal }) => {
-  useDocumentTitle('結帳步驟 1 | Ares');
+  useDocumentTitle('訂單摘要 | Ares');
   useScrollTop();
   const dispatch = useDispatch();
   const history = useHistory();

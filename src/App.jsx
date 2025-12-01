@@ -5,11 +5,14 @@ import React, { StrictMode } from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import AppRouter from '@/routers/AppRouter';
+import CartSync from '@/components/common/CartSync';
 
 const App = ({ store, persistor }) => (
   <StrictMode>
     <Provider store={store}>
       <PersistGate loading={<Preloader />} persistor={persistor}>
+        {/* CartSync handles loading and syncing basket with Firebase */}
+        <CartSync />
         <AppRouter />
       </PersistGate>
     </Provider>
@@ -18,7 +21,7 @@ const App = ({ store, persistor }) => (
 
 App.propTypes = {
   store: PropType.any.isRequired,
-  persistor: PropType.any.isRequired
+  persistor: PropType.any.isRequired,
 };
 
 export default App;

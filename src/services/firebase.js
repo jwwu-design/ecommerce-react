@@ -1,4 +1,4 @@
-import app from "firebase/app";
+﻿import app from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import "firebase/storage";
@@ -96,6 +96,30 @@ class Firebase {
 
   saveBasketItems = (items, userId) =>
     this.db.collection("users").doc(userId).update({ basket: items });
+
+  // UPDATE CART IN FIREBASE ------------
+  updateCartInFirebase = async (userId, basketItems) => {
+    try {
+      if (!userId) {
+        throw new Error("使用者 ID 不存在");
+      }
+
+      if (!Array.isArray(basketItems)) {
+        throw new Error("購物車資料格式錯誤");
+      }
+
+      // Use set with merge to create document if it doesn't exist
+      await this.db.collection("users").doc(userId).set(
+        { basket: basketItems },
+        { merge: true }
+      );
+
+      console.log(`✅ Firebase: Updated basket for user ${userId}, items count: ${basketItems.length}`);
+    } catch (error) {
+      console.error("❌ Firebase: updateCartInFirebase error:", error);
+      throw new Error(`更新購物車失敗: ${error.message}`);
+    }
+  };
 
   setAuthPersistence = () =>
     this.auth.setPersistence(app.auth.Auth.Persistence.LOCAL);
@@ -262,6 +286,113 @@ class Firebase {
     this.db.collection("products").doc(id).update(updates);
 
   removeProduct = (id) => this.db.collection("products").doc(id).delete();
+
+  // ORDER MANAGEMENT ACTIONS ------------
+  // 取得訂單列表（支援篩選與分頁）
+  getOrders = async (filters = {}, lastRefKey = null) => {
+    try {
+      let query = this.db.collection("orders").orderBy("createdAt", "desc");
+
+      // 套用篩選條件
+      if (filters.orderStatus) {
+        query = query.where("orderStatus", "==", filters.orderStatus);
+      }
+      if (filters.paymentStatus) {
+        query = query.where("paymentStatus", "==", filters.paymentStatus);
+      }
+      if (filters.shippingStatus) {
+        query = query.where("shippingStatus", "==", filters.shippingStatus);
+      }
+      if (filters.startDate) {
+        query = query.where("createdAt", ">=", filters.startDate);
+      }
+      if (filters.endDate) {
+        query = query.where("createdAt", "<=", filters.endDate);
+      }
+
+      // 分頁
+      if (lastRefKey) {
+        query = query.startAfter(lastRefKey);
+      }
+      query = query.limit(20);
+
+      const snapshot = await query.get();
+      const orders = [];
+      snapshot.forEach((doc) => {
+        orders.push({ id: doc.id, ...doc.data() });
+      });
+
+      const lastKey = snapshot.docs[snapshot.docs.length - 1];
+      return { orders, lastKey };
+    } catch (error) {
+      throw new Error("取得訂單列表失敗，請稍後再試。");
+    }
+  };
+
+  // 搜尋訂單（依訂單編號、顧客名稱、Email、手機）
+  searchOrders = async (searchTerm) => {
+    try {
+      const ordersRef = this.db.collection("orders");
+      const orders = [];
+
+      // 搜尋訂單編號
+      const orderIdQuery = await ordersRef
+        .where("orderId", ">=", searchTerm)
+        .where("orderId", "<=", `${searchTerm}\uf8ff`)
+        .limit(20)
+        .get();
+
+      orderIdQuery.forEach((doc) => {
+        orders.push({ id: doc.id, ...doc.data() });
+      });
+
+      // 搜尋顧客名稱
+      const nameQuery = await ordersRef
+        .where("customerInfo.fullname", ">=", searchTerm)
+        .where("customerInfo.fullname", "<=", `${searchTerm}\uf8ff`)
+        .limit(20)
+        .get();
+
+      nameQuery.forEach((doc) => {
+        const order = { id: doc.id, ...doc.data() };
+        if (!orders.find(o => o.id === order.id)) {
+          orders.push(order);
+        }
+      });
+
+      // 搜尋 Email
+      const emailQuery = await ordersRef
+        .where("customerInfo.email", ">=", searchTerm)
+        .where("customerInfo.email", "<=", `${searchTerm}\uf8ff`)
+        .limit(20)
+        .get();
+
+      emailQuery.forEach((doc) => {
+        const order = { id: doc.id, ...doc.data() };
+        if (!orders.find(o => o.id === order.id)) {
+          orders.push(order);
+        }
+      });
+
+      return orders;
+    } catch (error) {
+      throw new Error("搜尋訂單失敗，請稍後再試。");
+    }
+  };
+
+  // 取得單筆訂單詳情
+  getOrderById = async (orderId) => {
+    try {
+      const doc = await this.db.collection("orders").doc(orderId).get();
+      if (!doc.exists) {
+        throw new Error("訂單不存在");
+      }
+      return { id: doc.id, ...doc.data() };
+    } catch (error) {
+      throw new Error("取得訂單詳情失敗，請稍後再試。");
+    }
+  };
+
 }
 
 const firebaseInstance = new Firebase();

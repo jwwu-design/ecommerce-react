@@ -45,7 +45,7 @@ const CustomMobileInput = (props) => {
 };
 
 CustomMobileInput.defaultProps = {
-  label: 'Mobile Number',
+  label: '* 聯絡電話',
   placeholder: '09254461351'
 };
 

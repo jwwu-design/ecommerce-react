@@ -1,4 +1,4 @@
-import { ADMIN_PRODUCTS } from '@/constants/routes';
+import { ADMIN_PRODUCTS, ADMIN_ORDERS } from '@/constants/routes';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
@@ -11,7 +11,16 @@ const SideNavigation = () => (
           className="sidenavigation-menu"
           to={ADMIN_PRODUCTS}
         >
-        產品管理
+          產品管理
+        </NavLink>
+      </div>
+      <div className="sidenavigation-item">
+        <NavLink
+          activeClassName="sidenavigation-menu-active"
+          className="sidenavigation-menu"
+          to={ADMIN_ORDERS}
+        >
+          訂單管理
         </NavLink>
       </div>
       <div className="sidenavigation-item">
@@ -20,7 +29,7 @@ const SideNavigation = () => (
           className="sidenavigation-menu"
           to={ADMIN_PRODUCTS}
         >
-        訂單管理
+          用戶管理
         </NavLink>
       </div>
       <div className="sidenavigation-item">
@@ -29,7 +38,7 @@ const SideNavigation = () => (
           className="sidenavigation-menu"
           to={ADMIN_PRODUCTS}
         >
-        用戶管理
+          首頁圖片管理
         </NavLink>
       </div>
       <div className="sidenavigation-item">
@@ -38,16 +47,7 @@ const SideNavigation = () => (
           className="sidenavigation-menu"
           to={ADMIN_PRODUCTS}
         >
-        首頁圖片管理
-        </NavLink>
-      </div>
-      <div className="sidenavigation-item">
-        <NavLink
-          activeClassName="sidenavigation-menu-active"
-          className="sidenavigation-menu"
-          to={ADMIN_PRODUCTS}
-        >
-        報名表單管理
+          報名表單管理
         </NavLink>
       </div>
     </div>

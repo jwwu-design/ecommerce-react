@@ -43,7 +43,7 @@ const ShippingForm = () => {
             <CustomMobileInput name="mobile" defaultValue={values.mobile} />
           </div>
         </div>
-        <div className="checkout-fieldset">
+        {/* <div className="checkout-fieldset">
           <Field name="isInternational">
             {({ field, form, meta }) => (
               <div className="checkout-field">
@@ -79,7 +79,7 @@ const ShippingForm = () => {
               </div>
             )}
           </Field>
-        </div>
+        </div> */}
       </div>
     </div>
   );

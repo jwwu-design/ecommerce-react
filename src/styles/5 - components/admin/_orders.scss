@@ -1,0 +1,403 @@
+// 訂單管理頁面樣式
+
+.admin-orders {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.admin-orders-header {
+  margin-bottom: 2rem;
+
+  h2 {
+    margin: 0;
+    color: #333;
+  }
+}
+
+// 搜尋列
+.orders-search-section {
+  margin-bottom: 1.5rem;
+}
+
+.search-form {
+  display: flex;
+  gap: 1rem;
+  max-width: 600px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  font-size: 14px;
+
+  &:focus {
+    outline: none;
+    border-color: #1890ff;
+  }
+}
+
+// 篩選器
+.orders-filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: #fafafa;
+  border-radius: 4px;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  label {
+    font-size: 14px;
+    color: #666;
+    white-space: nowrap;
+  }
+}
+
+.filter-select {
+  padding: 0.5rem;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 120px;
+
+  &:focus {
+    outline: none;
+    border-color: #1890ff;
+  }
+}
+
+// 訂單表格
+.orders-table-container {
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    background: #fafafa;
+
+    th {
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: #333;
+      border-bottom: 2px solid #e8e8e8;
+      font-size: 14px;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid #f0f0f0;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: #fafafa;
+      }
+    }
+
+    td {
+      padding: 1rem;
+      font-size: 14px;
+      color: #666;
+    }
+  }
+}
+
+.order-id {
+  font-family: monospace;
+  font-weight: 500;
+  color: #1890ff;
+}
+
+.order-amount {
+  font-weight: 600;
+  color: #333;
+}
+
+// 狀態標籤
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+
+  &.status-processing {
+    background: #e6f7ff;
+    color: #1890ff;
+  }
+
+  &.status-confirmed {
+    background: #f6ffed;
+    color: #52c41a;
+  }
+
+  &.status-shipped {
+    background: #fff7e6;
+    color: #fa8c16;
+  }
+
+  &.status-delivered {
+    background: #f6ffed;
+    color: #52c41a;
+  }
+
+  &.status-cancelled {
+    background: #fff1f0;
+    color: #ff4d4f;
+  }
+
+  &.status-pending {
+    background: #fff7e6;
+    color: #fa8c16;
+  }
+
+  &.status-paid {
+    background: #f6ffed;
+    color: #52c41a;
+  }
+
+  &.status-failed {
+    background: #fff1f0;
+    color: #ff4d4f;
+  }
+
+  &.status-preparing {
+    background: #e6f7ff;
+    color: #1890ff;
+  }
+}
+
+// 載入更多
+.load-more-section {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+// 空狀態
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #999;
+}
+
+// 訂單詳情頁面
+.order-detail {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.order-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  h2 {
+    margin: 0;
+    color: #333;
+  }
+}
+
+.order-detail-section {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+
+  h3 {
+    margin: 0 0 1rem 0;
+    color: #333;
+    font-size: 16px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 0.5rem;
+  }
+}
+
+.order-info-grid,
+.customer-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #999;
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 14px;
+  color: #333;
+}
+
+// 商品表格
+.order-items-table-container {
+  overflow-x: auto;
+}
+
+.order-items-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    background: #fafafa;
+
+    th {
+      padding: 0.75rem;
+      text-align: left;
+      font-weight: 600;
+      color: #333;
+      border-bottom: 2px solid #e8e8e8;
+      font-size: 14px;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    td {
+      padding: 0.75rem;
+      font-size: 14px;
+      color: #666;
+
+      &.empty-cell {
+        text-align: center;
+        color: #999;
+        padding: 2rem;
+      }
+    }
+  }
+}
+
+// 金額明細
+.order-amount-summary {
+  max-width: 400px;
+  margin-left: auto;
+}
+
+.amount-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  font-size: 14px;
+
+  &.amount-total {
+    border-top: 2px solid #e8e8e8;
+    margin-top: 0.5rem;
+    padding-top: 1rem;
+    font-size: 16px;
+    font-weight: 600;
+
+    .amount-value {
+      color: #ff4d4f;
+      font-size: 18px;
+    }
+  }
+}
+
+.amount-label {
+  color: #666;
+}
+
+.amount-value {
+  color: #333;
+  font-weight: 500;
+}
+
+// 預留區塊
+.placeholder-section {
+  padding: 2rem;
+  background: #fafafa;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.placeholder-text {
+  color: #999;
+  font-size: 14px;
+  margin: 0;
+}
+
+.payment-info,
+.invoice-info {
+  margin-top: 1rem;
+  text-align: left;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 4px;
+
+  pre {
+    margin: 0;
+    font-size: 12px;
+    color: #666;
+  }
+}
+
+// 錯誤狀態
+.order-detail-error {
+  text-align: center;
+  padding: 3rem;
+
+  p {
+    color: #ff4d4f;
+    margin-bottom: 1rem;
+  }
+}
+
+// 響應式設計
+@media (max-width: 768px) {
+  .admin-orders,
+  .order-detail {
+    padding: 1rem;
+  }
+
+  .orders-filters {
+    flex-direction: column;
+  }
+
+  .search-form {
+    flex-direction: column;
+  }
+
+  .orders-table,
+  .order-items-table {
+    font-size: 12px;
+
+    th,
+    td {
+      padding: 0.5rem;
+    }
+  }
+
+  .order-info-grid,
+  .customer-info-grid {
+    grid-template-columns: 1fr;
+  }
+}

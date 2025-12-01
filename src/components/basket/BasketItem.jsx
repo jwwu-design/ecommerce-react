@@ -35,11 +35,10 @@ const BasketItem = ({ product }) => {
               <h5 className="my-0">{product.quantity}</h5>
             </div>
             <div>
-              <span className="spec-title">尺寸</span>
+              <span className="spec-title">日期</span>
               <h5 className="my-0">
                 {product.selectedSize}
                 {' '}
-                mm
               </h5>
             </div>
             {/* <div>
@@ -81,8 +80,8 @@ BasketItem.propTypes = {
     keywords: PropType.arrayOf(PropType.string),
     selectedSize: PropType.string,
     selectedColor: PropType.string,
-    imageCollection: PropType.arrayOf(PropType.string),
-    sizes: PropType.arrayOf(PropType.number),
+    imageCollection: PropType.arrayOf(PropType.object),
+    sizes: PropType.arrayOf(PropType.oneOfType([PropType.number, PropType.string])),
     image: PropType.string,
     imageUrl: PropType.string,
     isFeatured: PropType.bool,

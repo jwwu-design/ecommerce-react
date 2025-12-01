@@ -39,7 +39,7 @@ const FormSchema = Yup.object().shape({
 });
 
 const ShippingDetails = ({ profile, shipping, subtotal }) => {
-  useDocumentTitle('結帳步驟 2 | Ares');
+  useDocumentTitle('配送資訊 | Ares');
   useScrollTop();
   const dispatch = useDispatch();
   const history = useHistory();

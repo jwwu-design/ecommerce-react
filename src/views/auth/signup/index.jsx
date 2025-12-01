@@ -21,7 +21,7 @@ const SignUpSchema = Yup.object().shape({
     .matches(/[A-Z\W]/g, '密碼需至少包含 1 個大寫字母或特殊字元。'),
   fullname: Yup.string()
     .required('請輸入全名。')
-    .min(4, '姓名至少需 4 個字元。')
+    .min(2, '姓名至少需 2 個字元。')
 });
 
 const SignUp = ({ history }) => {

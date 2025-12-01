@@ -42,7 +42,7 @@ const FormSchema = Yup.object().shape({
     .min(1, '請至少輸入 1 個關鍵字。'),
   sizes: Yup.array()
     .of(Yup.number())
-    .min(1, '請輸入產品尺寸。'),
+    .min(1, '請輸入產品日期。'),
   isFeatured: Yup.boolean(),
   isRecommended: Yup.boolean()
   // availableColors: Yup.array()
@@ -173,14 +173,14 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                 &nbsp;
                 <div className="product-form-field">
                   <CustomCreatableSelect
-                    defaultValue={values.keywords.map((key) => ({ value: key, label: key }))}
+                    defaultValue={values.sizes.map((key) => ({ value: key, label: key }))}
                     name="sizes"
                     iid="sizes"
                     type="number"
                     isMulti
                     disabled={isLoading}
-                    placeholder="建立或選擇尺寸"
-                    label="* 尺寸（毫米）"
+                    placeholder="建立或選擇日期"
+                    label="* 日期"
                   />
                 </div>
               </div>

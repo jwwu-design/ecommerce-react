@@ -1,0 +1,106 @@
+.registration-form-upload {
+  padding: 2rem;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.registration-form-section {
+  margin-bottom: 2rem;
+}
+
+.registration-form-section h3 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.file-upload-area {
+  margin-top: 1rem;
+}
+
+.file-upload-label {
+  display: block;
+  padding: 3rem 2rem;
+  border: 2px dashed #d9d9d9;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #fafafa;
+}
+
+.file-upload-label:hover {
+  border-color: #1890ff;
+  background: #f0f8ff;
+}
+
+.upload-placeholder {
+  color: #999;
+}
+
+.upload-placeholder p {
+  margin-top: 0.5rem;
+  font-size: 14px;
+}
+
+.selected-file {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.selected-file span:first-child {
+  font-weight: 500;
+  color: #333;
+}
+
+.file-size {
+  font-size: 12px;
+  color: #999;
+}
+
+.upload-progress {
+  text-align: center;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1890ff, #40a9ff);
+  transition: width 0.3s ease;
+}
+
+.upload-success {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .registration-form-upload {
+    padding: 1rem;
+  }
+
+  .file-upload-label {
+    padding: 2rem 1rem;
+  }
+}

@@ -108,13 +108,13 @@ const ViewProduct = () => {
               <div className="divider" />
               <br />
               <div>
-                <span className="text-subtle">鏡片寬度與鏡框尺寸</span>
+                <span className="text-subtle">課程日期</span>
                 <br />
                 <br />
                 <Select
-                  placeholder="--選擇尺寸--"
+                  placeholder="--選擇日期--"
                   onChange={onSelectedSizeChange}
-                  options={product.sizes.sort((a, b) => (a < b ? -1 : 1)).map((size) => ({ label: `${size} mm`, value: size }))}
+                  options={product.sizes.sort((a, b) => (a < b ? -1 : 1)).map((size) => ({ label: `${size} `, value: size }))}
                   styles={{ menu: (provided) => ({ ...provided, zIndex: 10 }) }}
                 />
               </div>

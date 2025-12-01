@@ -25,13 +25,21 @@ const StepTracker = ({ current }) => {
             <div className="checkout-header-icon">
               <h4 className="checkout-header-step">2</h4>
             </div>
-            <h6 className="checkout-header-subtitle">配送資訊</h6>
+            <h6 className="checkout-header-subtitle">顧客資訊</h6>
           </div>
         </li>
         <li className={`checkout-header-list ${className(3)}`}>
           <div className="checkout-header-item">
             <div className="checkout-header-icon">
               <h4 className="checkout-header-step">3</h4>
+            </div>
+            <h6 className="checkout-header-subtitle">報名表單</h6>
+          </div>
+        </li>
+        <li className={`checkout-header-list ${className(4)}`}>
+          <div className="checkout-header-item">
+            <div className="checkout-header-icon">
+              <h4 className="checkout-header-step">4</h4>
             </div>
             <h6 className="checkout-header-subtitle">付款</h6>
           </div>

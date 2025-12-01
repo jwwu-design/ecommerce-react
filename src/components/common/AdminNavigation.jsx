@@ -19,11 +19,13 @@ const AdminNavigation = () => {
       <div className="logo">
         <Link to={ADMIN_DASHBOARD} style={{ display: 'flex', alignItems: 'center' }}>
           <img alt="Logo" src={logo} />
-          <li>管理員面板</li>
-          <li><NavLink activeClassName="navigation-menu-active" to={ROUTE.HOME}>網站前臺</NavLink></li>
+          <span>管理員面板</span>
         </Link>
       </div>
       <ul className="navigation-menu">
+        <li className="navigation-menu-item">
+          <NavLink activeClassName="navigation-menu-active" to={ROUTE.HOME}>網站前臺</NavLink>
+        </li>
         <li className="navigation-menu-item">
           <UserAvatar
             isAuthenticating={isAuthenticating}

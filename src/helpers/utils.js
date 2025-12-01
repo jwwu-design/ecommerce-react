@@ -18,7 +18,9 @@ export const displayDate = (timestamp) => {
 export const displayMoney = (n) => {
   const format = new Intl.NumberFormat('zh-TW', {
     style: 'currency',
-    currency: 'NTD'
+    currency: 'TWD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
   });
 
   // or use toLocaleString()

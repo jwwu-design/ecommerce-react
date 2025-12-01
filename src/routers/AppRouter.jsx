@@ -83,6 +83,14 @@ const AppRouter = () => (
           component={view.CheckOutStep3}
           path={ROUTES.CHECKOUT_STEP_3}
         />
+        <ClientRoute
+          component={view.CheckOutStep4}
+          path={ROUTES.CHECKOUT_STEP_4}
+        />
+        <ClientRoute
+          component={view.OrderConfirmation}
+          path="/checkout/confirmation/:orderId"
+        />
         <AdminRoute
           component={view.Dashboard}
           exact
@@ -99,6 +107,15 @@ const AppRouter = () => (
         <AdminRoute
           component={view.EditProduct}
           path={`${ROUTES.EDIT_PRODUCT}/:id`}
+        />
+        <AdminRoute
+          component={view.OrderList}
+          exact
+          path={ROUTES.ADMIN_ORDERS}
+        />
+        <AdminRoute
+          component={view.OrderDetail}
+          path={ROUTES.ADMIN_ORDER_DETAIL}
         />
         <PublicRoute component={view.PageNotFound} />
       </Switch>

@@ -31,20 +31,20 @@ const Home = () => {
     <main className="content">
       <div className="home">
         <div className="banner">
-          {/* <div className="banner-desc">
+          <div className="banner-desc">
             <h1 className="text-thin">
-              <strong>看見一切的清晰度</strong>
+              <strong>建立您的<br />稽核資格</strong>
             </h1>
             <p>
-              購買眼鏡讓你既開心又時尚，還能省錢。
-              眼鏡、太陽眼鏡與隱形眼鏡，我們都替你的雙眼照顧周全。
+              提供販賣驗證與培訓課程，幫助您建立專業的稽核資格。
+              無論是入門還是進階課程，我們都能為您的職業生涯加分。
             </p>
             <br />
             <Link to={SHOP} className="button">
-              立即購買 &nbsp;
+              立即報名 &nbsp;
               <ArrowRightOutlined />
             </Link>
-          </div> */}
+          </div>
           <div className="banner-img"><img src={bannerImg} alt="橫幅" /></div>
         </div>
         <div className="display">

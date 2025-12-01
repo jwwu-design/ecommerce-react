@@ -1,21 +1,36 @@
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import PropType from 'prop-types';
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addQtyItem, minusQtyItem } from '@/redux/actions/basketActions';
+import firebaseInstance from '@/services/firebase';
 
 const BasketItemControl = ({ product }) => {
   const dispatch = useDispatch();
+  const userId = useSelector(state => state.auth?.uid);
+  const basket = useSelector(state => state.basket?.items || []);
+
+  const syncCart = async () => {
+    if (userId) {
+      try {
+        await firebaseInstance.updateCartInFirebase(userId, basket);
+      } catch (e) {
+        console.error('Failed to sync cart to Firebase', e);
+      }
+    }
+  };
 
   const onAddQty = () => {
     if (product.quantity < product.maxQuantity) {
       dispatch(addQtyItem(product.id));
+      syncCart();
     }
   };
 
   const onMinusQty = () => {
-    if ((product.maxQuantity >= product.quantity) && product.quantity !== 0) {
+    if (product.maxQuantity >= product.quantity && product.quantity !== 0) {
       dispatch(minusQtyItem(product.id));
+      syncCart();
     }
   };
 
@@ -53,14 +68,13 @@ BasketItemControl.propTypes = {
     keywords: PropType.arrayOf(PropType.string),
     selectedSize: PropType.string,
     selectedColor: PropType.string,
-    imageCollection: PropType.arrayOf(PropType.string),
-    sizes: PropType.arrayOf(PropType.number),
+    imageCollection: PropType.arrayOf(PropType.object),
+    sizes: PropType.arrayOf(PropType.oneOfType([PropType.number, PropType.string])),
     image: PropType.string,
     imageUrl: PropType.string,
     isFeatured: PropType.bool,
-    isRecommended: PropType.bool
-    // availableColors: PropType.arrayOf(PropType.string)
-  }).isRequired
+    isRecommended: PropType.bool,
+  }).isRequired,
 };
 
 export default BasketItemControl;
