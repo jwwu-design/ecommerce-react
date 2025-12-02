@@ -42,6 +42,23 @@ const UserOrdersTab = () => {
 
   const getStatusBadge = (status) => {
     const statusConfig = {
+      // 審核狀態（優先）
+      approved: {
+        icon: <CheckCircleOutlined />,
+        text: '審核通過',
+        className: 'status-approved'
+      },
+      rejected: {
+        icon: <CloseCircleOutlined />,
+        text: '審核未通過',
+        className: 'status-rejected'
+      },
+      pending: {
+        icon: <ClockCircleOutlined />,
+        text: '等待審核',
+        className: 'status-pending'
+      },
+      // 舊的狀態值（向後兼容）
       processing: {
         icon: <ClockCircleOutlined />,
         text: '處理中',
@@ -67,21 +84,10 @@ const UserOrdersTab = () => {
         text: '已取消',
         className: 'status-rejected'
       },
-      // 舊的狀態值（向後兼容）
       pending_review: {
         icon: <ClockCircleOutlined />,
         text: '等待審核',
         className: 'status-pending'
-      },
-      approved: {
-        icon: <CheckCircleOutlined />,
-        text: '已審核',
-        className: 'status-approved'
-      },
-      rejected: {
-        icon: <CloseCircleOutlined />,
-        text: '已拒絕',
-        className: 'status-rejected'
       },
       paid: {
         icon: <DollarOutlined />,
@@ -95,7 +101,7 @@ const UserOrdersTab = () => {
       }
     };
 
-    const config = statusConfig[status] || statusConfig.processing;
+    const config = statusConfig[status] || statusConfig.pending;
 
     return (
       <span className={`order-status-badge ${config.className}`}>
@@ -146,7 +152,7 @@ const UserOrdersTab = () => {
                 </p>
               </div>
               <div className="order-status">
-                {getStatusBadge(order.orderStatus || order.status || 'pending_review')}
+                {getStatusBadge(order.reviewStatus || 'pending_review')}
               </div>
             </div>
 

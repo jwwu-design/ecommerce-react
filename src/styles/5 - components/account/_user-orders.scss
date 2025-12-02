@@ -95,21 +95,23 @@
   white-space: nowrap;
 
   &.status-pending {
-    background: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffeaa7;
+    background: #fff7e6;
+    color: #fa8c16;
+    border: 2px solid #ffd591;
   }
 
   &.status-approved {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+    color: white;
+    box-shadow: 0 2px 4px rgba(82, 196, 26, 0.3);
+    border: none;
   }
 
   &.status-rejected {
-    background: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    background: linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%);
+    color: white;
+    box-shadow: 0 2px 4px rgba(255, 77, 79, 0.3);
+    border: none;
   }
 
   &.status-paid {

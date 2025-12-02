@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { CheckCircleOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { useDocumentTitle, useScrollTop } from '@/hooks';
 import firebase from '@/services/firebase';
 import { displayMoney } from '@/helpers/utils';
@@ -108,15 +108,39 @@ const OrderConfirmation = () => {
           <div className="divider" />
 
           <div className="order-status-section">
-            <h3>訂單狀態</h3>
-            <div className="status-badge pending">
-              <ClockCircleOutlined />
-              &nbsp;
-              等待審核
-            </div>
+            <h3>報名表單狀態</h3>
+            {order.reviewStatus === 'approved' ? (
+              <div className="status-badge approved">
+                <CheckCircleOutlined />
+                &nbsp;
+                審核通過
+              </div>
+            ) : order.reviewStatus === 'rejected' ? (
+              <div className="status-badge rejected">
+                <CloseCircleOutlined />
+                &nbsp;
+                審核未通過
+              </div>
+            ) : (
+              <div className="status-badge pending">
+                <ClockCircleOutlined />
+                &nbsp;
+                等待審核
+              </div>
+            )}
             <p className="text-subtle" style={{ marginTop: '0.5rem' }}>
               訂單建立時間: {new Date(order.createdAt).toLocaleString('zh-TW')}
             </p>
+            {order.reviewedAt && (
+              <p className="text-subtle">
+                審核時間: {new Date(order.reviewedAt).toLocaleString('zh-TW')}
+              </p>
+            )}
+            {order.reviewNote && (
+              <p className="review-note" style={{ marginTop: '0.5rem', color: '#ff4d4f' }}>
+                備註：{order.reviewNote}
+              </p>
+            )}
           </div>
 
           <div className="divider" />

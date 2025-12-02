@@ -301,15 +301,21 @@ class Firebase {
   };
 
   // 上傳使用者填寫的報名表單
-  uploadRegistrationForm = async (userId, userName, file) => {
+  uploadRegistrationForm = async (userId, userName, file, orderId = null) => {
     try {
       const timestamp = new Date().getTime();
       const fileName = `${timestamp}.docx`;
-      // 使用 userName-userId 格式，方便識別
-      // 清理使用者名稱中的特殊字元
-      const sanitizedUserName = userName.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_');
-      const folderName = `${sanitizedUserName}-${userId}`;
-      const fileRef = this.storage.ref(`registration-forms/submissions/${folderName}/${fileName}`);
+
+      // 使用 orderId 作為路徑（如果有提供）
+      let fileRef;
+      if (orderId) {
+        fileRef = this.storage.ref(`registration-forms/orders/${orderId}/${fileName}`);
+      } else {
+        // 向後兼容：沒有 orderId 時使用舊路徑
+        const sanitizedUserName = userName.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_');
+        const folderName = `${sanitizedUserName}-${userId}`;
+        fileRef = this.storage.ref(`registration-forms/submissions/${folderName}/${fileName}`);
+      }
 
       const snapshot = await fileRef.put(file);
       const downloadURL = await snapshot.ref.getDownloadURL();
@@ -319,7 +325,8 @@ class Firebase {
         fileName,
         timestamp,
         originalFileName: file.name,
-        fileSize: file.size
+        fileSize: file.size,
+        uploadedAt: timestamp
       };
     } catch (error) {
       throw new Error("上傳報名表單失敗，請稍後再試。");
@@ -506,6 +513,40 @@ class Firebase {
     } catch (error) {
       console.error("❌ Failed to create order:", error);
       throw new Error("建立訂單失敗，請稍後再試。");
+    }
+  };
+
+  // 更新訂單審核狀態
+  updateOrderStatus = async (orderId, status, reviewNote = '') => {
+    try {
+      const updateData = {
+        reviewStatus: status, // 'approved', 'rejected', 'pending'
+        reviewedAt: new Date().getTime(),
+        reviewNote: reviewNote,
+        updatedAt: new Date().getTime()
+      };
+
+      await this.db.collection("orders").doc(orderId).update(updateData);
+      console.log(`✅ Updated order ${orderId} status to ${status}`);
+
+      return updateData;
+    } catch (error) {
+      console.error("❌ Failed to update order status:", error);
+      throw new Error("更新訂單狀態失敗，請稍後再試。");
+    }
+  };
+
+  // 更新訂單的報名表單資訊
+  updateOrderRegistrationForm = async (orderId, formData) => {
+    try {
+      await this.db.collection("orders").doc(orderId).update({
+        registrationForm: formData,
+        updatedAt: new Date().getTime()
+      });
+      console.log(`✅ Updated registration form for order ${orderId}`);
+    } catch (error) {
+      console.error("❌ Failed to update registration form:", error);
+      throw new Error("更新報名表單資訊失敗，請稍後再試。");
     }
   };
 

@@ -11,6 +11,7 @@ const OrderDetail = () => {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     fetchOrderDetail();
@@ -26,6 +27,48 @@ const OrderDetail = () => {
       console.error('Failed to fetch order detail:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleApprove = async () => {
+    if (updating) return;
+
+    const confirmApprove = window.confirm('確定要通過此報名表單審核嗎？');
+    if (!confirmApprove) return;
+
+    try {
+      setUpdating(true);
+      await firebaseInstance.updateOrderStatus(id, 'approved');
+
+      // 重新載入訂單資料
+      await fetchOrderDetail();
+      alert('審核通過！');
+    } catch (error) {
+      console.error('Failed to approve:', error);
+      alert('審核失敗：' + error.message);
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const handleReject = async () => {
+    if (updating) return;
+
+    const reason = window.prompt('請輸入拒絕原因（選填）：');
+    if (reason === null) return; // 使用者取消
+
+    try {
+      setUpdating(true);
+      await firebaseInstance.updateOrderStatus(id, 'rejected', reason);
+
+      // 重新載入訂單資料
+      await fetchOrderDetail();
+      alert('已拒絕此報名表單');
+    } catch (error) {
+      console.error('Failed to reject:', error);
+      alert('操作失敗：' + error.message);
+    } finally {
+      setUpdating(false);
     }
   };
 
@@ -138,7 +181,7 @@ const OrderDetail = () => {
             <thead>
               <tr>
                 <th>商品名稱</th>
-                <th>規格</th>
+                <th>日期</th>
                 <th>數量</th>
                 <th>單價</th>
                 <th>小計</th>
@@ -180,6 +223,103 @@ const OrderDetail = () => {
             <span className="amount-value">{displayMoney(order.totalAmount || 0)}</span>
           </div>
         </div>
+      </div>
+
+      {/* 報名表單審核 */}
+      <div className="order-detail-section">
+        <h3>報名表單審核</h3>
+        {order.registrationForm ? (
+          <div className="registration-form-review">
+            <div className="form-info-grid">
+              <div className="info-item">
+                <span className="info-label">檔案名稱：</span>
+                <span className="info-value">{order.registrationForm.originalFileName || '報名表單.docx'}</span>
+              </div>
+              <div className="info-item">
+                <span className="info-label">上傳時間：</span>
+                <span className="info-value">
+                  {order.registrationForm.uploadedAt
+                    ? new Date(order.registrationForm.uploadedAt).toLocaleString('zh-TW')
+                    : '-'}
+                </span>
+              </div>
+              <div className="info-item">
+                <span className="info-label">檔案大小：</span>
+                <span className="info-value">
+                  {order.registrationForm.fileSize
+                    ? `${(order.registrationForm.fileSize / 1024).toFixed(2)} KB`
+                    : '-'}
+                </span>
+              </div>
+              <div className="info-item">
+                <span className="info-label">審核狀態：</span>
+                <span className="info-value">
+                  {order.reviewStatus === 'approved' && (
+                    <span className="status-badge status-approved">✓ 已通過</span>
+                  )}
+                  {order.reviewStatus === 'rejected' && (
+                    <span className="status-badge status-rejected">✗ 已拒絕</span>
+                  )}
+                  {(!order.reviewStatus || order.reviewStatus === 'pending') && (
+                    <span className="status-badge status-pending">⏳ 待審核</span>
+                  )}
+                </span>
+              </div>
+            </div>
+
+            {order.reviewedAt && (
+              <div className="review-info">
+                <p className="text-subtle">
+                  審核時間：{new Date(order.reviewedAt).toLocaleString('zh-TW')}
+                </p>
+                {order.reviewNote && (
+                  <p className="review-note">備註：{order.reviewNote}</p>
+                )}
+              </div>
+            )}
+
+            <div className="form-actions">
+              <a
+                href={order.registrationForm.fileURL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="button button-small"
+              >
+                📥 下載表單
+              </a>
+
+              <a
+                href={`https://docs.google.com/viewer?url=${encodeURIComponent(order.registrationForm.fileURL)}&embedded=true`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="button button-small button-muted"
+              >
+                👁️ 線上預覽
+              </a>
+
+              {(!order.reviewStatus || order.reviewStatus === 'pending') && (
+                <>
+                  <button
+                    onClick={() => handleApprove()}
+                    className="button button-small"
+                    style={{ background: '#52c41a', borderColor: '#52c41a' }}
+                  >
+                    ✓ 通過審核
+                  </button>
+                  <button
+                    onClick={() => handleReject()}
+                    className="button button-small"
+                    style={{ background: '#ff4d4f', borderColor: '#ff4d4f' }}
+                  >
+                    ✗ 拒絕
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        ) : (
+          <p className="text-subtle">此訂單無報名表單</p>
+        )}
       </div>
 
       {/* 支付資訊（預留） */}
