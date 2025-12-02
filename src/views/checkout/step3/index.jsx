@@ -58,19 +58,26 @@ const RegistrationForm = ({ shipping, subtotal, basket, profile }) => {
 
       const { orderId } = await firebase.createOrder(orderData);
 
-      // 清空購物車 (Redux)
-      dispatch(clearBasket());
-
-      // 清空 Firebase 購物車
-      await firebase.updateCartInFirebase(uid, []);
-
       displayActionMessage('訂單建立成功！', 'success');
 
-      // 導向感謝頁面
-      history.push(`/checkout/confirmation/${orderId}`);
+      // 先導向確認頁面
+      history.replace(`/checkout/confirmation/${orderId}`);
+
+      // 延遲清空購物車，避免影響導航
+      setTimeout(async () => {
+        try {
+          // 清空購物車 (Redux)
+          dispatch(clearBasket());
+
+          // 清空 Firebase 購物車
+          await firebase.updateCartInFirebase(uid, []);
+        } catch (error) {
+          console.error('Failed to clear basket:', error);
+        }
+      }, 100);
+
     } catch (error) {
       displayActionMessage(error.message || '建立訂單失敗', 'error');
-    } finally {
       setCreatingOrder(false);
     }
   };

@@ -75,6 +75,10 @@
 
 // -- Checkout components
 @import './5 - components/checkout/checkout';
+@import './5 - components/checkout/order-confirmation';
+
+// -- Account components
+@import './5 - components/account/user-orders';
 
 // -- 404
 @import './5 - components/404/page-not-found';

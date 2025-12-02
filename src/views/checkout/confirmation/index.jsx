@@ -15,10 +15,8 @@ const OrderConfirmation = () => {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const doc = await firebase.getOrder(orderId);
-        if (doc.exists) {
-          setOrder(doc.data());
-        }
+        const orderData = await firebase.getOrderById(orderId);
+        setOrder(orderData);
       } catch (error) {
         console.error('Failed to fetch order:', error);
       } finally {
@@ -102,7 +100,7 @@ const OrderConfirmation = () => {
               )}
               <div className="order-total-row total">
                 <span><strong>總計</strong></span>
-                <span><strong>{displayMoney(order.total)}</strong></span>
+                <span><strong>{displayMoney(order.totalAmount || order.total)}</strong></span>
               </div>
             </div>
           </div>

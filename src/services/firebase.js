@@ -287,6 +287,61 @@ class Firebase {
 
   removeProduct = (id) => this.db.collection("products").doc(id).delete();
 
+  // REGISTRATION FORM ACTIONS ------------
+
+  // 取得報名表單範本的下載連結
+  getRegistrationFormTemplate = async () => {
+    try {
+      const templateRef = this.storage.ref("registration-forms/template.docx");
+      const downloadURL = await templateRef.getDownloadURL();
+      return downloadURL;
+    } catch (error) {
+      throw new Error("無法取得報名表單範本，請稍後再試。");
+    }
+  };
+
+  // 上傳使用者填寫的報名表單
+  uploadRegistrationForm = async (userId, userName, file) => {
+    try {
+      const timestamp = new Date().getTime();
+      const fileName = `${timestamp}.docx`;
+      // 使用 userName-userId 格式，方便識別
+      // 清理使用者名稱中的特殊字元
+      const sanitizedUserName = userName.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_');
+      const folderName = `${sanitizedUserName}-${userId}`;
+      const fileRef = this.storage.ref(`registration-forms/submissions/${folderName}/${fileName}`);
+
+      const snapshot = await fileRef.put(file);
+      const downloadURL = await snapshot.ref.getDownloadURL();
+
+      return {
+        downloadURL,
+        fileName,
+        timestamp,
+        originalFileName: file.name,
+        fileSize: file.size
+      };
+    } catch (error) {
+      throw new Error("上傳報名表單失敗，請稍後再試。");
+    }
+  };
+
+  // 儲存報名表單上傳記錄到 Firestore
+  saveRegistrationRecord = async (userId, formData) => {
+    try {
+      const recordId = this.db.collection("registrations").doc().id;
+      await this.db.collection("registrations").doc(recordId).set({
+        userId,
+        ...formData,
+        uploadedAt: new Date().getTime(),
+        status: "submitted"
+      });
+      return recordId;
+    } catch (error) {
+      throw new Error("儲存報名記錄失敗，請稍後再試。");
+    }
+  };
+
   // ORDER MANAGEMENT ACTIONS ------------
   // 取得訂單列表（支援篩選與分頁）
   getOrders = async (filters = {}, lastRefKey = null) => {
@@ -390,6 +445,61 @@ class Firebase {
       return { id: doc.id, ...doc.data() };
     } catch (error) {
       throw new Error("取得訂單詳情失敗，請稍後再試。");
+    }
+  };
+
+  // 取得使用者的所有訂單
+  getUserOrders = async (userId) => {
+    try {
+      const snapshot = await this.db
+        .collection("orders")
+        .where("userId", "==", userId)
+        .orderBy("createdAt", "desc")
+        .get();
+
+      return snapshot;
+    } catch (error) {
+      console.error("❌ Failed to get user orders:", error);
+      throw new Error("取得使用者訂單失敗，請稍後再試。");
+    }
+  };
+
+  // 建立訂單
+  createOrder = async (orderData) => {
+    try {
+      const timestamp = new Date().getTime();
+      const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
+      const orderId = `ORDER_${dateStr}_${randomStr}`;
+
+      const order = {
+        orderId,
+        userId: orderData.userId,
+        customerInfo: {
+          fullname: orderData.shipping?.fullname || orderData.userName,
+          email: orderData.shipping?.email || orderData.userEmail,
+          mobile: orderData.shipping?.mobile || '',
+          address: orderData.shipping?.address || {}
+        },
+        items: orderData.items || [],
+        totalAmount: orderData.total || 0,
+        subtotal: orderData.subtotal || 0,
+        shippingFee: orderData.shippingFee || 0,
+        orderStatus: 'processing',
+        paymentStatus: 'pending',
+        shippingStatus: 'pending',
+        createdAt: timestamp,
+        updatedAt: timestamp,
+        registrationForm: orderData.registrationForm || null
+      };
+
+      await this.db.collection("orders").doc(orderId).set(order);
+      console.log(`✅ Created order: ${orderId}`);
+
+      return { orderId, order };
+    } catch (error) {
+      console.error("❌ Failed to create order:", error);
+      throw new Error("建立訂單失敗，請稍後再試。");
     }
   };
 

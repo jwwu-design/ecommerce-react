@@ -42,6 +42,32 @@ const UserOrdersTab = () => {
 
   const getStatusBadge = (status) => {
     const statusConfig = {
+      processing: {
+        icon: <ClockCircleOutlined />,
+        text: '處理中',
+        className: 'status-pending'
+      },
+      confirmed: {
+        icon: <CheckCircleOutlined />,
+        text: '已確認',
+        className: 'status-approved'
+      },
+      shipped: {
+        icon: <CheckCircleOutlined />,
+        text: '已出貨',
+        className: 'status-approved'
+      },
+      delivered: {
+        icon: <CheckCircleOutlined />,
+        text: '已送達',
+        className: 'status-completed'
+      },
+      cancelled: {
+        icon: <CloseCircleOutlined />,
+        text: '已取消',
+        className: 'status-rejected'
+      },
+      // 舊的狀態值（向後兼容）
       pending_review: {
         icon: <ClockCircleOutlined />,
         text: '等待審核',
@@ -69,7 +95,7 @@ const UserOrdersTab = () => {
       }
     };
 
-    const config = statusConfig[status] || statusConfig.pending_review;
+    const config = statusConfig[status] || statusConfig.processing;
 
     return (
       <span className={`order-status-badge ${config.className}`}>
@@ -120,7 +146,7 @@ const UserOrdersTab = () => {
                 </p>
               </div>
               <div className="order-status">
-                {getStatusBadge(order.status)}
+                {getStatusBadge(order.orderStatus || order.status || 'pending_review')}
               </div>
             </div>
 
@@ -136,7 +162,7 @@ const UserOrdersTab = () => {
 
               <div className="order-total">
                 <span>總計:</span>
-                <strong>{displayMoney(order.total)}</strong>
+                <strong>{displayMoney(order.totalAmount || order.total)}</strong>
               </div>
             </div>
 
