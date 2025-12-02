@@ -111,7 +111,13 @@ const OrderDetail = () => {
           </div>
           <div className="info-item">
             <span className="info-label">手機：</span>
-            <span className="info-value">{order.customerInfo?.mobile || '-'}</span>
+            <span className="info-value">
+              {order.customerInfo?.mobile
+                ? (typeof order.customerInfo.mobile === 'object'
+                  ? order.customerInfo.mobile.value || order.customerInfo.mobile.dialCode + order.customerInfo.mobile.value || '-'
+                  : order.customerInfo.mobile)
+                : '-'}
+            </span>
           </div>
           <div className="info-item">
             <span className="info-label">地址：</span>

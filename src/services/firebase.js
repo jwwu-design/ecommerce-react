@@ -472,13 +472,19 @@ class Firebase {
       const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
       const orderId = `ORDER_${dateStr}_${randomStr}`;
 
+      // Normalize mobile field
+      const mobile = orderData.shipping?.mobile;
+      const mobileValue = typeof mobile === 'object'
+        ? (mobile.value || `${mobile.dialCode || ''}${mobile.value || ''}`)
+        : mobile || '';
+
       const order = {
         orderId,
         userId: orderData.userId,
         customerInfo: {
           fullname: orderData.shipping?.fullname || orderData.userName,
           email: orderData.shipping?.email || orderData.userEmail,
-          mobile: orderData.shipping?.mobile || '',
+          mobile: mobileValue,
           address: orderData.shipping?.address || {}
         },
         items: orderData.items || [],
