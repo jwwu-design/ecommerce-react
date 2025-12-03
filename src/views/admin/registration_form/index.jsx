@@ -139,7 +139,7 @@ const RegistrationFormManagement = () => {
         {/* 上傳新模板 */}
         <div className="upload-section">
           <h3>上傳新模板</h3>
-          <p className="text-subtle">上傳新的報名表單模板將會覆蓋現有模板</p>
+          {/* <p className="text-subtle">上傳新的報名表單模板將會覆蓋現有模板</p> */}
 
           <div className="upload-area">
             <input
@@ -162,18 +162,16 @@ const RegistrationFormManagement = () => {
                 </p>
               </div>
             )}
-
-            <button
-              onClick={handleUpload}
-              disabled={!selectedFile || uploading}
-              className="button button-small"
-              style={{ marginTop: '1rem' }}
-            >
-              {uploading ? <LoadingOutlined /> : <UploadOutlined />}
-              {uploading ? ' 上傳中...' : ' 上傳模板'}
-            </button>
           </div>
-
+          <button
+            onClick={handleUpload}
+            disabled={!selectedFile || uploading}
+            className="button button-small"
+            style={{ marginTop: '1rem' }}
+          >
+            {uploading ? <LoadingOutlined /> : <UploadOutlined />}
+            {uploading ? ' 上傳中...' : ' 上傳模板'}
+          </button>
           <div className="upload-instructions">
             <h4>使用說明</h4>
             <ul>
@@ -181,6 +179,7 @@ const RegistrationFormManagement = () => {
               <li>檔案大小限制：10MB</li>
               <li>上傳後，客戶在結帳第三步可以下載此模板</li>
               <li>建議定期更新模板以確保資訊正確</li>
+              <li>上傳新的報名表單模板將會覆蓋現有模板</li>
             </ul>
           </div>
         </div>

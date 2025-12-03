@@ -49,7 +49,7 @@ const Home = () => {
         </div>
         <div className="display">
           <div className="display-header">
-            <h1>精選課程</h1>
+            <h1>精選商品</h1>
             <Link to={FEATURED_PRODUCTS}>查看全部</Link>
           </div>
           {(errorFeatured && !isLoadingFeatured) ? (
@@ -67,7 +67,7 @@ const Home = () => {
         </div>
         <div className="display">
           <div className="display-header">
-            <h1>推薦課程</h1>
+            <h1>推薦商品</h1>
             <Link to={RECOMMENDED_PRODUCTS}>查看全部</Link>
           </div>
           {(errorRecommended && !isLoadingRecommended) ? (

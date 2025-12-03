@@ -16,10 +16,12 @@ const PublicRoute = ({
       // eslint-disable-next-line react/prop-types
       const { from } = props.location.state || { from: { pathname: '/' } };
 
-      if (isAuth && role === 'ADMIN') {
+      // 只在登入/註冊頁面時重定向管理員到後台
+      if (isAuth && role === 'ADMIN' && (path === SIGNIN || path === SIGNUP)) {
         return <Redirect to={ADMIN_DASHBOARD} />;
       }
 
+      // 一般用戶在登入/註冊頁面時重定向到來源頁面
       if ((isAuth && role === 'USER') && (path === SIGNIN || path === SIGNUP)) {
         return <Redirect to={from} />;
       }
