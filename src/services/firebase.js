@@ -564,6 +564,77 @@ class Firebase {
     }
   };
 
+  // USER MANAGEMENT ACTIONS ------------
+
+  // 取得所有用戶列表
+  getAllUsers = async () => {
+    try {
+      const snapshot = await this.db.collection("users").get();
+      const users = [];
+      snapshot.forEach((doc) => {
+        users.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+      return users;
+    } catch (error) {
+      console.error("Failed to get users:", error);
+      throw new Error("無法取得用戶列表");
+    }
+  };
+
+  // 取得用戶的訂單統計
+  getUserOrderStats = async (userId) => {
+    try {
+      const snapshot = await this.db
+        .collection("orders")
+        .where("userId", "==", userId)
+        .get();
+
+      let orderCount = 0;
+      let totalSpent = 0;
+
+      snapshot.forEach((doc) => {
+        const order = doc.data();
+        orderCount++;
+        totalSpent += order.totalAmount || 0;
+      });
+
+      return { orderCount, totalSpent };
+    } catch (error) {
+      console.error("Failed to get user order stats:", error);
+      return { orderCount: 0, totalSpent: 0 };
+    }
+  };
+
+  // 更新用戶角色
+  updateUserRole = async (userId, role) => {
+    try {
+      await this.db.collection("users").doc(userId).update({
+        role,
+        updatedAt: new Date().toUTCString()
+      });
+      console.log(`✅ Updated user ${userId} role to ${role}`);
+    } catch (error) {
+      console.error("Failed to update user role:", error);
+      throw new Error("更新用戶角色失敗");
+    }
+  };
+
+  // 停用/啟用用戶
+  toggleUserStatus = async (userId, isActive) => {
+    try {
+      await this.db.collection("users").doc(userId).update({
+        isActive,
+        updatedAt: new Date().toUTCString()
+      });
+      console.log(`✅ User ${userId} is now ${isActive ? 'active' : 'inactive'}`);
+    } catch (error) {
+      console.error("Failed to toggle user status:", error);
+      throw new Error("更新用戶狀態失敗");
+    }
+  };
 }
 
 const firebaseInstance = new Firebase();

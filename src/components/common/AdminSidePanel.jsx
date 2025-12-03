@@ -1,4 +1,4 @@
-import { ADMIN_DASHBOARD, ADMIN_PRODUCTS, ADMIN_ORDERS, ADMIN_REGISTRATION_FORM } from '@/constants/routes';
+import { ADMIN_DASHBOARD, ADMIN_PRODUCTS, ADMIN_ORDERS, ADMIN_REGISTRATION_FORM, ADMIN_USERS } from '@/constants/routes';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
@@ -36,7 +36,7 @@ const SideNavigation = () => (
         <NavLink
           activeClassName="sidenavigation-menu-active"
           className="sidenavigation-menu"
-          to={ADMIN_PRODUCTS}
+          to={ADMIN_USERS}
         >
           用戶管理
         </NavLink>

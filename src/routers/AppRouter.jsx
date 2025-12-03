@@ -125,6 +125,10 @@ const AppRouter = () => (
           component={view.RegistrationFormManagement}
           path={ROUTES.ADMIN_REGISTRATION_FORM}
         />
+        <AdminRoute
+          component={view.UserManagement}
+          path={ROUTES.ADMIN_USERS}
+        />
         <PublicRoute component={view.PageNotFound} />
       </Switch>
       <Footer />
