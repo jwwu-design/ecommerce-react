@@ -99,6 +99,7 @@ function* authSaga({ type, payload }) {
           basket: [],
           mobile: { data: {} },
           role: 'USER',
+          isActive: true,
           dateJoined: ref.user.metadata.creationTime || new Date().getTime()
         };
 
@@ -165,6 +166,7 @@ function* authSaga({ type, payload }) {
           basket: [],
           mobile: { data: {} },
           role: 'USER',
+          isActive: true,
           dateJoined: payload.metadata.creationTime
         };
         yield call(firebase.addUser, payload.uid, user);
