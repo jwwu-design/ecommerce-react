@@ -26,12 +26,12 @@ const UserAccount = () => {
           <UserAccountTab />
         </Suspense>
       </div>
-      <div index={1} label="我的願望清單">
+      {/* <div index={1} label="我的願望清單">
         <Suspense fallback={<Loader />}>
           <UserWishListTab />
         </Suspense>
-      </div>
-      <div index={2} label="我的訂單">
+      </div> */}
+      <div index={1} label="我的訂單">
         <Suspense fallback={<Loader />}>
           <UserOrdersTab />
         </Suspense>

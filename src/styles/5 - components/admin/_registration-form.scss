@@ -1,0 +1,185 @@
+// Registration Form Management Page Styles
+.registration-form-management {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+
+  .page-header {
+    margin-bottom: 2rem;
+
+    h2 {
+      font-size: 1.75rem;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .text-subtle {
+      color: #666;
+      font-size: 1rem;
+    }
+  }
+
+  .management-content {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .current-template-section,
+  .upload-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    h3 {
+      font-size: 1.5rem;
+      color: #333;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid #f0f0f0;
+    }
+
+    .text-subtle {
+      color: #666;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .loading-state {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+
+    p {
+      margin-top: 1rem;
+    }
+  }
+
+  .template-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    background: #f9f9f9;
+    border-radius: 6px;
+    margin-top: 1rem;
+
+    .template-status {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+
+      .status-text {
+        h4 {
+          margin: 0 0 0.25rem;
+          color: #333;
+          font-size: 1.125rem;
+        }
+
+        .text-subtle {
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  .no-template {
+    padding: 2rem;
+    text-align: center;
+    background: #fafafa;
+    border-radius: 6px;
+    margin-top: 1rem;
+
+    .text-subtle {
+      margin: 0;
+    }
+  }
+
+  .upload-area {
+    margin-top: 1.5rem;
+    padding: 2rem;
+    background: #fafafa;
+    border-radius: 6px;
+    border: 2px dashed #d9d9d9;
+    text-align: center;
+
+    .file-select-button {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: #1890ff;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+
+      &:hover {
+        background: #40a9ff;
+      }
+    }
+
+    .selected-file-info {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: white;
+      border-radius: 4px;
+      text-align: left;
+
+      p {
+        margin: 0.25rem 0;
+        font-size: 0.875rem;
+
+        strong {
+          color: #333;
+        }
+      }
+    }
+  }
+
+  .upload-instructions {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #e6f7ff;
+    border-radius: 6px;
+    border-left: 4px solid #1890ff;
+
+    h4 {
+      margin: 0 0 1rem;
+      color: #333;
+      font-size: 1.125rem;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.5rem;
+
+      li {
+        margin: 0.5rem 0;
+        color: #666;
+        font-size: 0.875rem;
+      }
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .registration-form-management {
+    padding: 1rem;
+
+    .page-header h2 {
+      font-size: 1.5rem;
+    }
+
+    .current-template-section,
+    .upload-section {
+      padding: 1.5rem 1rem;
+    }
+
+    .template-info {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+  }
+}

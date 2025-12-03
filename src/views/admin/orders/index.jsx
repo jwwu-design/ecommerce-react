@@ -5,8 +5,12 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import firebaseInstance from '@/services/firebase';
 import { ADMIN_ORDER_DETAIL } from '@/constants/routes';
+import { useDocumentTitle } from '@/hooks';
+
 
 const OrderList = () => {
+  useDocumentTitle('訂單管理 | Ares 管理後台');
+
   const history = useHistory();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -81,32 +85,32 @@ const OrderList = () => {
     setSearchTerm('');
   };
 
-  const getStatusBadge = (status, type) => {
-    const statusConfig = {
-      orderStatus: {
-        processing: { text: '處理中', class: 'status-processing' },
-        confirmed: { text: '已確認', class: 'status-confirmed' },
-        shipped: { text: '已出貨', class: 'status-shipped' },
-        delivered: { text: '已送達', class: 'status-delivered' },
-        cancelled: { text: '已取消', class: 'status-cancelled' }
-      },
-      paymentStatus: {
-        pending: { text: '待付款', class: 'status-pending' },
-        paid: { text: '已付款', class: 'status-paid' },
-        failed: { text: '付款失敗', class: 'status-failed' }
-      },
-      shippingStatus: {
-        pending: { text: '待出貨', class: 'status-pending' },
-        preparing: { text: '準備中', class: 'status-preparing' },
-        shipped: { text: '已出貨', class: 'status-shipped' },
-        delivered: { text: '已送達', class: 'status-delivered' }
-      }
+  const getStatusBadge = (status) => {
+    const statusMap = {
+      approved: { text: '審核通過', className: 'status-approved' },
+      rejected: { text: '審核未通過', className: 'status-rejected' },
+      pending: { text: '等待審核', className: 'status-pending' },
+      // 向後兼容舊狀態
+      processing: { text: '處理中', className: 'status-pending' },
+      confirmed: { text: '已確認', className: 'status-approved' },
+      shipped: { text: '已出貨', className: 'status-approved' },
+      delivered: { text: '已送達', className: 'status-approved' },
+      cancelled: { text: '已取消', className: 'status-rejected' }
     };
 
-    const config = statusConfig[type]?.[status];
-    if (!config) return <span className="status-badge">{status || '未知'}</span>;
+    const config = statusMap[status] || statusMap.pending;
+    return <span className={`status-badge ${config.className}`}>{config.text}</span>;
+  };
 
-    return <span className={`status-badge ${config.class}`}>{config.text}</span>;
+  const getPaymentStatusBadge = (status) => {
+    const statusMap = {
+      pending: { text: '待付款', className: 'status-pending' },
+      paid: { text: '已付款', className: 'status-paid' },
+      failed: { text: '付款失敗', className: 'status-failed' }
+    };
+
+    const config = statusMap[status] || statusMap.pending;
+    return <span className={`status-badge ${config.className}`}>{config.text}</span>;
   };
 
   return (
@@ -134,18 +138,16 @@ const OrderList = () => {
       {/* 篩選器 */}
       <div className="orders-filters">
         <div className="filter-group">
-          <label>訂單狀態：</label>
+          <label>審核狀態：</label>
           <select
-            value={filters.orderStatus}
-            onChange={(e) => handleFilterChange('orderStatus', e.target.value)}
             className="filter-select"
+            value={filters.orderStatus}
+            onChange={(e) => setFilters({ ...filters, orderStatus: e.target.value })}
           >
             <option value="">全部</option>
-            <option value="processing">處理中</option>
-            <option value="confirmed">已確認</option>
-            <option value="shipped">已出貨</option>
-            <option value="delivered">已送達</option>
-            <option value="cancelled">已取消</option>
+            <option value="pending">等待審核</option>
+            <option value="approved">審核通過</option>
+            <option value="rejected">審核未通過</option>
           </select>
         </div>
 
@@ -200,11 +202,11 @@ const OrderList = () => {
               <thead>
                 <tr>
                   <th>訂單編號</th>
-                  <th>下單日期</th>
-                  <th>顧客姓名</th>
-                  <th>訂單總額</th>
+                  <th>訂單日期</th>
+                  <th>客戶姓名</th>
+                  <th>訂單金額</th>
                   <th>付款狀態</th>
-                  <th>訂單狀態</th>
+                  <th>審核狀態</th>
                   <th>操作</th>
                 </tr>
               </thead>
@@ -221,8 +223,8 @@ const OrderList = () => {
                     <td className="order-amount">
                       {displayMoney(order.totalAmount || 0)}
                     </td>
-                    <td>{getStatusBadge(order.paymentStatus, 'paymentStatus')}</td>
-                    <td>{getStatusBadge(order.orderStatus, 'orderStatus')}</td>
+                    <td>{getPaymentStatusBadge(order.paymentStatus || 'pending')}</td>
+                    <td>{getStatusBadge(order.reviewStatus || 'pending')}</td>
                     <td>
                       <button
                         onClick={() => history.push(ADMIN_ORDER_DETAIL.replace(':id', order.id))}

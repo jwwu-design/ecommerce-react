@@ -300,6 +300,20 @@ class Firebase {
     }
   };
 
+  // 上傳報名表單範本（管理員用）
+  uploadRegistrationFormTemplate = async (file) => {
+    try {
+      const templateRef = this.storage.ref("registration-forms/template.docx");
+      await templateRef.put(file);
+      const downloadURL = await templateRef.getDownloadURL();
+      console.log('✅ Template uploaded successfully:', downloadURL);
+      return downloadURL;
+    } catch (error) {
+      console.error('❌ Failed to upload template:', error);
+      throw new Error("上傳報名表單範本失敗，請稍後再試。");
+    }
+  };
+
   // 上傳使用者填寫的報名表單
   uploadRegistrationForm = async (userId, userName, file, orderId = null) => {
     try {

@@ -61,6 +61,10 @@ const AppRouter = () => (
           component={view.ViewProduct}
           path={ROUTES.VIEW_PRODUCT}
         />
+        <PublicRoute
+          component={view.ContactUs}
+          path={ROUTES.CONTACT}
+        />
         <ClientRoute
           component={view.UserAccount}
           exact
@@ -116,6 +120,10 @@ const AppRouter = () => (
         <AdminRoute
           component={view.OrderDetail}
           path={ROUTES.ADMIN_ORDER_DETAIL}
+        />
+        <AdminRoute
+          component={view.RegistrationFormManagement}
+          path={ROUTES.ADMIN_REGISTRATION_FORM}
         />
         <PublicRoute component={view.PageNotFound} />
       </Switch>

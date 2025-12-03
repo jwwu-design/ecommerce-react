@@ -19,7 +19,7 @@ const AdminNavigation = () => {
       <div className="logo">
         <Link to={ADMIN_DASHBOARD} style={{ display: 'flex', alignItems: 'center' }}>
           <img alt="Logo" src={logo} />
-          <span>管理員面板</span>
+          {/* <span>管理員面板</span> */}
         </Link>
       </div>
       <ul className="navigation-menu">
