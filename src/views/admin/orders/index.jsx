@@ -142,7 +142,7 @@ const OrderList = () => {
           <select
             className="filter-select"
             value={filters.orderStatus}
-            onChange={(e) => handleFilterChange('orderStatus', e.target.value)}
+            onChange={(e) => setFilters({ ...filters, orderStatus: e.target.value })}
           >
             <option value="">全部</option>
             <option value="pending">等待審核</option>

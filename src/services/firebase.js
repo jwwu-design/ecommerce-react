@@ -367,23 +367,23 @@ class Firebase {
   // 取得訂單列表（支援篩選與分頁）
   getOrders = async (filters = {}, lastRefKey = null) => {
     try {
+      console.log('🔍 getOrders called with filters:', filters);
       let query = this.db.collection("orders").orderBy("createdAt", "desc");
 
       // 套用篩選條件
+      // 審核狀態 (reviewStatus: approved/rejected/pending)
+      if (filters.reviewStatus) {
+        console.log('📌 Applying reviewStatus filter:', filters.reviewStatus);
+        query = query.where("reviewStatus", "==", filters.reviewStatus);
+      }
+      // 訂單狀態 (orderStatus: processing/confirmed/shipped/delivered/cancelled)
       if (filters.orderStatus) {
+        console.log('📌 Applying orderStatus filter:', filters.orderStatus);
         query = query.where("orderStatus", "==", filters.orderStatus);
       }
       if (filters.paymentStatus) {
+        console.log('📌 Applying paymentStatus filter:', filters.paymentStatus);
         query = query.where("paymentStatus", "==", filters.paymentStatus);
-      }
-      if (filters.shippingStatus) {
-        query = query.where("shippingStatus", "==", filters.shippingStatus);
-      }
-      if (filters.startDate) {
-        query = query.where("createdAt", ">=", filters.startDate);
-      }
-      if (filters.endDate) {
-        query = query.where("createdAt", "<=", filters.endDate);
       }
 
       // 分頁
@@ -392,15 +392,23 @@ class Firebase {
       }
       query = query.limit(20);
 
+      console.log('🔄 Executing Firestore query...');
       const snapshot = await query.get();
       const orders = [];
       snapshot.forEach((doc) => {
         orders.push({ id: doc.id, ...doc.data() });
       });
 
+      console.log(`✅ Found ${orders.length} orders`);
+      if (orders.length > 0) {
+        console.log('First order reviewStatus:', orders[0].reviewStatus);
+      }
       const lastKey = snapshot.docs[snapshot.docs.length - 1];
       return { orders, lastKey };
     } catch (error) {
+      console.error("❌ Failed to get orders:", error);
+      console.error("Error code:", error.code);
+      console.error("Error message:", error.message);
       throw new Error("取得訂單列表失敗，請稍後再試。");
     }
   };
