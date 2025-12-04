@@ -124,7 +124,7 @@ const OrderList = () => {
         <form onSubmit={handleSearch} className="search-form">
           <input
             type="text"
-            placeholder="搜尋訂單編號、顧客名稱、Email、手機..."
+            placeholder="搜尋訂單編號(含日期)、顧客名稱"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
@@ -142,7 +142,7 @@ const OrderList = () => {
           <select
             className="filter-select"
             value={filters.orderStatus}
-            onChange={(e) => setFilters({ ...filters, orderStatus: e.target.value })}
+            onChange={(e) => handleFilterChange('orderStatus', e.target.value)}
           >
             <option value="">全部</option>
             <option value="pending">等待審核</option>

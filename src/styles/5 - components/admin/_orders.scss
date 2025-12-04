@@ -59,6 +59,14 @@
     font-size: 14px;
     color: #666;
     white-space: nowrap;
+    background: none;
+    border: none;
+    padding: 0;
+
+    &:hover {
+      cursor: default;
+      background: none;
+    }
   }
 }
 

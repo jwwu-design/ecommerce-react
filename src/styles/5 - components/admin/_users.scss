@@ -77,6 +77,17 @@
     .filter-group {
       display: flex;
       gap: 0.75rem;
+
+      label {
+        background: none;
+        border: none;
+        padding: 0;
+
+        &:hover {
+          cursor: default;
+          background: none;
+        }
+      }
     }
 
     .filter-select {
@@ -424,7 +435,15 @@
         margin-bottom: 0.5rem;
         color: #333;
         font-weight: 600;
-        font-size: 0.875rem;
+        font-size: 1rem;
+        background: none;
+        border: none;
+        padding: 0;
+
+        &:hover {
+          cursor: default;
+          background: none;
+        }
       }
 
       input,

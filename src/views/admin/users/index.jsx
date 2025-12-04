@@ -344,7 +344,7 @@ const UserManagement = () => {
               </div>
 
               <div className="form-group">
-                <label>電話</label>
+                <label>電話 *</label>
                 <input
                   type="text"
                   value={editForm.mobile}
