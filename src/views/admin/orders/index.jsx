@@ -16,7 +16,7 @@ const OrderList = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({
-    orderStatus: '',
+    reviewStatus: '',
     paymentStatus: '',
     shippingStatus: ''
   });
@@ -78,7 +78,7 @@ const OrderList = () => {
 
   const resetFilters = () => {
     setFilters({
-      orderStatus: '',
+      reviewStatus: '',
       paymentStatus: '',
       shippingStatus: ''
     });
@@ -141,8 +141,8 @@ const OrderList = () => {
           <label>審核狀態：</label>
           <select
             className="filter-select"
-            value={filters.orderStatus}
-            onChange={(e) => setFilters({ ...filters, orderStatus: e.target.value })}
+            value={filters.reviewStatus}
+            onChange={(e) => setFilters({ ...filters, reviewStatus: e.target.value })}
           >
             <option value="">全部</option>
             <option value="pending">等待審核</option>

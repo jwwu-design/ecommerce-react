@@ -368,41 +368,80 @@ class Firebase {
   getOrders = async (filters = {}, lastRefKey = null) => {
     try {
       console.log('🔍 getOrders called with filters:', filters);
+
+      // 檢查是否有篩選條件
+      const hasFilters = filters.reviewStatus || filters.orderStatus || filters.paymentStatus || filters.shippingStatus;
+
       let query = this.db.collection("orders").orderBy("createdAt", "desc");
 
-      // 套用篩選條件
-      // 審核狀態 (reviewStatus: approved/rejected/pending)
-      if (filters.reviewStatus) {
-        console.log('📌 Applying reviewStatus filter:', filters.reviewStatus);
-        query = query.where("reviewStatus", "==", filters.reviewStatus);
-      }
-      // 訂單狀態 (orderStatus: processing/confirmed/shipped/delivered/cancelled)
-      if (filters.orderStatus) {
-        console.log('📌 Applying orderStatus filter:', filters.orderStatus);
-        query = query.where("orderStatus", "==", filters.orderStatus);
-      }
-      if (filters.paymentStatus) {
-        console.log('📌 Applying paymentStatus filter:', filters.paymentStatus);
-        query = query.where("paymentStatus", "==", filters.paymentStatus);
+      // 如果有篩選條件，嘗試套用（可能需要索引）
+      if (hasFilters) {
+        try {
+          // 審核狀態 (reviewStatus: approved/rejected/pending)
+          if (filters.reviewStatus) {
+            console.log('📌 Applying reviewStatus filter:', filters.reviewStatus);
+            query = query.where("reviewStatus", "==", filters.reviewStatus);
+          }
+          // 訂單狀態 (orderStatus: processing/confirmed/shipped/delivered/cancelled)
+          if (filters.orderStatus) {
+            console.log('📌 Applying orderStatus filter:', filters.orderStatus);
+            query = query.where("orderStatus", "==", filters.orderStatus);
+          }
+          if (filters.paymentStatus) {
+            console.log('📌 Applying paymentStatus filter:', filters.paymentStatus);
+            query = query.where("paymentStatus", "==", filters.paymentStatus);
+          }
+          if (filters.shippingStatus) {
+            console.log('📌 Applying shippingStatus filter:', filters.shippingStatus);
+            query = query.where("shippingStatus", "==", filters.shippingStatus);
+          }
+        } catch (indexError) {
+          console.warn('⚠️ Firestore index not ready, will use client-side filtering');
+        }
       }
 
       // 分頁
       if (lastRefKey) {
         query = query.startAfter(lastRefKey);
       }
-      query = query.limit(20);
+      query = query.limit(100); // 增加限制以支援客戶端篩選
 
       console.log('🔄 Executing Firestore query...');
       const snapshot = await query.get();
-      const orders = [];
+      let orders = [];
       snapshot.forEach((doc) => {
         orders.push({ id: doc.id, ...doc.data() });
       });
 
-      console.log(`✅ Found ${orders.length} orders`);
+      console.log(`✅ Found ${orders.length} orders from Firestore`);
+
+      // 如果有篩選條件且 Firestore 查詢沒有套用篩選（索引未建立），則在客戶端篩選
+      if (hasFilters && orders.length > 0) {
+        const originalLength = orders.length;
+
+        if (filters.reviewStatus) {
+          orders = orders.filter(order => order.reviewStatus === filters.reviewStatus);
+          console.log(`📌 Client-side reviewStatus filter: ${originalLength} -> ${orders.length}`);
+        }
+        if (filters.orderStatus) {
+          orders = orders.filter(order => order.orderStatus === filters.orderStatus);
+          console.log(`📌 Client-side orderStatus filter applied`);
+        }
+        if (filters.paymentStatus) {
+          orders = orders.filter(order => order.paymentStatus === filters.paymentStatus);
+          console.log(`📌 Client-side paymentStatus filter applied`);
+        }
+        if (filters.shippingStatus) {
+          orders = orders.filter(order => order.shippingStatus === filters.shippingStatus);
+          console.log(`📌 Client-side shippingStatus filter applied`);
+        }
+      }
+
+      console.log(`✅ Final result: ${orders.length} orders`);
       if (orders.length > 0) {
         console.log('First order reviewStatus:', orders[0].reviewStatus);
       }
+
       const lastKey = snapshot.docs[snapshot.docs.length - 1];
       return { orders, lastKey };
     } catch (error) {
