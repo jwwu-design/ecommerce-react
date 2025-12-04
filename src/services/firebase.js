@@ -559,6 +559,7 @@ class Firebase {
         totalAmount: orderData.total || 0,
         subtotal: orderData.subtotal || 0,
         shippingFee: orderData.shippingFee || 0,
+        reviewStatus: 'pending',
         orderStatus: 'processing',
         paymentStatus: 'pending',
         shippingStatus: 'pending',
