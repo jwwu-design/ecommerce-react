@@ -608,6 +608,20 @@ class Firebase {
     }
   };
 
+  // 更新用戶資料
+  updateUser = async (userId, updates) => {
+    try {
+      await this.db.collection("users").doc(userId).update({
+        ...updates,
+        updatedAt: new Date().toUTCString()
+      });
+      console.log(`✅ Updated user ${userId}`);
+    } catch (error) {
+      console.error("Failed to update user:", error);
+      throw new Error("更新用戶資料失敗");
+    }
+  };
+
   // 更新用戶角色
   updateUserRole = async (userId, role) => {
     try {

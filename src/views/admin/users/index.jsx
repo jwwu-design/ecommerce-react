@@ -13,6 +13,14 @@ const UserManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [editingUser, setEditingUser] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editForm, setEditForm] = useState({
+    fullname: '',
+    email: '',
+    mobile: '',
+    role: 'USER'
+  });
 
   // 載入用戶資料
   useEffect(() => {
@@ -52,10 +60,48 @@ const UserManagement = () => {
         `用戶已${!currentStatus ? '啟用' : '停用'}`,
         'success'
       );
-      // 重新載入用戶列表
       loadUsers();
     } catch (error) {
       displayActionMessage('操作失敗，請稍後再試', 'error');
+    }
+  };
+
+  const handleEditUser = (user) => {
+    setEditingUser(user);
+    setEditForm({
+      fullname: user.fullname,
+      email: user.email,
+      mobile: user.mobile?.data?.value || '',
+      role: user.role
+    });
+    setShowEditModal(true);
+  };
+
+  const handleSaveEdit = async () => {
+    try {
+      const updates = {
+        fullname: editForm.fullname,
+        email: editForm.email,
+        mobile: {
+          data: {
+            value: editForm.mobile
+          }
+        }
+      };
+
+      await firebase.updateUser(editingUser.id, updates);
+
+      // 如果角色有變更，也更新角色
+      if (editForm.role !== editingUser.role) {
+        await firebase.updateUserRole(editingUser.id, editForm.role);
+      }
+
+      displayActionMessage('用戶資料已更新', 'success');
+      setShowEditModal(false);
+      setEditingUser(null);
+      loadUsers();
+    } catch (error) {
+      displayActionMessage('更新失敗，請稍後再試', 'error');
     }
   };
 
@@ -240,7 +286,7 @@ const UserManagement = () => {
                           <button
                             className="action-btn edit-btn"
                             title="編輯用戶"
-                            disabled
+                            onClick={() => handleEditUser(user)}
                           >
                             <EditOutlined />
                           </button>
@@ -265,6 +311,76 @@ const UserManagement = () => {
             <p>顯示 {filteredUsers.length} 個用戶（共 {users.length} 個）</p>
           </div>
         </>
+      )}
+
+      {/* 編輯用戶 Modal */}
+      {showEditModal && (
+        <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>編輯用戶資料</h3>
+              <button className="modal-close" onClick={() => setShowEditModal(false)}>×</button>
+            </div>
+
+            <div className="modal-body">
+              <div className="form-group">
+                <label>姓名 *</label>
+                <input
+                  type="text"
+                  value={editForm.fullname}
+                  onChange={(e) => setEditForm({ ...editForm, fullname: e.target.value })}
+                  placeholder="請輸入姓名"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Email *</label>
+                <input
+                  type="email"
+                  value={editForm.email}
+                  onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                  placeholder="請輸入 Email"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>電話</label>
+                <input
+                  type="text"
+                  value={editForm.mobile}
+                  onChange={(e) => setEditForm({ ...editForm, mobile: e.target.value })}
+                  placeholder="請輸入電話號碼"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>角色 *</label>
+                <select
+                  value={editForm.role}
+                  onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
+                >
+                  <option value="USER">用戶</option>
+                  <option value="ADMIN">管理員</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button
+                className="button button-border"
+                onClick={() => setShowEditModal(false)}
+              >
+                取消
+              </button>
+              <button
+                className="button"
+                onClick={handleSaveEdit}
+              >
+                儲存
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
