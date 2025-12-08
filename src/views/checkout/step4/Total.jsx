@@ -1,57 +1,57 @@
 import { ArrowLeftOutlined, CheckOutlined } from '@ant-design/icons';
 import { CHECKOUT_STEP_3 } from '@/constants/routes';
-import { useFormikContext } from 'formik';
 import { displayMoney } from '@/helpers/utils';
 import PropType from 'prop-types';
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { setPaymentDetails } from '@/redux/actions/checkoutActions';
 
 const Total = ({ isInternational, subtotal }) => {
-  const { values, submitForm } = useFormikContext();
   const history = useHistory();
-  const dispatch = useDispatch();
-
-  const onClickBack = () => {
-    // destructure to only select left fields omitting cardnumber and ccv
-    const { cardnumber, ccv, ...rest } = values;
-
-    dispatch(setPaymentDetails({ ...rest })); // save payment details
-    history.push(CHECKOUT_STEP_3);
-  };
+  const shippingFee = isInternational ? 50 : 0;
 
   return (
-    <>
-      <div className="basket-total text-right">
-        <p className="basket-total-title">總計：</p>
-        <h2 className="basket-total-amount">
-          {displayMoney(subtotal + (isInternational ? 50 : 0))}
-        </h2>
-      </div>
-      <br />
-      <div className="checkout-shipping-action">
-        <button
-          className="button button-muted"
-          onClick={() => onClickBack(values)}
-          type="button"
-        >
-          <ArrowLeftOutlined />
-          &nbsp;
-          返回上一步
-        </button>
-        <button
-          className="button"
-          disabled={false}
-          onClick={submitForm}
-          type="button"
-        >
-          <CheckOutlined />
-          &nbsp;
-          確認付款
-        </button>
-      </div>
-    </>
+    <div className="checkout-total d-flex-end padding-right-m">
+      <table>
+        <tbody>
+          <tr>
+            <td>
+              <span className="d-block margin-0 padding-right-s text-right">
+                小計 :
+              </span>
+            </td>
+            <td>
+              <h4 className="basket-total-amount text-subtle text-right margin-0 ">
+                {displayMoney(subtotal)}
+              </h4>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <span className="d-block margin-0 padding-right-s text-right">
+                運費 :
+              </span>
+            </td>
+            <td>
+              <h4 className="basket-total-amount text-subtle text-right margin-0">
+                {displayMoney(shippingFee)}
+              </h4>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <span className="d-block margin-0 padding-right-s text-right">
+                總計 :
+              </span>
+            </td>
+            <td>
+              <h2 className="basket-total-amount text-right">
+                {displayMoney(subtotal + shippingFee)}
+              </h2>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   );
 };
 

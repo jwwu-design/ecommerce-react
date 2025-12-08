@@ -175,10 +175,20 @@ const UserOrdersTab = () => {
             <div className="order-card-footer">
               <Link
                 to={`/checkout/confirmation/${order.orderId}`}
-                className="button button-small"
+                className="button button-small button-border"
               >
                 查看詳情
               </Link>
+
+              {/* 審核通過且未付款時顯示付款按鈕 */}
+              {order.reviewStatus === 'approved' && order.paymentStatus === 'pending' && (
+                <Link
+                  to={`/checkout/step4?orderId=${order.orderId}`}
+                  className="button button-small"
+                >
+                  前往付款
+                </Link>
+              )}
             </div>
           </div>
         ))}

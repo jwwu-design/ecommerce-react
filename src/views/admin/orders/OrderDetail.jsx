@@ -124,8 +124,8 @@ const OrderDetail = () => {
           <div className="info-item">
             <span className="info-label">訂單狀態：</span>
             <span className="info-value">
-              <span className={`status-badge status-${order.orderStatus}`}>
-                {order.orderStatus || '未知'}
+              <span className={`status-badge status-${order.reviewStatus}`}>
+                {order.reviewStatus || '未知'}
               </span>
             </span>
           </div>

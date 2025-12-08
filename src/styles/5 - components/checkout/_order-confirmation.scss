@@ -26,7 +26,8 @@
 
   .order-id {
     color: #666;
-    font-size: 1.125rem; // 1rem + 4px
+    font-size: 1.2rem;
+    ; // 1rem + 4px
 
     strong {
       color: #333;
@@ -54,7 +55,8 @@
     line-height: 1.6;
     max-width: 600px;
     margin: 0 auto;
-    font-size: 1.125rem; // 1rem + 4px
+    font-size: 1.2rem;
+    ; // 1rem + 4px
   }
 }
 
@@ -92,13 +94,14 @@
 
     h4 {
       color: #333;
-      font-size: 1.125rem; // 1rem + 4px
+      font-size: 1.2rem;
+      ; // 1rem + 4px
       margin: 0 0 0.5rem;
     }
 
     p {
       margin: 0;
-      font-size: 1rem; // 1rem + 4px
+      font-size: 1.2rem; // 1rem + 4px
     }
   }
 
@@ -120,7 +123,8 @@
   justify-content: space-between;
   padding: 0.5rem 0;
   color: #666;
-  font-size: 1.125rem; // 1rem + 4px
+  font-size: 1.2rem;
+  ; // 1rem + 4px
 
   &.total {
     padding-top: 1rem;
@@ -149,7 +153,8 @@
   padding: 0.75rem 1.5rem;
   border-radius: 50px;
   font-weight: 600;
-  font-size: 1.125rem; // 1rem + 4px
+  font-size: 1.2rem;
+  ; // 1rem + 4px
 
   &.pending {
     background: #fff7e6;
@@ -219,19 +224,21 @@
       align-items: center;
       justify-content: center;
       font-weight: 600;
-      font-size: 1.125rem; // 1rem + 4px
+      font-size: 1.2rem;
+      ; // 1rem + 4px
     }
 
     strong {
       display: block;
       color: #333;
       margin-bottom: 0.25rem;
-      font-size: 1.125rem; // 1rem + 4px
+      font-size: 1.2rem;
+      ; // 1rem + 4px
     }
 
     p {
       margin: 0;
-      font-size: 1rem; // 1rem + 4px
+      font-size: 1.2rem; // 1rem + 4px
     }
   }
 }
@@ -251,7 +258,8 @@
   p {
     margin: 0.5rem 0;
     color: #666;
-    font-size: 1.125rem; // 1rem + 4px
+    font-size: 1.2rem;
+    ; // 1rem + 4px
   }
 
   a {
@@ -314,7 +322,7 @@
     &:before {
       width: 1.75rem;
       height: 1.75rem;
-      font-size: 1rem;
+      font-size: 1.2rem;
     }
   }
 }

@@ -79,24 +79,14 @@ const UserManagement = () => {
 
   const handleSaveEdit = async () => {
     try {
-      const updates = {
-        fullname: editForm.fullname,
-        email: editForm.email,
-        mobile: {
-          data: {
-            value: editForm.mobile
-          }
-        }
-      };
-
-      await firebase.updateUser(editingUser.id, updates);
-
-      // 如果角色有變更，也更新角色
+      // 只更新角色
       if (editForm.role !== editingUser.role) {
         await firebase.updateUserRole(editingUser.id, editForm.role);
+        displayActionMessage('用戶身份已更新', 'success');
+      } else {
+        displayActionMessage('沒有變更', 'info');
       }
 
-      displayActionMessage('用戶資料已更新', 'success');
       setShowEditModal(false);
       setEditingUser(null);
       loadUsers();
@@ -318,50 +308,40 @@ const UserManagement = () => {
         <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>編輯用戶資料</h3>
+              <h3>編輯用戶身份</h3>
               <button className="modal-close" onClick={() => setShowEditModal(false)}>×</button>
             </div>
 
             <div className="modal-body">
-              <div className="form-group">
-                <label>姓名 *</label>
-                <input
-                  type="text"
-                  value={editForm.fullname}
-                  onChange={(e) => setEditForm({ ...editForm, fullname: e.target.value })}
-                  placeholder="請輸入姓名"
-                />
+              {/* 用戶資訊（唯讀） */}
+              <div className="user-info-section">
+                <div className="info-row">
+                  <label>姓名</label>
+                  <div className="info-value">{editForm.fullname}</div>
+                </div>
+
+                <div className="info-row">
+                  <label>Email</label>
+                  <div className="info-value">{editForm.email}</div>
+                </div>
+
+                <div className="info-row">
+                  <label>電話</label>
+                  <div className="info-value">{editForm.mobile || '未設定'}</div>
+                </div>
               </div>
 
+              {/* 可編輯的角色 */}
               <div className="form-group">
-                <label>Email *</label>
-                <input
-                  type="email"
-                  value={editForm.email}
-                  onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
-                  placeholder="請輸入 Email"
-                />
-              </div>
-
-              <div className="form-group">
-                <label>電話 *</label>
-                <input
-                  type="text"
-                  value={editForm.mobile}
-                  onChange={(e) => setEditForm({ ...editForm, mobile: e.target.value })}
-                  placeholder="請輸入電話號碼"
-                />
-              </div>
-
-              <div className="form-group">
-                <label>角色 *</label>
+                <label>用戶身份 *</label>
                 <select
                   value={editForm.role}
                   onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
                 >
-                  <option value="USER">用戶</option>
+                  <option value="USER">一般用戶</option>
                   <option value="ADMIN">管理員</option>
                 </select>
+                <p className="field-note">⚠️ 變更用戶身份將影響其系統權限</p>
               </div>
             </div>
 
@@ -376,7 +356,7 @@ const UserManagement = () => {
                 className="button"
                 onClick={handleSaveEdit}
               >
-                儲存
+                儲存變更
               </button>
             </div>
           </div>

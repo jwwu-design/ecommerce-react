@@ -141,6 +141,19 @@ const OrderConfirmation = () => {
                 備註：{order.reviewNote}
               </p>
             )}
+
+            {/* 審核通過且未付款時顯示付款按鈕 */}
+            {order.reviewStatus === 'approved' && order.paymentStatus === 'pending' && (
+              <div style={{ marginTop: '1.5rem' }}>
+                <Link
+                  to={`/checkout/step4?orderId=${order.orderId}`}
+                  className="button button-large"
+                  style={{ width: '100%', textAlign: 'center' }}
+                >
+                  立即付款
+                </Link>
+              </div>
+            )}
           </div>
 
           <div className="divider" />
@@ -172,10 +185,13 @@ const OrderConfirmation = () => {
           <div className="contact-info-section">
             <h3>需要協助？</h3>
             <p className="text-subtle">
-              如有任何問題,請聯繫我們的客服團隊:
+              如有任何問題,請聯繫我們的客服
             </p>
             <p>
-              電子郵件: <a href={`mailto:${order.userEmail}`}>{order.userEmail}</a>
+              電子郵件: <a href={`mailto:ares@ares-cert.com`}>ares@ares-cert.com</a>
+            </p>
+            <p>
+              電話：06-2959696
             </p>
           </div>
 

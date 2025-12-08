@@ -1,0 +1,126 @@
+// ECPay Payment Styles
+.ecpay-payment {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  .payment-section-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+
+  .payment-info-box {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 8px;
+    margin-bottom: 2rem;
+
+    .payment-icon {
+      flex-shrink: 0;
+    }
+
+    .payment-description {
+      flex: 1;
+
+      h4 {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        color: #333;
+      }
+
+      p {
+        color: #666;
+        margin-bottom: 1rem;
+      }
+
+      .payment-features {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+
+        li {
+          color: #00AA5B;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  .payment-notice {
+    background: #fff9e6;
+    border-left: 4px solid #ffa500;
+    padding: 1.5rem;
+    border-radius: 4px;
+
+    p {
+      margin: 0 0 0.75rem 0;
+      color: #333;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.5rem;
+      color: #666;
+
+      li {
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+}
+
+.checkout-step-4 {
+  max-width: 800px;
+  margin: 0 auto;
+
+  .payment-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: 2rem;
+
+    .button-large {
+      min-width: 300px;
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+    }
+
+    .payment-secure-notice {
+      margin-top: 1rem;
+      color: #666;
+      font-size: 1.2rem;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .ecpay-payment {
+    .payment-info-box {
+      flex-direction: column;
+      text-align: center;
+
+      .payment-description {
+        .payment-features {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+  }
+
+  .checkout-step-4 {
+    .payment-actions {
+      .button-large {
+        min-width: 100%;
+      }
+    }
+  }
+}
