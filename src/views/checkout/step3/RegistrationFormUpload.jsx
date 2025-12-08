@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import firebase from '@/services/firebase';
 
 
-const RegistrationFormUpload = ({ userId, userName, onUploadComplete }) => {
+const RegistrationFormUpload = ({ userId, userEmail, orderId, onUploadComplete }) => {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadedFile, setUploadedFile] = useState(null);
@@ -75,7 +75,13 @@ const RegistrationFormUpload = ({ userId, userName, onUploadComplete }) => {
       }, 200);
 
       // 上傳檔案到 Firebase Storage
-      const result = await firebase.uploadRegistrationForm(userId, userName, selectedFile);
+      // orderId 可能為 undefined（一般流程）或有值（重新上傳流程）
+      const result = await firebase.uploadRegistrationForm(
+        userId,
+        userEmail,
+        selectedFile,
+        orderId || null
+      );
 
       clearInterval(progressInterval);
       setUploadProgress(100);
@@ -185,7 +191,8 @@ const RegistrationFormUpload = ({ userId, userName, onUploadComplete }) => {
 
 RegistrationFormUpload.propTypes = {
   userId: PropType.string.isRequired,
-  userName: PropType.string.isRequired,
+  userEmail: PropType.string.isRequired,
+  orderId: PropType.string,  // 可選，重新上傳時才有
   onUploadComplete: PropType.func
 };
 

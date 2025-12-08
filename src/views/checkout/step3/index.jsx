@@ -164,7 +164,7 @@ const RegistrationForm = () => {
 
           <RegistrationFormUpload
             userId={uid}
-            userName={fullname}
+            userEmail={profile.email}
             orderId={orderId}
             onUploadComplete={handleUploadComplete}
           />
@@ -205,13 +205,13 @@ const RegistrationForm = () => {
       <div className="checkout-step-3">
         <RegistrationFormUpload
           userId={uid}
-          userName={fullname}
+          userEmail={profile.email}
           onUploadComplete={handleUploadComplete}
         />
 
         <Total
           isInternational={shipping.isInternational}
-          subtotal={total}
+          subtotal={Number(total)}
         />
 
         <div className="checkout-shipping-action">

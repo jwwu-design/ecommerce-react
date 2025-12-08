@@ -70,7 +70,7 @@ const OrderConfirmation = () => {
       // 上傳檔案到 Firebase Storage
       const uploadResult = await firebase.uploadRegistrationForm(
         uid,
-        fullname,
+        profile.email,  // 改用 email
         selectedFile,
         orderId
       );
