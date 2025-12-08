@@ -315,20 +315,29 @@ class Firebase {
   };
 
   // 上傳使用者填寫的報名表單
-  uploadRegistrationForm = async (userId, userName, file, orderId = null) => {
+  uploadRegistrationForm = async (userId, userEmail, file, orderId = null) => {
     try {
       const timestamp = new Date().getTime();
-      const fileName = `${timestamp}.docx`;
 
-      // 使用 orderId 作為路徑（如果有提供）
+      // 統一路徑結構：registration-forms/useremail-userid/filename.docx
       let fileRef;
-      if (orderId) {
-        fileRef = this.storage.ref(`registration-forms/orders/${orderId}/${fileName}`);
-      } else {
-        // 向後兼容：沒有 orderId 時使用舊路徑
-        const sanitizedUserName = userName.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_');
-        const folderName = `${sanitizedUserName}-${userId}`;
-        fileRef = this.storage.ref(`registration-forms/submissions/${folderName}/${fileName}`);
+      let fileName;
+
+      if (orderId && userEmail) {
+        // 有 orderId：使用 orderId 作為檔名，這樣重新上傳時會覆蓋舊檔案
+        const sanitizedEmail = userEmail.replace(/[@.]/g, '_');
+        const folderName = `${sanitizedEmail}-${userId}`;
+        fileName = `${orderId}.docx`;
+        fileRef = this.storage.ref(`registration-forms/${folderName}/${fileName}`);
+        console.log(`📁 Uploading to: registration-forms/${folderName}/${fileName}`);
+      }
+      else {
+        // 沒有 orderId：使用時間戳記作為檔名（臨時上傳）
+        fileName = `${timestamp}.docx`;
+        const sanitizedEmail = userEmail ? userEmail.replace(/[@.]/g, '_') : 'unknown';
+        const folderName = `${sanitizedEmail}-${userId}`;
+        fileRef = this.storage.ref(`registration-forms/${folderName}/${fileName}`);
+        console.log(`📁 Uploading to: registration-forms/${folderName}/${fileName}`);
       }
 
       const snapshot = await fileRef.put(file);
@@ -343,6 +352,7 @@ class Firebase {
         uploadedAt: timestamp
       };
     } catch (error) {
+      console.error('❌ Upload error:', error);
       throw new Error("上傳報名表單失敗，請稍後再試。");
     }
   };

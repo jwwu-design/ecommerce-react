@@ -66,8 +66,12 @@ const RegistrationForm = () => {
   };
 
   // 處理表單上傳完成
-  const handleUploadComplete = (uploadedFormData) => {
-    setFormData(uploadedFormData);
+  const handleUploadComplete = (uploadedFormData, originalFile) => {
+    // 保存上傳結果和原始檔案，以便後續重新上傳
+    setFormData({
+      ...uploadedFormData,
+      file: originalFile
+    });
   };
 
   // 建立訂單並繼續（一般流程）
@@ -76,6 +80,25 @@ const RegistrationForm = () => {
 
     setCreatingOrder(true);
     try {
+      // 先生成 orderId
+      const timestamp = new Date().getTime();
+      const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
+      const tempOrderId = `ORDER_${dateStr}_${randomStr}`;
+
+      console.log('🆔 Generated orderId:', tempOrderId);
+
+      // 使用 orderId 重新上傳檔案到正確路徑
+      console.log('📤 Re-uploading file with orderId...');
+      const reuploadedFormData = await firebase.uploadRegistrationForm(
+        uid,
+        profile.email,
+        formData.file, // 使用原始檔案
+        tempOrderId
+      );
+
+      console.log('✅ File reuploaded with orderId:', reuploadedFormData);
+
       // 建立訂單
       const newOrderData = {
         userId: uid,
@@ -92,7 +115,8 @@ const RegistrationForm = () => {
           mobile: shipping.mobile,
           isInternational: shipping.isInternational
         },
-        registrationForm: formData
+        registrationForm: reuploadedFormData, // 使用重新上傳的資料
+        orderId: tempOrderId // 使用預先生成的 orderId
       };
 
       const result = await firebase.createOrder(newOrderData);

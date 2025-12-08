@@ -52,18 +52,15 @@ const RegistrationFormUpload = ({ userId, userEmail, orderId, onUploadComplete }
     setSelectedFile(file);
   };
 
-  // 上傳報名表單
   const handleUpload = async () => {
     if (!selectedFile) {
-      displayActionMessage('請先選擇要上傳的檔案', 'error');
+      displayActionMessage('請先選擇檔案', 'error');
       return;
     }
 
     setUploading(true);
-    setUploadProgress(0);
-
     try {
-      // 模擬上傳進度
+      // 模擬上傳進度（實際不上傳）
       const progressInterval = setInterval(() => {
         setUploadProgress((prev) => {
           if (prev >= 90) {
@@ -74,32 +71,27 @@ const RegistrationFormUpload = ({ userId, userEmail, orderId, onUploadComplete }
         });
       }, 200);
 
-      // 上傳檔案到 Firebase Storage
-      // orderId 可能為 undefined（一般流程）或有值（重新上傳流程）
-      const result = await firebase.uploadRegistrationForm(
-        userId,
-        userEmail,
-        selectedFile,
-        orderId || null
-      );
+      // 等待一下讓進度條跑完
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
       clearInterval(progressInterval);
       setUploadProgress(100);
       setUploadedFile(selectedFile.name);
-      displayActionMessage('報名表單上傳成功！', 'success');
+      displayActionMessage('報名表單已準備好！', 'success');
 
-      // 通知父元件上傳完成,傳遞完整的檔案資訊
+      // 只傳遞檔案對象，不上傳
       if (onUploadComplete) {
         onUploadComplete({
-          fileName: result.fileName,
-          fileURL: result.downloadURL,
-          originalFileName: result.originalFileName,
-          fileSize: result.fileSize,
-          uploadedAt: result.timestamp
-        });
+          fileName: selectedFile.name,
+          fileSize: selectedFile.size,
+          timestamp: new Date().getTime()
+        }, selectedFile);
       }
+
+      console.log('✅ File ready for upload:', selectedFile.name);
     } catch (error) {
-      displayActionMessage(error.message || '上傳失敗,請稍後再試', 'error');
+      console.error('❌ File validation failed:', error);
+      displayActionMessage(error.message || '檔案驗證失敗，請稍後再試', 'error');
     } finally {
       setUploading(false);
     }
