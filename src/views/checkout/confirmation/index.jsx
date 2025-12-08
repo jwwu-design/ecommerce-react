@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { useDocumentTitle, useScrollTop } from '@/hooks';
+import { useSelector } from 'react-redux';
 import firebase from '@/services/firebase';
 import { displayMoney } from '@/helpers/utils';
+import { displayActionMessage } from '@/helpers/utils';
 
 const OrderConfirmation = () => {
   useDocumentTitle('訂單確認 | Ares');
@@ -11,6 +13,14 @@ const OrderConfirmation = () => {
   const { orderId } = useParams();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  // 取得當前使用者資訊
+  const { uid, fullname } = useSelector((state) => ({
+    uid: state.auth.id,
+    fullname: state.profile.fullname || 'User'
+  }));
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -28,6 +38,63 @@ const OrderConfirmation = () => {
       fetchOrder();
     }
   }, [orderId]);
+
+  // 處理檔案選擇
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // 檢查檔案類型
+      const validTypes = ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'];
+      if (!validTypes.includes(file.type)) {
+        displayActionMessage('請上傳 Word 檔案 (.docx 或 .doc)', 'error');
+        return;
+      }
+      // 檢查檔案大小 (10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        displayActionMessage('檔案大小不得超過 10MB', 'error');
+        return;
+      }
+      setSelectedFile(file);
+    }
+  };
+
+  // 處理重新上傳
+  const handleReupload = async () => {
+    if (!selectedFile) {
+      displayActionMessage('請選擇檔案', 'error');
+      return;
+    }
+
+    setUploading(true);
+    try {
+      // 上傳檔案到 Firebase Storage
+      const uploadResult = await firebase.uploadRegistrationForm(
+        uid,
+        fullname,
+        selectedFile,
+        orderId
+      );
+
+      // 更新訂單的報名表單資訊
+      await firebase.updateOrderRegistrationForm(orderId, uploadResult);
+
+      // 重設審核狀態為 pending
+      await firebase.updateOrderStatus(orderId, 'pending', '');
+
+      console.log('✅ Registration form reuploaded');
+      displayActionMessage('報名表單已重新上傳，等待審核', 'success');
+
+      // 重新載入訂單資料
+      const updatedOrder = await firebase.getOrderById(orderId);
+      setOrder(updatedOrder);
+      setSelectedFile(null);
+    } catch (error) {
+      console.error('❌ Failed to reupload:', error);
+      displayActionMessage('上傳失敗，請稍後再試', 'error');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -155,21 +222,42 @@ const OrderConfirmation = () => {
               </div>
             )}
 
-            {/* 審核被拒絕時顯示重新上傳按鈕 */}
+            {/* 審核被拒絕時顯示重新上傳區域 */}
             {order.reviewStatus === 'rejected' && (
-              <div style={{ marginTop: '1.5rem' }}>
-                <Link
-                  to={`/checkout/step3?orderId=${order.orderId}&reupload=true`}
+              <div style={{ marginTop: '1.5rem', padding: '1.5rem', background: '#f9f9f9', borderRadius: '8px' }}>
+                <h4 style={{ marginBottom: '1rem', color: '#333' }}>重新上傳報名表單</h4>
+
+                <div style={{ marginBottom: '1rem' }}>
+                  <input
+                    type="file"
+                    accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    onChange={handleFileSelect}
+                    style={{ display: 'none' }}
+                    id="reupload-file-input"
+                  />
+                  <label
+                    htmlFor="reupload-file-input"
+                    className="button button-border"
+                    style={{ cursor: 'pointer', display: 'block', width: '100%', textAlign: 'center', marginBottom: '0.5rem' }}
+                  >
+                    <UploadOutlined /> 選擇檔案
+                  </label>
+                  {selectedFile && (
+                    <p style={{ color: '#666', margin: '0.5rem 0 0 0', fontSize: '1.2rem', textAlign: 'center' }}>
+                      已選擇：{selectedFile.name}
+                    </p>
+                  )}
+                </div>
+
+                <button
                   className="button button-large"
-                  style={{ width: '100%', textAlign: 'center', background: '#ff9800' }}
+                  style={{ width: '100%', background: '#333', borderColor: '#333' }}
+                  onClick={handleReupload}
+                  disabled={!selectedFile || uploading}
                 >
-                  重新上傳報名表單
-                </Link>
-                <p style={{ marginTop: '1rem', color: '#666', textAlign: 'center' }}>
-                  如有疑問，請聯繫客服：<br />
-                  Email: ares@ares-cert.com<br />
-                  電話: 06-2959696
-                </p>
+                  {uploading ? '上傳中...' : '提交重新上傳'}
+                </button>
+
               </div>
             )}
           </div>

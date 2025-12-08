@@ -332,10 +332,10 @@ class Firebase {
       }
 
       const snapshot = await fileRef.put(file);
-      const downloadURL = await snapshot.ref.getDownloadURL();
+      const fileURL = await snapshot.ref.getDownloadURL();
 
       return {
-        downloadURL,
+        fileURL,
         fileName,
         timestamp,
         originalFileName: file.name,
