@@ -61,9 +61,23 @@ const OrderDetail = () => {
       setUpdating(true);
       await firebaseInstance.updateOrderStatus(id, 'rejected', reason);
 
+      // 發送拒絕通知 Email
+      try {
+        await firebaseInstance.sendRejectionEmail({
+          orderId: order.orderId,
+          customerEmail: order.customerInfo?.email || order.userEmail,
+          customerName: order.customerInfo?.fullname || order.userName,
+          reason: reason || '報名資料不符合要求'
+        });
+        console.log('✅ Rejection email sent');
+      } catch (emailError) {
+        console.error('❌ Failed to send email:', emailError);
+        // Email 發送失敗不影響審核流程
+      }
+
       // 重新載入訂單資料
       await fetchOrderDetail();
-      alert('已拒絕此報名表單');
+      alert('已拒絕此報名表單，並已發送通知信給顧客');
     } catch (error) {
       console.error('Failed to reject:', error);
       alert('操作失敗：' + error.message);
@@ -122,12 +136,12 @@ const OrderDetail = () => {
             </span>
           </div>
           <div className="info-item">
-            <span className="info-label">訂單狀態：</span>
+            {/* <span className="info-label">訂單狀態：</span>
             <span className="info-value">
               <span className={`status-badge status-${order.reviewStatus}`}>
                 {order.reviewStatus || '未知'}
               </span>
-            </span>
+            </span> */}
           </div>
           <div className="info-item">
             <span className="info-label">付款狀態：</span>

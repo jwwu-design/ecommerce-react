@@ -154,6 +154,24 @@ const OrderConfirmation = () => {
                 </Link>
               </div>
             )}
+
+            {/* 審核被拒絕時顯示重新上傳按鈕 */}
+            {order.reviewStatus === 'rejected' && (
+              <div style={{ marginTop: '1.5rem' }}>
+                <Link
+                  to={`/checkout/step3?orderId=${order.orderId}&reupload=true`}
+                  className="button button-large"
+                  style={{ width: '100%', textAlign: 'center', background: '#ff9800' }}
+                >
+                  重新上傳報名表單
+                </Link>
+                <p style={{ marginTop: '1rem', color: '#666', textAlign: 'center' }}>
+                  如有疑問，請聯繫客服：<br />
+                  Email: ares@ares-cert.com<br />
+                  電話: 06-2959696
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="divider" />
