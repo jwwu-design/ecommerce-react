@@ -18,22 +18,47 @@ import ShippingTotal from './ShippingTotal';
 
 const FormSchema = Yup.object().shape({
   fullname: Yup.string()
-    .required('請輸入姓名。')
+    .required('請輸入學員姓名。')
     .min(2, '姓名至少需 2 個字元。')
     .max(60, '姓名不可超過 60 個字元。'),
+  companyName: Yup.string()
+    .required('請輸入公司名稱。'),
   email: Yup.string()
     .email('Email 格式不正確。')
-    .required('請輸入 Email。'),
-  address: Yup.string()
-    .required('請輸入收件地址。'),
+    .required('請輸入電子郵件。'),
   mobile: Yup.object()
     .shape({
       country: Yup.string(),
       countryCode: Yup.string(),
-      dialCode: Yup.string().required('請輸入手機號碼。'),
-      value: Yup.string().required('請輸入手機號碼。')
+      dialCode: Yup.string().required('請輸入聯絡電話。'),
+      value: Yup.string().required('請輸入聯絡電話。')
     })
-    .required('請輸入手機號碼。'),
+    .required('請輸入聯絡電話。'),
+  invoiceInfo: Yup.string()
+    .required('請輸入發票抬頭或統編。'),
+  address: Yup.string()
+    .required('請輸入聯絡地址。'),
+  englishName: Yup.string()
+    .required('請輸入英文姓名。')
+    .matches(/^[A-Z\s]+$/, '請使用大寫英文字母'),
+  dietPreference: Yup.string()
+    .required('請選擇葷/素食。')
+    .oneOf(['葷', '素(蛋奶素)', '素(全素)'], '請選擇有效的選項'),
+  couponType: Yup.string()
+    .required('請選擇優惠券選項。')
+    .oneOf(['無', '其他'], '請選擇有效的選項'),
+  couponCode: Yup.string()
+    .when('couponType', {
+      is: '其他',
+      then: Yup.string().required('請輸入優惠券序號。')
+    }),
+  infoSource: Yup.string()
+    .required('請選擇資訊來源。'),
+  infoSourceOther: Yup.string()
+    .when('infoSource', {
+      is: '其他',
+      then: Yup.string().required('請說明資訊來源。')
+    }),
   isInternational: Yup.boolean(),
   isDone: Yup.boolean()
 });
@@ -46,9 +71,17 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
 
   const initFormikValues = {
     fullname: shipping.fullname || profile.fullname || '',
+    companyName: shipping.companyName || '',
     email: shipping.email || profile.email || '',
-    address: shipping.address || profile.address || '',
     mobile: shipping.mobile || profile.mobile || {},
+    invoiceInfo: shipping.invoiceInfo || '',
+    address: shipping.address || profile.address || '',
+    englishName: shipping.englishName || '',
+    dietPreference: shipping.dietPreference || '葷',
+    couponType: shipping.couponType || '無',
+    couponCode: shipping.couponCode || '',
+    infoSource: shipping.infoSource || '',
+    infoSourceOther: shipping.infoSourceOther || '',
     isInternational: shipping.isInternational || false,
     isDone: shipping.isDone || false
   };
@@ -56,9 +89,17 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
   const onSubmitForm = (form) => {
     dispatch(setShippingDetails({
       fullname: form.fullname,
+      companyName: form.companyName,
       email: form.email,
-      address: form.address,
       mobile: form.mobile,
+      invoiceInfo: form.invoiceInfo,
+      address: form.address,
+      englishName: form.englishName,
+      dietPreference: form.dietPreference,
+      couponType: form.couponType,
+      couponCode: form.couponCode,
+      infoSource: form.infoSource,
+      infoSourceOther: form.infoSourceOther,
       isInternational: form.isInternational,
       isDone: true
     }));
@@ -70,7 +111,7 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
       <div className="checkout">
         <StepTracker current={2} />
         <div className="checkout-step-2">
-          <h3 className="text-center">運送資訊</h3>
+          <h3 className="text-center">顧客資訊</h3>
           <Formik
             initialValues={initFormikValues}
             validateOnChange

@@ -548,7 +548,7 @@ class Firebase {
       const timestamp = new Date().getTime();
       const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
       const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
-      const orderId = `ORDER_${dateStr}_${randomStr}`;
+      const orderId = orderData.orderId || `ORDER_${dateStr}_${randomStr}`;
 
       // Normalize mobile field
       const mobile = orderData.shipping?.mobile;
@@ -557,13 +557,21 @@ class Firebase {
         : mobile || '';
 
       const order = {
-        orderId,
+        orderId: orderData.orderId || orderId,  // 支援預先生成的 orderId
         userId: orderData.userId,
         customerInfo: {
           fullname: orderData.shipping?.fullname || orderData.userName,
+          companyName: orderData.shipping?.companyName || '',
           email: orderData.shipping?.email || orderData.userEmail,
           mobile: mobileValue,
-          address: orderData.shipping?.address || {}
+          invoiceInfo: orderData.shipping?.invoiceInfo || '',
+          address: orderData.shipping?.address || '',
+          englishName: orderData.shipping?.englishName || '',
+          dietPreference: orderData.shipping?.dietPreference || '',
+          couponType: orderData.shipping?.couponType || '無',
+          couponCode: orderData.shipping?.couponCode || '',
+          infoSource: orderData.shipping?.infoSource || '',
+          infoSourceOther: orderData.shipping?.infoSourceOther || ''
         },
         items: orderData.items || [],
         totalAmount: orderData.total || 0,
@@ -579,7 +587,6 @@ class Firebase {
       };
 
       await this.db.collection("orders").doc(orderId).set(order);
-      console.log(`✅ Created order: ${orderId}`);
 
       return { orderId, order };
     } catch (error) {

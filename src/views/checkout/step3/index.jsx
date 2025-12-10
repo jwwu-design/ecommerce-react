@@ -110,13 +110,21 @@ const RegistrationForm = () => {
         total: total,
         shipping: {
           fullname: shipping.fullname,
+          companyName: shipping.companyName,
           email: shipping.email,
-          address: shipping.address,
           mobile: shipping.mobile,
+          invoiceInfo: shipping.invoiceInfo,
+          address: shipping.address,
+          englishName: shipping.englishName,
+          dietPreference: shipping.dietPreference,
+          couponType: shipping.couponType,
+          couponCode: shipping.couponCode,
+          infoSource: shipping.infoSource,
+          infoSourceOther: shipping.infoSourceOther,
           isInternational: shipping.isInternational
         },
-        registrationForm: reuploadedFormData, // 使用重新上傳的資料
-        orderId: tempOrderId // 使用預先生成的 orderId
+        registrationForm: reuploadedFormData,
+        orderId: tempOrderId
       };
 
       const result = await firebase.createOrder(newOrderData);
