@@ -10,7 +10,7 @@ const ShippingTotal = ({ subtotal }) => {
     <div className="checkout-total d-flex-end padding-right-m">
       <table>
         <tbody>
-          <tr>
+          {/* <tr>
             <td>
               <span className="d-block margin-0 padding-right-s text-right">
                 國際運費: &nbsp;
@@ -21,7 +21,7 @@ const ShippingTotal = ({ subtotal }) => {
                 {values.isInternational ? '$50.00' : '$0.00'}
               </h4>
             </td>
-          </tr>
+          </tr> */}
           <tr>
             <td>
               <span className="d-block margin-0 padding-right-s text-right">

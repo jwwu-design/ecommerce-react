@@ -52,7 +52,7 @@ const CustomCreatableSelect = (props) => {
             zIndex: 10
           }),
           container: (provided) => ({
-            ...provided, marginBottom: '1.2rem'
+            ...provided, marginBottom: '0rem'
           }),
           control: (provided) => ({
             ...provided,

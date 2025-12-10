@@ -110,7 +110,7 @@ const OrderConfirmation = () => {
         <h1>找不到訂單</h1>
         <p>訂單編號 {orderId} 不存在</p>
         <Link to="/" className="button">
-          返回首頁
+          返回首頁XX
         </Link>
       </div>
     );
@@ -302,8 +302,8 @@ const OrderConfirmation = () => {
           </div>
 
           <div className="confirmation-actions">
-            <Link to="/" className="button">
-              返回首頁
+            <Link to="/account" className="button">
+              返回上一頁
             </Link>
           </div>
         </div>

@@ -15,10 +15,11 @@ import * as Yup from 'yup';
 
 // 預設品牌選項，可自行調整
 const brandOptions = [
-  { value: 'Salt Maalat', label: 'Salt Maalat' },
-  { value: 'Betsin Maalat', label: 'Betsin Maalat' },
-  { value: 'Sexbomb', label: 'Sexbomb' },
-  { value: 'Black Kibal', label: 'Black Kibal' }
+  { value: 'Ares', label: 'Ares' },
+  // { value: 'Salt Maalat', label: 'Salt Maalat' },
+  // { value: 'Betsin Maalat', label: 'Betsin Maalat' },
+  // { value: 'Sexbomb', label: 'Sexbomb' },
+  // { value: 'Black Kibal', label: 'Black Kibal' }
 ];
 
 const FormSchema = Yup.object().shape({

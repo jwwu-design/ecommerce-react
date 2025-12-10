@@ -1,3 +1,4 @@
+import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { CHECKOUT_STEP_2, SIGNIN } from '@/constants/routes';
 import { useDocumentTitle, useScrollTop } from '@/hooks';
 import { displayActionMessage } from '@/helpers/utils';
@@ -248,12 +249,23 @@ const RegistrationForm = () => {
 
         <div className="checkout-shipping-action">
           <button
-            className="button"
+            className="button button-muted"
+            onClick={() => history.push(CHECKOUT_STEP_2)}
+            type="button"
+          >
+            <ArrowLeftOutlined />
+            &nbsp;
+            上一步
+          </button>
+          <button
+            className="button button-icon"
             disabled={!formData || creatingOrder}
             onClick={handleContinue}
             type="button"
           >
-            {creatingOrder ? '建立訂單中...' : '繼續'}
+            {creatingOrder ? '建立訂單中...' : '建立訂單'}
+            &nbsp;
+            <ArrowRightOutlined />
           </button>
         </div>
       </div>

@@ -154,20 +154,24 @@ const OrderDetail = () => {
         </div>
       </div>
 
-      {/* 顧客資料 */}
+      {/* 顧客資訊 */}
       <div className="order-detail-section">
-        <h3>顧客資料</h3>
+        <h3>顧客資訊</h3>
         <div className="customer-info-grid">
           <div className="info-item">
-            <span className="info-label">姓名：</span>
+            <span className="info-label">學員姓名：</span>
             <span className="info-value">{order.customerInfo?.fullname || '-'}</span>
+          </div>
+          <div className="info-item">
+            <span className="info-label">英文姓名：</span>
+            <span className="info-value">{order.customerInfo?.englishName || '-'}</span>
           </div>
           <div className="info-item">
             <span className="info-label">Email：</span>
             <span className="info-value">{order.customerInfo?.email || '-'}</span>
           </div>
           <div className="info-item">
-            <span className="info-label">手機：</span>
+            <span className="info-label">聯絡電話：</span>
             <span className="info-value">
               {order.customerInfo?.mobile
                 ? (typeof order.customerInfo.mobile === 'object'
@@ -177,11 +181,37 @@ const OrderDetail = () => {
             </span>
           </div>
           <div className="info-item">
-            <span className="info-label">地址：</span>
+            <span className="info-label">發票抬頭/統編：</span>
+            <span className="info-value">{order.customerInfo?.invoiceInfo || '-'}</span>
+          </div>
+          <div className="info-item">
+            <span className="info-label">聯絡地址：</span>
             <span className="info-value">
-              {order.customerInfo?.address
-                ? `${order.customerInfo.address.city || ''} ${order.customerInfo.address.district || ''} ${order.customerInfo.address.street || ''}`
-                : '-'}
+              {order.customerInfo?.address || '-'}
+            </span>
+          </div>
+          <div className="info-item">
+            <span className="info-label">公司名稱：</span>
+            <span className="info-value">{order.customerInfo?.companyName || '-'}</span>
+          </div>
+          <div className="info-item">
+            <span className="info-label">葷/素食：</span>
+            <span className="info-value">{order.customerInfo?.dietPreference || '-'}</span>
+          </div>
+          <div className="info-item">
+            <span className="info-label">優惠券：</span>
+            <span className="info-value">
+              {order.customerInfo?.couponType === '序號' && order.customerInfo?.couponCode
+                ? `序號: ${order.customerInfo.couponCode}`
+                : order.customerInfo?.couponType || '無'}
+            </span>
+          </div>
+          <div className="info-item">
+            <span className="info-label">資訊來源：</span>
+            <span className="info-value">
+              {order.customerInfo?.infoSource === '其他' && order.customerInfo?.infoSourceOther
+                ? `其他: ${order.customerInfo.infoSourceOther}`
+                : order.customerInfo?.infoSource || '-'}
             </span>
           </div>
         </div>

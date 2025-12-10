@@ -178,8 +178,8 @@ const RegistrationFormManagement = () => {
               <li>支援格式：.docx、.doc</li>
               <li>檔案大小限制：10MB</li>
               <li>上傳後，客戶在結帳第三步可以下載此模板</li>
+              <li>上傳後，新的報名表單模板將會覆蓋現有模板</li>
               <li>建議定期更新模板以確保資訊正確</li>
-              <li>上傳新的報名表單模板將會覆蓋現有模板</li>
             </ul>
           </div>
         </div>
