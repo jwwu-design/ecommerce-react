@@ -718,42 +718,16 @@ class Firebase {
   // 發送拒絕通知 Email
   sendRejectionEmail = async ({ orderId, customerEmail, customerName, reason }) => {
     try {
-      console.log('📧 Sending rejection email via EmailJS...');
-      console.log('To:', customerEmail);
-      console.log('Order ID:', orderId);
-      console.log('Reason:', reason);
-
       // 動態導入 EmailJS（避免 SSR 問題）
       const emailjs = await import('@emailjs/browser');
 
       // EmailJS 設定
-      // TODO: 請在 https://www.emailjs.com/ 註冊並替換以下值
-      // 詳細設定步驟請參考 EMAILJS_SETUP.md
       const SERVICE_ID = 'service_9uqmwds';      // 例如：'service_abc123'
       const TEMPLATE_ID = 'template_3lzj7gz';    // 例如：'template_xyz789'
       const PUBLIC_KEY = 'Lu_-1Zzum7gYvL1UU';      // 例如：'user_ABC123XYZ'
 
       // 檢查是否已設定
       if (SERVICE_ID === 'YOUR_SERVICE_ID') {
-        console.warn('⚠️ EmailJS 尚未設定，使用模擬模式');
-        console.warn('請參考 EMAILJS_SETUP.md 完成設定');
-        console.log('Email 內容預覽：');
-        console.log(`
-親愛的 ${customerName}，您好：
-
-很抱歉通知您，您的報名表單（訂單編號：${orderId}）審核未通過。
-
-拒絕原因：${reason}
-
-請聯繫我們的客服團隊以了解詳情：
-電子郵件：ares@ares-cert.com
-電話：06-2959696
-
-您可以重新上傳報名表單，我們會盡快為您處理。
-
-祝您順心
-Ares 團隊
-        `);
         return { success: true, message: 'Email sent (simulated - EmailJS not configured)' };
       }
 
@@ -777,6 +751,47 @@ Ares 團隊
       return { success: true, message: 'Email sent', response };
     } catch (error) {
       console.error('❌ Failed to send rejection email:', error);
+      // Email 發送失敗不應該中斷審核流程
+      return { success: false, message: 'Email failed but review completed', error };
+    }
+  };
+
+  // 發送審核通過通知 Email
+  sendApprovalEmail = async ({ orderId, customerEmail, customerName, orderUrl }) => {
+    try {
+      // 動態導入 EmailJS（避免 SSR 問題）
+      const emailjs = await import('@emailjs/browser');
+
+      // EmailJS 設定
+      const SERVICE_ID = 'service_9uqmwds';
+      const TEMPLATE_ID = 'template_34krn9i';    // 需要在 EmailJS 建立審核通過的模板
+      const PUBLIC_KEY = 'Lu_-1Zzum7gYvL1UU';
+
+      // 檢查是否已設定
+      if (SERVICE_ID === 'YOUR_SERVICE_ID') {
+        return { success: true, message: 'Email sent (simulated - EmailJS not configured)' };
+      }
+
+      // 發送 Email
+      const response = await emailjs.default.send(
+        SERVICE_ID,
+        TEMPLATE_ID,
+        {
+          to_email: customerEmail,
+          to_name: customerName,
+          order_id: orderId,
+          order_url: orderUrl,
+          support_email: 'ares@ares-cert.com',
+          support_phone: '06-2959696',
+          company_name: 'Ares'
+        },
+        PUBLIC_KEY
+      );
+
+      console.log('✅ Approval email sent successfully:', response);
+      return { success: true, message: 'Approval email sent', response };
+    } catch (error) {
+      console.error('❌ Failed to send approval email:', error);
       // Email 發送失敗不應該中斷審核流程
       return { success: false, message: 'Email failed but review completed', error };
     }

@@ -40,9 +40,24 @@ const OrderDetail = () => {
       setUpdating(true);
       await firebaseInstance.updateOrderStatus(id, 'approved');
 
+      // 發送審核通過通知 Email
+      try {
+        const orderUrl = `${window.location.origin}/checkout/step4?orderId=${order.orderId}`;
+        await firebaseInstance.sendApprovalEmail({
+          orderId: order.orderId,
+          customerEmail: order.customerInfo?.email || order.userEmail,
+          customerName: order.customerInfo?.fullname || order.userName,
+          orderUrl: orderUrl
+        });
+        console.log('✅ Approval email sent with URL:', orderUrl);
+      } catch (emailError) {
+        console.error('❌ Failed to send email:', emailError);
+        // Email 發送失敗不影響審核流程
+      }
+
       // 重新載入訂單資料
       await fetchOrderDetail();
-      alert('審核通過！');
+      alert('審核通過，並已發送通知信給顧客');
     } catch (error) {
       console.error('Failed to approve:', error);
       alert('審核失敗：' + error.message);
