@@ -1,5 +1,4 @@
 import { ArrowRightOutlined, LoadingOutlined } from '@ant-design/icons';
-import { SocialLogin } from '@/components/common';
 import { CustomInput } from '@/components/formik';
 import { FORGOT_PASSWORD, SIGNUP } from '@/constants/routes';
 import { Field, Form, Formik } from 'formik';
@@ -123,10 +122,6 @@ const SignIn = ({ history }) => {
                 </Formik>
               </div>
             </div>
-            {/* <div className="auth-divider">
-              <h6>或</h6>
-            </div>
-            <SocialLogin isLoading={isAuthenticating} /> */}
           </div>
           <div className="auth-message">
             <span className="auth-info">
