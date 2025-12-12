@@ -14,7 +14,7 @@ import EditForm from './EditForm';
 
 const FormSchema = Yup.object().shape({
   fullname: Yup.string()
-    .min(4, '姓名至少需要 4 個字元。')
+    .min(2, '姓名至少需要 2 個字元。')
     .max(60, '姓名長度不能超過 60 個字元。')
     .required('姓名為必填欄位'),
   email: Yup.string()

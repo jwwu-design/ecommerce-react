@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { useDocumentTitle, useScrollTop } from '@/hooks';
 import { useSelector } from 'react-redux';
@@ -11,10 +11,15 @@ const OrderConfirmation = () => {
   useDocumentTitle('訂單確認 | Ares');
   useScrollTop();
   const { orderId } = useParams();
+  const location = useLocation();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+
+  // 檢查是否來自付款成功
+  const params = new URLSearchParams(location.search);
+  const isPaymentSuccess = params.get('payment') === 'success';
 
   // 取得當前使用者資訊
   const { uid, fullname } = useSelector((state) => ({
@@ -121,16 +126,25 @@ const OrderConfirmation = () => {
       <div className="order-confirmation-wrapper">
         <div className="order-confirmation-header">
           <CheckCircleOutlined style={{ fontSize: '5rem', color: '#52c41a', marginBottom: '1rem' }} />
-          <h1>感謝您的訂購！</h1>
+          <h1>{isPaymentSuccess ? '付款成功！' : '感謝您的訂購！'}</h1>
           <p className="order-id">訂單編號: <strong>{order.orderId}</strong></p>
         </div>
 
         <div className="order-confirmation-content">
           <div className="confirmation-message">
-            <h2>您的訂單已成功建立</h2>
+            <h2>{isPaymentSuccess ? '您的付款已完成' : '您的訂單已成功建立'}</h2>
             <p className="text-subtle">
-              我們已收到您的報名表單,管理員將在 1-2 個工作天內審核您的資料。
-              審核通過後,我們會透過電子郵件通知您進行付款。
+              {isPaymentSuccess ? (
+                <>
+                  感謝您完成付款！我們已收到您的款項，課程報名已確認完成。
+                  相關資訊將會透過電子郵件寄送給您。
+                </>
+              ) : (
+                <>
+                  我們已收到您的報名表單,管理員將在 1-2 個工作天內審核您的資料。
+                  審核通過後,我們會透過電子郵件通知您進行付款。
+                </>
+              )}
             </p>
           </div>
 
@@ -175,39 +189,66 @@ const OrderConfirmation = () => {
           <div className="divider" />
 
           <div className="order-status-section">
-            <h3>報名表單狀態</h3>
-            {order.reviewStatus === 'approved' ? (
-              <div className="status-badge approved">
-                <CheckCircleOutlined />
-                &nbsp;
-                審核通過
+            <h3>訂單狀態</h3>
+
+            {/* 付款狀態 */}
+            {isPaymentSuccess || order.paymentStatus === 'paid' ? (
+              <div style={{ marginBottom: '1.5rem' }}>
+                <h4 style={{ marginBottom: '0.5rem', fontSize: '1.4rem' }}>付款狀態</h4>
+                <div className="status-badge approved">
+                  <CheckCircleOutlined />
+                  &nbsp;
+                  付款完成
+                </div>
+                {order.payment && order.payment.PaymentDate && (
+                  <p className="text-subtle" style={{ marginTop: '0.5rem' }}>
+                    付款時間: {order.payment.PaymentDate}
+                  </p>
+                )}
+                {order.payment && order.payment.TradeNo && (
+                  <p className="text-subtle">
+                    交易編號: {order.payment.TradeNo}
+                  </p>
+                )}
               </div>
-            ) : order.reviewStatus === 'rejected' ? (
-              <div className="status-badge rejected">
-                <CloseCircleOutlined />
-                &nbsp;
-                審核未通過
-              </div>
-            ) : (
-              <div className="status-badge pending">
-                <ClockCircleOutlined />
-                &nbsp;
-                等待審核
-              </div>
-            )}
-            <p className="text-subtle" style={{ marginTop: '0.5rem' }}>
-              訂單建立時間: {new Date(order.createdAt).toLocaleString('zh-TW')}
-            </p>
-            {order.reviewedAt && (
-              <p className="text-subtle">
-                審核時間: {new Date(order.reviewedAt).toLocaleString('zh-TW')}
+            ) : null}
+
+            {/* 報名表單審核狀態 */}
+            <div>
+              <h4 style={{ marginBottom: '0.5rem', fontSize: '1.4rem' }}>報名表單狀態</h4>
+              {order.reviewStatus === 'approved' ? (
+                <div className="status-badge approved">
+                  <CheckCircleOutlined />
+                  &nbsp;
+                  審核通過
+                </div>
+              ) : order.reviewStatus === 'rejected' ? (
+                <div className="status-badge rejected">
+                  <CloseCircleOutlined />
+                  &nbsp;
+                  審核未通過
+                </div>
+              ) : (
+                <div className="status-badge pending">
+                  <ClockCircleOutlined />
+                  &nbsp;
+                  等待審核
+                </div>
+              )}
+              <p className="text-subtle" style={{ marginTop: '0.5rem' }}>
+                訂單建立時間: {new Date(order.createdAt).toLocaleString('zh-TW')}
               </p>
-            )}
-            {order.reviewNote && (
-              <p className="review-note" style={{ marginTop: '0.5rem', color: '#ff4d4f' }}>
-                備註：{order.reviewNote}
-              </p>
-            )}
+              {order.reviewedAt && (
+                <p className="text-subtle">
+                  審核時間: {new Date(order.reviewedAt).toLocaleString('zh-TW')}
+                </p>
+              )}
+              {order.reviewNote && (
+                <p className="review-note" style={{ marginTop: '0.5rem', color: '#ff4d4f' }}>
+                  備註：{order.reviewNote}
+                </p>
+              )}
+            </div>
 
             {/* 審核通過且未付款時顯示付款按鈕 */}
             {order.reviewStatus === 'approved' && order.paymentStatus === 'pending' && (
@@ -266,24 +307,45 @@ const OrderConfirmation = () => {
 
           <div className="next-steps-section">
             <h3>接下來的步驟</h3>
-            <ol className="next-steps-list">
-              <li>
-                <strong>管理員審核</strong>
-                <p className="text-subtle">我們會仔細審核您上傳的報名表單</p>
-              </li>
-              <li>
-                <strong>電子郵件通知</strong>
-                <p className="text-subtle">審核通過後,您會收到電子郵件通知</p>
-              </li>
-              <li>
-                <strong>完成付款</strong>
-                <p className="text-subtle">點擊郵件中的連結完成付款</p>
-              </li>
-              <li>
-                <strong>參加課程</strong>
-                <p className="text-subtle">付款完成後即可參加課程</p>
-              </li>
-            </ol>
+            {isPaymentSuccess || order.paymentStatus === 'paid' ? (
+              <ol className="next-steps-list">
+                <li>
+                  <strong>確認電子郵件</strong>
+                  <p className="text-subtle">請查收您的信箱，我們已寄送課程相關資訊</p>
+                </li>
+                <li>
+                  <strong>課程準備</strong>
+                  <p className="text-subtle">請準備好相關學習資料，並留意課程通知</p>
+                </li>
+                <li>
+                  <strong>參加課程</strong>
+                  <p className="text-subtle">按照郵件中的指示參加課程</p>
+                </li>
+                <li>
+                  <strong>完成學習</strong>
+                  <p className="text-subtle">認真學習，順利取得認證</p>
+                </li>
+              </ol>
+            ) : (
+              <ol className="next-steps-list">
+                <li>
+                  <strong>管理員審核</strong>
+                  <p className="text-subtle">我們會仔細審核您上傳的報名表單</p>
+                </li>
+                <li>
+                  <strong>電子郵件通知</strong>
+                  <p className="text-subtle">審核通過後,您會收到電子郵件通知</p>
+                </li>
+                <li>
+                  <strong>完成付款</strong>
+                  <p className="text-subtle">點擊郵件中的連結完成付款</p>
+                </li>
+                <li>
+                  <strong>參加課程</strong>
+                  <p className="text-subtle">付款完成後即可參加課程</p>
+                </li>
+              </ol>
+            )}
           </div>
 
           <div className="divider" />

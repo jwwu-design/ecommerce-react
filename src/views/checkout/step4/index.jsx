@@ -30,6 +30,14 @@ const Payment = () => {
     if (orderId) {
       // 載入訂單資料
       loadOrderData(orderId);
+
+      // 檢查是否有付款結果參數
+      const paymentStatus = params.get('payment');
+      if (paymentStatus === 'success') {
+        displayActionMessage('付款成功！', 'success');
+      } else if (paymentStatus === 'failed') {
+        displayActionMessage('付款失敗，請重試', 'error');
+      }
     }
   }, [orderId]);
 
@@ -51,24 +59,50 @@ const Payment = () => {
     try {
       setLoading(true);
 
-      if (orderData) {
-        // 使用現有訂單付款
-        console.log('💳 Processing payment for order:', orderData.orderId);
-        displayActionMessage('正在導向綠界支付頁面...', 'info');
-
-        // TODO: 實作綠界金流 API 呼叫
-        // 這裡應該呼叫後端 API 來產生綠界支付表單
-        setTimeout(() => {
-          displayActionMessage('綠界支付功能開發中...', 'info');
-          setLoading(false);
-        }, 1500);
-
-      } else {
-        displayActionMessage('請先完成訂單建立', 'error');
+      if (!orderData) {
+        displayActionMessage('訂單資料不存在', 'error');
+        setLoading(false);
+        return;
       }
+
+      console.log('💳 Processing payment for order:', orderData.orderId);
+      displayActionMessage('正在導向綠界支付頁面...', 'info');
+
+      // 初始化 Firebase Functions
+      const functions = firebase.functions();
+
+      // 呼叫 Cloud Function 產生綠界支付表單
+      const createECPayOrder = functions.httpsCallable('createECPayOrder');
+      const result = await createECPayOrder({
+        orderId: orderData.orderId,
+        totalAmount: orderData.totalAmount,
+        itemName: orderData.items && orderData.items.length > 0
+          ? orderData.items[0].name
+          : '課程報名',
+        customerEmail: orderData.customerInfo?.email || orderData.userEmail,
+        clientBackURL: window.location.origin
+      });
+
+      console.log('✅ ECPay form generated');
+
+      // 將回傳的 HTML form 插入頁面並自動提交
+      const formContainer = document.createElement('div');
+      formContainer.innerHTML = result.data.formHtml;
+      formContainer.style.display = 'none';
+      document.body.appendChild(formContainer);
+
+      // 自動提交表單導向綠界
+      const form = formContainer.querySelector('form');
+      if (form) {
+        console.log('🚀 Submitting to ECPay...');
+        form.submit();
+      } else {
+        throw new Error('Failed to create payment form');
+      }
+
     } catch (error) {
       console.error('❌ Payment error:', error);
-      displayActionMessage('付款處理失敗', 'error');
+      displayActionMessage(error.message || '付款處理失敗', 'error');
       setLoading(false);
     }
   };
@@ -99,7 +133,7 @@ const Payment = () => {
 
           <Total
             isInternational={false}
-            subtotal={orderData?.totalAmount || 0}
+            subtotal={Number(orderData?.totalAmount) || 0}
           />
 
           <div className="payment-actions">

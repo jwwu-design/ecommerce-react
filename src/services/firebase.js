@@ -2,6 +2,7 @@
 import "firebase/auth";
 import "firebase/firestore";
 import "firebase/storage";
+import "firebase/functions";
 import firebaseConfig from "./config";
 
 class Firebase {
@@ -11,7 +12,11 @@ class Firebase {
     this.storage = app.storage();
     this.db = app.firestore();
     this.auth = app.auth();
+    this.functionsInstance = app.functions();
   }
+
+  // FIREBASE FUNCTIONS
+  functions = () => this.functionsInstance;
 
   // AUTH ACTIONS ------------
 
@@ -794,6 +799,26 @@ class Firebase {
       console.error('❌ Failed to send approval email:', error);
       // Email 發送失敗不應該中斷審核流程
       return { success: false, message: 'Email failed but review completed', error };
+    }
+  };
+
+  // PAYMENT ACTIONS ------------
+
+  // 更新訂單付款狀態
+  updateOrderPaymentStatus = async (orderId, paymentData) => {
+    try {
+      await this.db.collection("orders").doc(orderId).update({
+        paymentStatus: paymentData.status, // 'paid', 'failed', 'pending'
+        payment: {
+          ...paymentData,
+          updatedAt: new Date().getTime()
+        },
+        updatedAt: new Date().getTime()
+      });
+      console.log(`✅ Updated payment status for order ${orderId} to ${paymentData.status}`);
+    } catch (error) {
+      console.error("❌ Failed to update payment status:", error);
+      throw new Error("更新付款狀態失敗");
     }
   };
 }
