@@ -102,10 +102,14 @@ const ViewProduct = () => {
               <br />
               <span className="text-subtle">{product.brand}</span>
               <h1 className="margin-top-0">{product.name}</h1>
-              <span>{product.description}</span>
-              <br />
-              <br />
               <div className="divider" />
+              <br />
+              <div>
+                <span className="text-subtle">地區</span>
+                <br />
+                <br />
+                <span>{product.region}</span>
+              </div>
               <br />
               <div>
                 <span className="text-subtle">課程日期</span>
@@ -142,6 +146,29 @@ const ViewProduct = () => {
               </div>
             </div>
           </div>
+
+          {/* 商品詳細資訊區塊 */}
+          <div className="product-detail-info">
+            <div className="product-detail-info-item">
+              <span className="text-subtle label">大類</span>
+              <br />
+              <span className="value">{product.category}</span>
+            </div>
+
+            <div className="product-detail-info-item">
+              <span className="text-subtle label">系統</span>
+              <br />
+              <span className="value">{product.system}</span>
+            </div>
+            <div className="divider product-detail-info-divider" />
+
+            <div className="product-detail-info-description">
+              <span className="text-subtle label">產品敘述</span>
+              <br />
+              <p>{product.description}</p>
+            </div>
+          </div>
+
           <div style={{ marginTop: '10rem' }}>
             <div className="display-header">
               <h1>推薦商品</h1>

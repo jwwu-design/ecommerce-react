@@ -189,12 +189,15 @@
 
 // PRODUCT MODAL -------------------------------------------------
 .product-view {
-  margin: 0 5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 5rem;
 
   @include tablet {
     width: 100%;
-    margin: 0;
+    margin: 0 auto;
     margin-top: 5rem;
+    padding: 0;
   }
 }
 
@@ -561,5 +564,49 @@
 
   p {
     margin-top: 0;
+  }
+}
+
+// PRODUCT DETAIL INFO SECTION -------------------------------------------------
+.product-detail-info {
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.product-detail-info-item {
+  margin-bottom: 1.5rem;
+
+  .label {
+    font-size: 1.4rem;
+    font-weight: 500;
+  }
+
+  .value {
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+    display: inline-block;
+  }
+}
+
+.product-detail-info-divider {
+  margin: 2rem 0;
+}
+
+.product-detail-info-description {
+  .label {
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    display: inline-block;
+  }
+
+  p {
+    font-size: 1.6rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    margin: 0;
   }
 }
