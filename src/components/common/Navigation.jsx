@@ -76,10 +76,10 @@ const Navigation = () => {
       <ul className="navigation-menu-main">
         <li><NavLink activeClassName="navigation-menu-active" exact to={ROUTE.HOME}>首頁</NavLink></li>
         <li><NavLink activeClassName="navigation-menu-active" to={ROUTE.SHOP}>商店</NavLink></li>
+        <li><NavLink activeClassName="navigation-menu-active" to={ROUTE.FEATURED_PRODUCTS}>精選商品</NavLink></li>
+        <li><NavLink activeClassName="navigation-menu-active" to={ROUTE.RECOMMENDED_PRODUCTS}>推薦商品</NavLink></li>
         <li><NavLink activeClassName="navigation-menu-active" to={ROUTE.CONTACT}>聯絡我們</NavLink></li>
         {store.user && store.user.role === 'ADMIN' && <li><NavLink activeClassName="navigation-menu-active" to={ROUTE.ADMIN_DASHBOARD}>管理後臺</NavLink></li>}
-        {/* <li><NavLink activeClassName="navigation-menu-active" to={ROUTE.FEATURED_PRODUCTS}>Featured</NavLink></li> */}
-        {/* <li><NavLink activeClassName="navigation-menu-active" to={ROUTE.RECOMMENDED_PRODUCTS}>Recommended</NavLink></li> */}
       </ul>
       {(pathname === ROUTE.SHOP || pathname === ROUTE.SEARCH) && (
         <FiltersToggle>

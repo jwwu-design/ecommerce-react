@@ -381,30 +381,65 @@ const OrderDetail = () => {
         )}
       </div>
 
-      {/* 支付資訊（預留） */}
+      {/* 支付資訊 */}
       <div className="order-detail-section">
         <h3>支付資訊</h3>
-        <div className="placeholder-section">
-          <p className="placeholder-text">支付資訊功能開發中，將於串接金流後提供</p>
-          {order.payment && (
-            <div className="payment-info">
-              <pre>{JSON.stringify(order.payment, null, 2)}</pre>
+        {order.payment ? (
+          <div className="order-info-grid">
+            <div className="info-item">
+              <span className="info-label">交易狀態：</span>
+              <span className="info-value">
+                <span className={`status-badge ${order.payment.RtnCode === '1' ? 'status-approved' : 'status-rejected'}`}>
+                  {order.payment.RtnMsg || '-'}
+                </span>
+              </span>
             </div>
-          )}
-        </div>
-      </div>
-
-      {/* 發票資訊（預留） */}
-      <div className="order-detail-section">
-        <h3>發票資訊</h3>
-        <div className="placeholder-section">
-          <p className="placeholder-text">發票資訊功能開發中，將於整合發票系統後提供</p>
-          {order.invoice && (
-            <div className="invoice-info">
-              <pre>{JSON.stringify(order.invoice, null, 2)}</pre>
+            <div className="info-item">
+              <span className="info-label">綠界交易編號：</span>
+              <span className="info-value">{order.payment.TradeNo || '-'}</span>
             </div>
-          )}
-        </div>
+            <div className="info-item">
+              <span className="info-label">交易金額：</span>
+              <span className="info-value">NT$ {order.payment.TradeAmt ? Number(order.payment.TradeAmt).toLocaleString() : '-'}</span>
+            </div>
+            <div className="info-item">
+              <span className="info-label">付款方式：</span>
+              <span className="info-value">
+                {order.payment.PaymentType === 'Credit_CreditCard'
+                  ? '信用卡'
+                  : order.payment.PaymentType === 'ATM_TAISHIN'
+                    ? 'ATM 轉帳'
+                    : order.payment.PaymentType === 'CVS_CVS'
+                      ? '超商代碼繳費'
+                      : order.payment.PaymentType || '-'}
+              </span>
+            </div>
+            <div className="info-item">
+              <span className="info-label">付款手續費：</span>
+              <span className="info-value">
+                {order.payment.PaymentTypeChargeFee
+                  ? `NT$ ${Number(order.payment.PaymentTypeChargeFee).toLocaleString()}`
+                  : '-'}
+              </span>
+            </div>
+            <div className="info-item">
+              <span className="info-label">付款時間：</span>
+              <span className="info-value">
+                {order.payment.PaymentDate
+                  ? order.payment.PaymentDate.replace(/\//g, '-')
+                  : order.payment.updatedAt
+                    ? new Date(order.payment.updatedAt).toLocaleString('zh-TW')
+                    : '-'}
+              </span>
+            </div>
+            <div className="info-item">
+              <span className="info-label">回傳代碼：</span>
+              <span className="info-value">{order.payment.RtnCode || '-'}</span>
+            </div>
+          </div>
+        ) : (
+          <p className="text-subtle">尚無支付資訊</p>
+        )}
       </div>
     </div>
   );

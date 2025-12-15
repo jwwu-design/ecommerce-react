@@ -3,7 +3,7 @@ import { CheckOutlined, LoadingOutlined } from '@ant-design/icons';
 import { ImageLoader } from '@/components/common';
 import {
   // CustomColorInput,
-  CustomCreatableSelect, CustomInput, CustomTextarea
+  CustomCreatableSelect, CustomInput, CustomTextarea, CustomDateRangePicker
 } from '@/components/formik';
 import {
   Field, FieldArray, Form, Formik
@@ -90,14 +90,8 @@ const FormSchema = Yup.object().shape({
     .of(Yup.string())
     .min(1, '請至少輸入 1 個關鍵字。'),
   sizes: Yup.array()
-    .of(
-      Yup.string()
-        .matches(
-          /^(\d{1,2}\/\d{1,2})(~\d{1,2}\/\d{1,2})?$/,
-          '日期格式錯誤，請使用 MM/DD 或 MM/DD~MM/DD 格式'
-        )
-    )
-    .min(1, '請輸入產品日期。'),
+    .of(Yup.string())
+    .min(1, '請至少選擇一個日期。'),
   region: Yup.string()
     .required('地區為必填。'),
   category: Yup.string()
@@ -222,44 +216,33 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                   />
                 </div>
               </div>
-              <div className="d-flex">
-                <div className="product-form-field">
-                  <CustomCreatableSelect
-                    defaultValue={{ label: values.region, value: values.region }}
-                    name="region"
-                    iid="region"
-                    options={regionOptions}
-                    disabled={isLoading}
-                    placeholder="選擇地區"
-                    label="* 地區"
-                  />
-                </div>
-                &nbsp;
-                <div className="product-form-field">
-                  <CustomCreatableSelect
-                    defaultValue={values.sizes.map((key) => ({ value: key, label: key }))}
-                    name="sizes"
-                    iid="sizes"
-                    isMulti
-                    disabled={isLoading}
-                    placeholder="建立或選擇日期 (例如: 12/12 或 12/12~12/14)"
-                    label="* 日期"
-                    isValidNewOption={(inputValue) => {
-                      const datePattern = /^(\d{1,2}\/\d{1,2})(~\d{1,2}\/\d{1,2})?$/;
-                      return datePattern.test(inputValue);
-                    }}
-                    formatCreateLabel={(inputValue) => {
-                      const datePattern = /^(\d{1,2}\/\d{1,2})(~\d{1,2}\/\d{1,2})?$/;
-                      if (!datePattern.test(inputValue)) {
-                        return `❌ 格式錯誤 (請使用 MM/DD 或 MM/DD~MM/DD)`;
-                      }
-                      return `建立 "${inputValue}"`;
-                    }}
-                    onCreateValidationError={(inputValue) => {
-                      return `日期格式錯誤："${inputValue}" 不符合 MM/DD 或 MM/DD~MM/DD 格式`;
-                    }}
-                  />
-                </div>
+              <div className="product-form-field">
+                <CustomCreatableSelect
+                  defaultValue={{ label: values.region, value: values.region }}
+                  name="region"
+                  iid="region"
+                  options={regionOptions}
+                  disabled={isLoading}
+                  placeholder="選擇地區"
+                  label="* 地區"
+                  onChange={(newValue) => {
+                    const newRegion = newValue?.value || '';
+                    setValues({
+                      ...values,
+                      region: newRegion,
+                      sizes: [] // 切換地區時清空已選日期
+                    });
+                  }}
+                />
+              </div>
+              <div className="product-form-field">
+                <Field
+                  name="sizes"
+                  component={CustomDateRangePicker}
+                  label="* 課程日期"
+                  disabled={isLoading}
+                  region={values.region}
+                />
               </div>
               <div className="d-flex">
                 <div className="product-form-field">

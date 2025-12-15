@@ -1,0 +1,91 @@
+// React DatePicker 自定義樣式
+@import 'react-datepicker/dist/react-datepicker.css';
+
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+.react-datepicker__input-container {
+  width: 100%;
+
+  input {
+    width: 100%;
+    padding: 1.2rem;
+    border: 1px solid #cacaca;
+    font-size: 1.4rem;
+    font-family: inherit;
+    border-radius: 0;
+    transition: all .3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #1a1a1a;
+    }
+
+    &:disabled {
+      background-color: #f5f5f5;
+      cursor: not-allowed;
+    }
+
+    &.input-error {
+      border-color: red;
+    }
+  }
+}
+
+.react-datepicker {
+  font-family: inherit;
+  font-size: 1.4rem;
+  border: 1px solid #e1e1e1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.react-datepicker__header {
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #e1e1e1;
+}
+
+.react-datepicker__current-month,
+.react-datepicker__day-name,
+.react-datepicker__day {
+  font-size: 1.4rem;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range {
+  background-color: #1a1a1a;
+  color: white;
+
+  &:hover {
+    background-color: darken(#1a1a1a, 10%);
+  }
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: lighten(#1a1a1a, 40%);
+}
+
+.react-datepicker__day:hover {
+  background-color: #f0f0f0;
+}
+
+.date-range-picker-container {
+  .date-type-selector {
+    margin-bottom: 1rem;
+  }
+
+  .date-pickers {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .selected-dates-list {
+    min-height: 50px;
+    padding: 1rem;
+    border: 1px solid #e1e1e1;
+    border-radius: 4px;
+    background-color: #fafafa;
+  }
+}
