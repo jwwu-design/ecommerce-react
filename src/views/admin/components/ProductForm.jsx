@@ -22,6 +22,54 @@ const brandOptions = [
   // { value: 'Black Kibal', label: 'Black Kibal' }
 ];
 
+// 地區選項
+const regionOptions = [
+  { value: '台北', label: '台北' },
+  { value: '台南', label: '台南' }
+];
+
+// 大類選項
+const categoryOptions = [
+  { value: 'ESG項目', label: 'ESG項目' },
+  { value: '資安項目', label: '資安項目' },
+  { value: '品質系統', label: '品質系統' }
+];
+
+// 系統選項（根據大類）
+const systemOptions = {
+  'ESG項目': [
+    { value: 'ISO 14064-1', label: 'ISO 14064-1' },
+    { value: 'ISO 14064-2', label: 'ISO 14064-2' },
+    { value: 'ISO 14067', label: 'ISO 14067' },
+    { value: 'ISO 14064-1+14067 雙主導查證員', label: 'ISO 14064-1+14067 雙主導查證員' },
+    { value: 'ISO 50001', label: 'ISO 50001' },
+    { value: 'ISO 14068-1', label: 'ISO 14068-1' },
+    { value: 'ISO 46001', label: 'ISO 46001' },
+    { value: '永續報告書撰寫技巧暨GRI 2021 新版解析(GRI、SASB、TCFD)', label: '永續報告書撰寫技巧暨GRI 2021 新版解析(GRI、SASB、TCFD)' },
+    { value: 'AA1000永續報告查證師', label: 'AA1000永續報告查證師' },
+    { value: 'ISO 32210與永續金融管理師', label: 'ISO 32210與永續金融管理師' },
+    { value: 'iPAS 淨零碳規劃管理師', label: 'iPAS 淨零碳規劃管理師' },
+    { value: 'CBAM企業內控管理人才培訓班', label: 'CBAM企業內控管理人才培訓班' },
+    { value: 'GHG Protocol核心盤查與報告實務', label: 'GHG Protocol核心盤查與報告實務' }
+  ],
+  '資安項目': [
+    { value: 'ISO 27001', label: 'ISO 27001' },
+    { value: 'ISO 27701', label: 'ISO 27701' },
+    { value: 'ISO 27017/27018', label: 'ISO 27017/27018' },
+    { value: 'ISO 42001', label: 'ISO 42001' }
+  ],
+  '品質系統': [
+    { value: 'ISO 9001', label: 'ISO 9001' },
+    { value: 'ISO 14001', label: 'ISO 14001' },
+    { value: 'ISO 45001', label: 'ISO 45001' },
+    { value: 'ISO 22000', label: 'ISO 22000' },
+    { value: 'ISO 13485', label: 'ISO 13485' },
+    { value: 'ISO 22716', label: 'ISO 22716' },
+    { value: 'ISO 19011', label: 'ISO 19011' },
+    { value: 'ISO 16949', label: 'ISO 16949' }
+  ]
+};
+
 const FormSchema = Yup.object().shape({
   name: Yup.string()
     .required('產品名稱為必填。')
@@ -42,8 +90,20 @@ const FormSchema = Yup.object().shape({
     .of(Yup.string())
     .min(1, '請至少輸入 1 個關鍵字。'),
   sizes: Yup.array()
-    .of(Yup.number())
+    .of(
+      Yup.string()
+        .matches(
+          /^(\d{1,2}\/\d{1,2})(~\d{1,2}\/\d{1,2})?$/,
+          '日期格式錯誤，請使用 MM/DD 或 MM/DD~MM/DD 格式'
+        )
+    )
     .min(1, '請輸入產品日期。'),
+  region: Yup.string()
+    .required('地區為必填。'),
+  category: Yup.string()
+    .required('大類為必填。'),
+  system: Yup.string()
+    .required('系統為必填。'),
   isFeatured: Yup.boolean(),
   isRecommended: Yup.boolean()
   // availableColors: Yup.array()
@@ -60,6 +120,9 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
     description: product?.description || '',
     keywords: product?.keywords || [],
     sizes: product?.sizes || [],
+    region: product?.region || '',
+    category: product?.category || '',
+    system: product?.system || '',
     isFeatured: product?.isFeatured || false,
     isRecommended: product?.isRecommended || false
     // availableColors: product?.availableColors || []
@@ -162,13 +225,13 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
               <div className="d-flex">
                 <div className="product-form-field">
                   <CustomCreatableSelect
-                    defaultValue={values.keywords.map((key) => ({ value: key, label: key }))}
-                    name="keywords"
-                    iid="keywords"
-                    isMulti
+                    defaultValue={{ label: values.region, value: values.region }}
+                    name="region"
+                    iid="region"
+                    options={regionOptions}
                     disabled={isLoading}
-                    placeholder="建立或選擇關鍵字"
-                    label="* 關鍵字"
+                    placeholder="選擇地區"
+                    label="* 地區"
                   />
                 </div>
                 &nbsp;
@@ -177,14 +240,72 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                     defaultValue={values.sizes.map((key) => ({ value: key, label: key }))}
                     name="sizes"
                     iid="sizes"
-                    type="number"
                     isMulti
                     disabled={isLoading}
-                    placeholder="建立或選擇日期"
+                    placeholder="建立或選擇日期 (例如: 12/12 或 12/12~12/14)"
                     label="* 日期"
+                    isValidNewOption={(inputValue) => {
+                      const datePattern = /^(\d{1,2}\/\d{1,2})(~\d{1,2}\/\d{1,2})?$/;
+                      return datePattern.test(inputValue);
+                    }}
+                    formatCreateLabel={(inputValue) => {
+                      const datePattern = /^(\d{1,2}\/\d{1,2})(~\d{1,2}\/\d{1,2})?$/;
+                      if (!datePattern.test(inputValue)) {
+                        return `❌ 格式錯誤 (請使用 MM/DD 或 MM/DD~MM/DD)`;
+                      }
+                      return `建立 "${inputValue}"`;
+                    }}
+                    onCreateValidationError={(inputValue) => {
+                      return `日期格式錯誤："${inputValue}" 不符合 MM/DD 或 MM/DD~MM/DD 格式`;
+                    }}
                   />
                 </div>
               </div>
+              <div className="d-flex">
+                <div className="product-form-field">
+                  <CustomCreatableSelect
+                    defaultValue={{ label: values.category, value: values.category }}
+                    name="category"
+                    iid="category"
+                    options={categoryOptions}
+                    disabled={isLoading}
+                    placeholder="選擇大類"
+                    label="* 大類"
+                    onChange={(newValue) => {
+                      setValues({
+                        ...values,
+                        category: newValue?.value || '',
+                        system: '' // 重設系統選項
+                      });
+                    }}
+                  />
+                </div>
+                &nbsp;
+                <div className="product-form-field">
+                  <CustomCreatableSelect
+                    defaultValue={{ label: values.system, value: values.system }}
+                    name="system"
+                    iid="system"
+                    options={values.category ? systemOptions[values.category] : []}
+                    disabled={isLoading || !values.category}
+                    placeholder={values.category ? "選擇系統" : "請先選擇大類"}
+                    label="* 系統"
+                  />
+                </div>
+              </div>
+              <div className="product-form-field">
+                <CustomCreatableSelect
+                  defaultValue={values.keywords.map((key) => ({ value: key, label: key }))}
+                  name="keywords"
+                  iid="keywords"
+                  isMulti
+                  disabled={isLoading}
+                  placeholder="建立或選擇關鍵字"
+                  label="* 關鍵字"
+                />
+              </div>
+
+
               {/* <div className="product-form-field">
                 <FieldArray
                   name="availableColors"
@@ -325,6 +446,9 @@ ProductForm.propTypes = {
     keywords: PropType.arrayOf(PropType.string),
     imageCollection: PropType.arrayOf(PropType.object),
     sizes: PropType.arrayOf(PropType.string),
+    region: PropType.string,
+    category: PropType.string,
+    system: PropType.string,
     image: PropType.string,
     imageUrl: PropType.string,
     isFeatured: PropType.bool,

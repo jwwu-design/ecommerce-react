@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # 如果請求的是實際存在的檔案或目錄，直接提供
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+
+  # 否則重定向到 index.html
+  RewriteRule ^ /index.html [L]
+</IfModule>

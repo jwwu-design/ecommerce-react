@@ -7,12 +7,17 @@ import CreatableSelect from 'react-select/creatable';
 const CustomCreatableSelect = (props) => {
   const [field, meta, helpers] = useField(props);
   const {
-    options, defaultValue, label, placeholder, isMulti, type, iid
+    options, defaultValue, label, placeholder, isMulti, type, iid,
+    isValidNewOption, formatCreateLabel, onCreateValidationError
   } = props;
   const { touched, error } = meta;
   const { setValue } = helpers;
+  const [validationError, setValidationError] = React.useState('');
 
   const handleChange = (newValue) => {
+    // 清除驗證錯誤
+    setValidationError('');
+
     if (Array.isArray(newValue)) {
       const arr = newValue.map((fieldKey) => fieldKey.value);
       setValue(arr);
@@ -30,9 +35,53 @@ const CustomCreatableSelect = (props) => {
     }
   };
 
+  const handleInputChange = (inputValue, actionMeta) => {
+    // 清除之前的驗證錯誤（當使用者重新輸入時）
+    if (actionMeta.action === 'input-change') {
+      setValidationError('');
+    }
+  };
+
+  const handleBlur = (e) => {
+    // 當使用者離開輸入框時，如果有輸入值但格式不正確，顯示錯誤
+    const inputValue = e.target.value;
+    if (inputValue && isValidNewOption && !isValidNewOption(inputValue)) {
+      const errorMsg = onCreateValidationError
+        ? onCreateValidationError(inputValue)
+        : '輸入格式無效';
+      setValidationError(errorMsg);
+    }
+  };
+
+  const handleCreateOption = (inputValue) => {
+    // 如果有提供驗證函數，先檢查
+    if (isValidNewOption && !isValidNewOption(inputValue)) {
+      // 無效時設定錯誤訊息
+      const errorMsg = onCreateValidationError
+        ? onCreateValidationError(inputValue)
+        : '輸入格式無效';
+      setValidationError(errorMsg);
+      return;
+    }
+
+    // 清除驗證錯誤
+    setValidationError('');
+
+    // 新增選項
+    const newOption = { value: inputValue, label: inputValue };
+    if (isMulti) {
+      const currentValues = field.value || [];
+      setValue([...currentValues, inputValue]);
+    } else {
+      setValue(inputValue);
+    }
+  };
+
   return (
     <div className="input-group">
-      {touched && error ? (
+      {validationError ? (
+        <span className="label-input label-error">{validationError}</span>
+      ) : touched && error ? (
         <span className="label-input label-error">{error}</span>
       ) : (
         <label className="label-input" htmlFor={field.name}>{label}</label>
@@ -43,9 +92,12 @@ const CustomCreatableSelect = (props) => {
         name={field.name}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
+        onCreateOption={handleCreateOption}
         defaultValue={defaultValue}
         options={options}
         instanceId={iid}
+        isValidNewOption={isValidNewOption}
+        formatCreateLabel={formatCreateLabel}
         styles={{
           menu: (provided) => ({
             ...provided,
@@ -56,7 +108,7 @@ const CustomCreatableSelect = (props) => {
           }),
           control: (provided) => ({
             ...provided,
-            border: touched && error ? '1px solid red' : '1px solid #cacaca'
+            border: (validationError || (touched && error)) ? '1px solid red' : '1px solid #cacaca'
           })
         }}
       />
@@ -69,7 +121,10 @@ CustomCreatableSelect.defaultProps = {
   placeholder: '',
   iid: '',
   options: [],
-  type: 'string'
+  type: 'string',
+  isValidNewOption: undefined,
+  formatCreateLabel: undefined,
+  onCreateValidationError: undefined
 };
 
 CustomCreatableSelect.propTypes = {
@@ -82,7 +137,10 @@ CustomCreatableSelect.propTypes = {
   placeholder: PropType.string,
   isMulti: PropType.bool,
   type: PropType.string,
-  iid: PropType.string
+  iid: PropType.string,
+  isValidNewOption: PropType.func,
+  formatCreateLabel: PropType.func,
+  onCreateValidationError: PropType.func
 };
 
 export default CustomCreatableSelect;
