@@ -668,7 +668,9 @@ class Firebase {
       snapshot.forEach((doc) => {
         const order = doc.data();
         orderCount++;
-        totalSpent += order.totalAmount || 0;
+        // 確保 totalAmount 是數字類型
+        const amount = parseFloat(order.totalAmount) || 0;
+        totalSpent += amount;
       });
 
       return { orderCount, totalSpent };

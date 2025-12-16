@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { AppliedFilters, ProductGrid, ProductList } from '@/components/product';
+import CategorySidebar from '@/components/common/CategorySidebar';
 import { useDocumentTitle, useScrollTop } from '@/hooks';
 import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -18,6 +19,9 @@ const Shop = () => {
 
   return (
     <main className="content">
+      <div className="shop-container">
+        <CategorySidebar />
+      </div>
       <section className="product-list-wrapper">
         <AppliedFilters filteredProductsCount={store.filteredProducts.length} />
         <ProductList {...store}>

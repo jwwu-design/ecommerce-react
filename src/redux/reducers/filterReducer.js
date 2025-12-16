@@ -12,7 +12,12 @@ const initState = {
   brand: '',
   minPrice: 0,
   maxPrice: 0,
-  sortBy: ''
+  sortBy: '',
+  region: '',
+  category: '',
+  system: '',
+  startDate: '',
+  endDate: ''
 };
 
 export default (state = initState, action) => {
