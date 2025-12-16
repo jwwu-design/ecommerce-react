@@ -23,7 +23,29 @@ function* handleError(e) {
   const obj = { success: false, type: 'auth', isError: true };
   yield put(setAuthenticating(false));
 
-  switch (e.code) {
+  // 處理 Firebase 錯誤訊息可能是 JSON 字串的情況
+  let errorCode = e.code;
+  let errorMessage = e.message;
+
+  // 如果錯誤訊息是 JSON 字串，嘗試解析
+  if (typeof errorMessage === 'string' && errorMessage.includes('INVALID_LOGIN_CREDENTIALS')) {
+    try {
+      const parsedError = JSON.parse(errorMessage);
+      if (parsedError.error && parsedError.error.message) {
+        errorMessage = parsedError.error.message;
+      }
+    } catch (parseError) {
+      // 如果解析失敗，繼續使用原始訊息
+    }
+  }
+
+  // 檢查錯誤訊息內容（不僅是錯誤代碼）
+  if (errorMessage && errorMessage.includes('INVALID_LOGIN_CREDENTIALS')) {
+    yield put(setAuthStatus({ ...obj, message: '電子郵件或密碼不正確，請重新輸入。' }));
+    return;
+  }
+
+  switch (errorCode) {
     case 'auth/network-request-failed':
       yield put(setAuthStatus({ ...obj, message: '網路錯誤，請稍後再試。' }));
       break;
@@ -36,11 +58,24 @@ function* handleError(e) {
     case 'auth/user-not-found':
       yield put(setAuthStatus({ ...obj, message: '電子郵件或密碼不正確。' }));
       break;
+    case 'auth/invalid-credential':
+    case 'auth/invalid-login-credentials':
+      yield put(setAuthStatus({ ...obj, message: '電子郵件或密碼不正確，請重新輸入。' }));
+      break;
+    case 'auth/invalid-email':
+      yield put(setAuthStatus({ ...obj, message: '電子郵件格式不正確。' }));
+      break;
+    case 'auth/user-disabled':
+      yield put(setAuthStatus({ ...obj, message: '此帳號已被停用，請聯繫客服。' }));
+      break;
+    case 'auth/too-many-requests':
+      yield put(setAuthStatus({ ...obj, message: '登入嘗試次數過多，請稍後再試。' }));
+      break;
     case 'auth/reset-password-error':
       yield put(setAuthStatus({ ...obj, message: '重設密碼郵件傳送失敗，請確認您輸入的電子郵件是否正確。' }));
       break;
     default:
-      yield put(setAuthStatus({ ...obj, message: e.message }));
+      yield put(setAuthStatus({ ...obj, message: errorMessage }));
       break;
   }
 }
@@ -133,7 +168,7 @@ function* authSaga({ type, payload }) {
         yield put(setAuthStatus({
           success: true,
           type: 'reset',
-          message: '重設密碼的郵件已發送到您提供的電子郵件信箱。'
+          message: '重設密碼郵件已發送至您的信箱,請查收。若未收到,請檢查垃圾郵件資料夾。'
         }));
         yield put(setAuthenticating(false));
       } catch (e) {

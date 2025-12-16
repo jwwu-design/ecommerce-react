@@ -27,7 +27,7 @@ const ForgotPassword = () => {
 
   const onEmailChange = (e) => {
     const value = e.target.value.trim();
-    const error = !/\S+@\S+\.\S+/.test(value) ? 'Invalid email format' : '';
+    const error = !/\S+@\S+\.\S+/.test(value) ? '電子郵件格式錯誤' : '';
     setField({ email: value, error });
   };
 

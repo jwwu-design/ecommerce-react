@@ -12,6 +12,7 @@ import { useFileHandler } from '@/hooks';
 import PropType from 'prop-types';
 import React from 'react';
 import * as Yup from 'yup';
+import { CATEGORY_OPTIONS, SYSTEM_OPTIONS_BY_CATEGORY } from '@/constants/productCategories';
 
 // 預設品牌選項，可自行調整
 const brandOptions = [
@@ -28,47 +29,14 @@ const regionOptions = [
   { value: '台南', label: '台南' }
 ];
 
-// 大類選項
-const categoryOptions = [
-  { value: 'ESG項目', label: 'ESG項目' },
-  { value: '資安項目', label: '資安項目' },
-  { value: '品質系統', label: '品質系統' }
-];
+// 將導入的常量轉換為 react-select 格式
+const categoryOptions = CATEGORY_OPTIONS.map(cat => ({ value: cat, label: cat }));
 
-// 系統選項（根據大類）
-const systemOptions = {
-  'ESG項目': [
-    { value: 'ISO 14064-1', label: 'ISO 14064-1' },
-    { value: 'ISO 14064-2', label: 'ISO 14064-2' },
-    { value: 'ISO 14067', label: 'ISO 14067' },
-    { value: 'ISO 14064-1+14067 雙主導查證員', label: 'ISO 14064-1+14067 雙主導查證員' },
-    { value: 'ISO 50001', label: 'ISO 50001' },
-    { value: 'ISO 14068-1', label: 'ISO 14068-1' },
-    { value: 'ISO 46001', label: 'ISO 46001' },
-    { value: '永續報告書撰寫技巧暨GRI 2021 新版解析(GRI、SASB、TCFD)', label: '永續報告書撰寫技巧暨GRI 2021 新版解析(GRI、SASB、TCFD)' },
-    { value: 'AA1000永續報告查證師', label: 'AA1000永續報告查證師' },
-    { value: 'ISO 32210與永續金融管理師', label: 'ISO 32210與永續金融管理師' },
-    { value: 'iPAS 淨零碳規劃管理師', label: 'iPAS 淨零碳規劃管理師' },
-    { value: 'CBAM企業內控管理人才培訓班', label: 'CBAM企業內控管理人才培訓班' },
-    { value: 'GHG Protocol核心盤查與報告實務', label: 'GHG Protocol核心盤查與報告實務' }
-  ],
-  '資安項目': [
-    { value: 'ISO 27001', label: 'ISO 27001' },
-    { value: 'ISO 27701', label: 'ISO 27701' },
-    { value: 'ISO 27017/27018', label: 'ISO 27017/27018' },
-    { value: 'ISO 42001', label: 'ISO 42001' }
-  ],
-  '品質系統': [
-    { value: 'ISO 9001', label: 'ISO 9001' },
-    { value: 'ISO 14001', label: 'ISO 14001' },
-    { value: 'ISO 45001', label: 'ISO 45001' },
-    { value: 'ISO 22000', label: 'ISO 22000' },
-    { value: 'ISO 13485', label: 'ISO 13485' },
-    { value: 'ISO 22716', label: 'ISO 22716' },
-    { value: 'ISO 19011', label: 'ISO 19011' },
-    { value: 'ISO 16949', label: 'ISO 16949' }
-  ]
-};
+// 將導入的常量轉換為 react-select 格式
+const systemOptions = Object.keys(SYSTEM_OPTIONS_BY_CATEGORY).reduce((acc, category) => {
+  acc[category] = SYSTEM_OPTIONS_BY_CATEGORY[category].map(sys => ({ value: sys, label: sys }));
+  return acc;
+}, {});
 
 const FormSchema = Yup.object().shape({
   name: Yup.string()
