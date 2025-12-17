@@ -68,10 +68,11 @@ const UserManagement = () => {
 
   const handleEditUser = (user) => {
     setEditingUser(user);
+    const mobileValue = formatMobile(user.mobile);
     setEditForm({
       fullname: user.fullname,
       email: user.email,
-      mobile: user.mobile?.data?.value || '',
+      mobile: mobileValue === '-' ? '' : mobileValue,
       role: user.role
     });
     setShowEditModal(true);

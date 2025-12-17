@@ -54,6 +54,20 @@ const ProductItem = ({ product, isItemOnBasket, addToBasket }) => {
             <p className="product-card-brand">
               {product.brand || <Skeleton width={60} />}
             </p>
+            {product.id && (
+              <div className="product-card-info">
+                {product.region && (
+                  <div className="info-item">
+                    <span className="info-value">{product.region}場</span>
+                  </div>
+                )}
+                {product.category && (
+                  <div className="info-item">
+                    <span className="info-value">{product.category}</span>
+                  </div>
+                )}
+              </div>
+            )}
             <h4 className="product-card-price">
               {product.price ? displayMoney(product.price) : <Skeleton width={40} />}
             </h4>

@@ -10,9 +10,12 @@ import {
   RiseOutlined,
   CheckCircleOutlined,
   ClockCircleOutlined,
-  CloseCircleOutlined
+  CloseCircleOutlined,
+  EyeOutlined
 } from '@ant-design/icons';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import firebase from '@/services/firebase';
+import analyticsService from '@/services/analytics';
 import { displayMoney } from '@/helpers/utils';
 import { ADMIN_ORDERS, ADMIN_USERS, ADMIN_PRODUCTS } from '@/constants/routes';
 
@@ -35,9 +38,44 @@ const Dashboard = () => {
     recentOrders: []
   });
 
+  const [analyticsData, setAnalyticsData] = useState([]);
+  const [topPages, setTopPages] = useState([]);
+  const [analyticsLoading, setAnalyticsLoading] = useState(true);
+  const [analyticsTimeRange, setAnalyticsTimeRange] = useState(7); // 1, 7, 30
+
   useEffect(() => {
     loadDashboardData();
   }, []);
+
+  useEffect(() => {
+    loadAnalyticsData();
+  }, [analyticsTimeRange]);
+
+  const loadAnalyticsData = async () => {
+    try {
+      setAnalyticsLoading(true);
+
+      // 載入流量數據
+      const data = await analyticsService.getAnalyticsData(analyticsTimeRange);
+
+      // 格式化數據供圖表使用
+      const formattedData = data.map(item => ({
+        date: item.date.slice(5), // 只顯示 MM-DD
+        瀏覽數: item.pageViews || 0,
+        訪客數: item.uniqueVisitors || 0
+      }));
+
+      setAnalyticsData(formattedData);
+
+      // 載入熱門頁面
+      const pages = await analyticsService.getTopPages(analyticsTimeRange);
+      setTopPages(pages);
+    } catch (error) {
+      console.error('Failed to load analytics data:', error);
+    } finally {
+      setAnalyticsLoading(false);
+    }
+  };
 
   const loadDashboardData = async () => {
     try {
@@ -235,6 +273,109 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* 網站流量分析 */}
+      <div className="dashboard-section">
+        <div className="section-header">
+          <h2>網站流量分析</h2>
+          <div className="time-range-selector">
+            <button
+              className={`time-range-btn ${analyticsTimeRange === 1 ? 'active' : ''}`}
+              onClick={() => setAnalyticsTimeRange(1)}
+            >
+              1日
+            </button>
+            <button
+              className={`time-range-btn ${analyticsTimeRange === 7 ? 'active' : ''}`}
+              onClick={() => setAnalyticsTimeRange(7)}
+            >
+              7日
+            </button>
+            <button
+              className={`time-range-btn ${analyticsTimeRange === 30 ? 'active' : ''}`}
+              onClick={() => setAnalyticsTimeRange(30)}
+            >
+              30日
+            </button>
+          </div>
+        </div>
+
+        {analyticsLoading ? (
+          <div className="loader" style={{ padding: '2rem' }}>
+            <LoadingOutlined style={{ fontSize: 32 }} />
+          </div>
+        ) : (
+          <div className="analytics-charts">
+            {/* 流量趨勢圖 */}
+            <div className="chart-container">
+              <h3 className="chart-title">
+                <EyeOutlined /> 流量趨勢
+              </h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={analyticsData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis dataKey="date" stroke="#6b7280" style={{ fontSize: '0.875rem' }} />
+                  <YAxis stroke="#6b7280" style={{ fontSize: '0.875rem' }} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'white',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px',
+                      fontSize: '0.875rem'
+                    }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: '0.875rem' }} />
+                  <Line
+                    type="monotone"
+                    dataKey="瀏覽數"
+                    stroke="#6366f1"
+                    strokeWidth={2}
+                    dot={{ fill: '#6366f1', r: 4 }}
+                    activeDot={{ r: 6 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="訪客數"
+                    stroke="#10b981"
+                    strokeWidth={2}
+                    dot={{ fill: '#10b981', r: 4 }}
+                    activeDot={{ r: 6 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* 熱門頁面 */}
+            <div className="chart-container">
+              <h3 className="chart-title">
+                <RiseOutlined /> 熱門頁面 Top 5
+              </h3>
+              {topPages.length > 0 ? (
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={topPages}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <XAxis dataKey="page" stroke="#6b7280" style={{ fontSize: '0.75rem' }} />
+                    <YAxis stroke="#6b7280" style={{ fontSize: '0.875rem' }} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'white',
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '8px',
+                        fontSize: '0.875rem'
+                      }}
+                    />
+                    <Bar dataKey="views" fill="#6366f1" radius={[8, 8, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="empty-state">
+                  <p>尚無流量數據</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 最近訂單 */}

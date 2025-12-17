@@ -182,6 +182,22 @@ function* authSaga({ type, payload }) {
       if (snapshot.data()) { // if user exists in database
         const user = snapshot.data();
 
+        // 檢查用戶是否被停用
+        if (user.isActive === false) {
+          // 用戶已被停用，強制登出
+          yield call(firebase.signOut);
+          yield put(clearProfile());
+          yield put(signOutSuccess());
+          yield put(setAuthStatus({
+            success: false,
+            type: 'auth',
+            isError: true,
+            message: '此帳號已被停用，請聯繫客服。'
+          }));
+          yield put(setAuthenticating(false));
+          break;
+        }
+
         yield put(setProfile(user));
         yield put(setBasketItems(user.basket));
         yield put(setBasketItems(user.basket));

@@ -49,7 +49,7 @@
 
 .product-card {
   max-width: 360px;
-  height: 230px;
+  height: 340px;
   border: 1px solid $border-color;
   text-align: center;
   position: relative;
@@ -64,7 +64,7 @@
   }
 
   @include mobile {
-    height: 200px;
+    height: 300px;
   }
 }
 
@@ -150,6 +150,34 @@
 
   @include mobile {
     margin-bottom: 0;
+  }
+}
+
+.product-card-info {
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+  color: #6b7280;
+  line-height: 1.6;
+  text-align: center;
+
+  .info-item {
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .info-label {
+      font-weight: 600;
+      color: #374151;
+      min-width: 50px;
+      flex-shrink: 0;
+    }
+
+    .info-value {
+      color: #6b7280;
+      flex: 1;
+      text-align: center;
+    }
   }
 }
 
