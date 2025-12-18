@@ -22,7 +22,7 @@ const EditForm = ({ isLoading, authProvider }) => {
         style={{ textTransform: 'capitalize' }}
       />
       <Field
-        disabled={authProvider !== 'password' || isLoading}
+        disabled={true}
         name="email"
         type="email"
         label="* 電子郵件地址"
