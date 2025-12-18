@@ -14,6 +14,18 @@ const CustomCreatableSelect = (props) => {
   const { setValue } = helpers;
   const [validationError, setValidationError] = React.useState('');
 
+  // 將 field.value 轉換為 react-select 需要的格式
+  const getCurrentValue = () => {
+    if (!field.value) return isMulti ? [] : null;
+
+    if (isMulti) {
+      return Array.isArray(field.value)
+        ? field.value.map((val) => ({ value: val, label: val }))
+        : [];
+    }
+    return { value: field.value, label: field.value };
+  };
+
   const handleChange = (newValue) => {
     // 清除驗證錯誤
     setValidationError('');
@@ -21,8 +33,10 @@ const CustomCreatableSelect = (props) => {
     if (Array.isArray(newValue)) {
       const arr = newValue.map((fieldKey) => fieldKey.value);
       setValue(arr);
-    } else {
+    } else if (newValue) {
       setValue(newValue.value);
+    } else {
+      setValue(isMulti ? [] : '');
     }
   };
 
@@ -93,7 +107,7 @@ const CustomCreatableSelect = (props) => {
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         onCreateOption={handleCreateOption}
-        defaultValue={defaultValue}
+        value={getCurrentValue()}
         options={options}
         instanceId={iid}
         isValidNewOption={isValidNewOption}
