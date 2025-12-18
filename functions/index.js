@@ -201,6 +201,7 @@ exports.ecpayCallback = functions.https.onRequest(async (req, res) => {
 
             const orderDoc = ordersSnapshot.docs[0];
             const orderId = orderDoc.id;
+            const orderData = orderDoc.data();
 
             const paymentStatus = data.RtnCode === '1' ? 'paid' : 'failed';
 
@@ -220,6 +221,39 @@ exports.ecpayCallback = functions.https.onRequest(async (req, res) => {
             });
 
             functions.logger.log('Order payment status updated:', orderId, ecpayTradeNo, paymentStatus);
+
+            // 如果付款成功，減少商品庫存
+            if (paymentStatus === 'paid' && orderData.items && Array.isArray(orderData.items)) {
+                functions.logger.log('Payment successful, updating product quantities...');
+
+                const batch = admin.firestore().batch();
+
+                for (const item of orderData.items) {
+                    const productRef = admin.firestore().collection('products').doc(item.id);
+                    const productDoc = await productRef.get();
+
+                    if (productDoc.exists) {
+                        const productData = productDoc.data();
+                        const currentQuantity = productData.maxQuantity || 0;
+                        const orderedQuantity = item.quantity || 0;
+                        const newQuantity = Math.max(0, currentQuantity - orderedQuantity);
+
+                        batch.update(productRef, {
+                            maxQuantity: newQuantity,
+                            updatedAt: new Date().getTime()
+                        });
+
+                        functions.logger.log(
+                            `Product ${item.id} quantity updated: ${currentQuantity} -> ${newQuantity} (ordered: ${orderedQuantity})`
+                        );
+                    } else {
+                        functions.logger.warn(`Product ${item.id} not found`);
+                    }
+                }
+
+                await batch.commit();
+                functions.logger.log('All product quantities updated successfully');
+            }
 
             // 回傳 1|OK 給綠界
             res.status(200).send('1|OK');
