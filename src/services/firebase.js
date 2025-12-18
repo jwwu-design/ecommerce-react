@@ -331,8 +331,12 @@ class Firebase {
 
           // 檢查是否為索引錯誤
           if (e.code === 'failed-precondition' || e.message?.includes('index')) {
-            console.warn("Firestore 需要建立索引，請按照錯誤訊息中的連結建立索引");
-            console.warn("暫時改用不排序的查詢");
+            console.group("🔥 Firestore 索引錯誤");
+            console.error("完整錯誤訊息:", e);
+            console.warn("⚠️ 需要建立 Firestore 索引");
+            console.warn("📝 請複製上方錯誤訊息中的 URL 連結到瀏覽器建立索引");
+            console.warn("🔄 暫時改用前端排序（功能不受影響）");
+            console.groupEnd();
 
             // 降級方案：不使用 orderBy，在前端排序
             try {
@@ -357,12 +361,15 @@ class Firebase {
               // 在前端排序
               products.sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0));
 
+              console.info(`✅ 已使用前端排序載入 ${products.length} 個商品`);
+
               resolve({
                 products,
                 total: products.length,
                 isFiltered: !!(filters.region || filters.category || filters.system)
               });
             } catch (fallbackError) {
+              console.error("降級查詢也失敗:", fallbackError);
               reject(fallbackError?.message || ":( 取得商品失敗。");
             }
           } else {

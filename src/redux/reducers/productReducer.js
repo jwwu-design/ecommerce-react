@@ -23,7 +23,10 @@ export default (state = {
         ...state,
         lastRefKey: action.payload.lastKey,
         total: action.payload.total,
-        items: [...state.items, ...action.payload.products]
+        // 如果 payload 有 replace flag，則替換整個列表；否則累加
+        items: action.payload.replace
+          ? action.payload.products
+          : [...state.items, ...action.payload.products]
       };
     case ADD_PRODUCT_SUCCESS:
       return {

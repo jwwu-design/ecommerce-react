@@ -41,11 +41,19 @@ const ProductList = (props) => {
 
       if (result.products.length === 0) {
         dispatch(setRequestStatus('查無符合條件的商品。'));
+        dispatch(getProductsSuccess({
+          products: [],
+          lastKey: null,
+          total: 0,
+          replace: true  // 使用替換模式
+        }));
       } else {
+        // 使用替換模式更新商品列表
         dispatch(getProductsSuccess({
           products: result.products,
-          lastKey: null, // 已載入全部，不需要 lastKey
-          total: result.total
+          lastKey: null,
+          total: result.total,
+          replace: true  // 使用替換模式，不累加
         }));
         dispatch(setRequestStatus(''));
       }
@@ -74,15 +82,22 @@ const ProductList = (props) => {
     if (isInitialLoad) return;
 
     if (hasActiveFilters()) {
+      // 有篩選條件：載入所有符合條件的商品
       fetchProductsWithFilters();
     } else {
-      // 清除篩選時，重新載入初始商品
+      // 清除篩選時：使用替換模式重新載入初始商品
+      setFetching(true);
+      dispatch(setLoading(true));
+      dispatch(setRequestStatus(null));
+      // 先清空，使用 replace 模式
       dispatch(getProductsSuccess({
         products: [],
         lastKey: null,
-        total: 0
+        total: 0,
+        replace: true
       }));
-      fetchProducts();
+      // 重新載入初始商品
+      dispatch(getProducts(null));
     }
   }, [filter.region, filter.category, filter.system]);
 

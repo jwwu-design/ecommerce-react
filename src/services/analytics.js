@@ -1,4 +1,5 @@
 import firebase from './firebase';
+import app from 'firebase/app';
 
 class AnalyticsService {
   // 記錄頁面瀏覽
@@ -13,9 +14,9 @@ class AnalyticsService {
       if (doc.exists) {
         // 更新現有資料
         await analyticsRef.update({
-          pageViews: firebase.db.FieldValue.increment(1),
+          pageViews: app.firestore.FieldValue.increment(1),
           lastUpdated: new Date().getTime(),
-          [`pages.${this.sanitizePagePath(pagePath)}`]: firebase.db.FieldValue.increment(1)
+          [`pages.${this.sanitizePagePath(pagePath)}`]: app.firestore.FieldValue.increment(1)
         });
       } else {
         // 建立新的每日資料
@@ -54,7 +55,7 @@ class AnalyticsService {
 
         if (doc.exists) {
           await analyticsRef.update({
-            uniqueVisitors: firebase.db.FieldValue.increment(1)
+            uniqueVisitors: app.firestore.FieldValue.increment(1)
           });
         } else {
           await analyticsRef.set({
@@ -190,9 +191,9 @@ class AnalyticsService {
       if (doc.exists) {
         // 更新現有資料
         await analyticsRef.update({
-          totalViews: firebase.db.FieldValue.increment(1),
+          totalViews: app.firestore.FieldValue.increment(1),
           lastUpdated: new Date().getTime(),
-          [`products.${productId}.views`]: firebase.db.FieldValue.increment(1),
+          [`products.${productId}.views`]: app.firestore.FieldValue.increment(1),
           [`products.${productId}.name`]: productName,
           [`products.${productId}.lastViewed`]: new Date().getTime()
         });
