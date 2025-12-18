@@ -12,6 +12,7 @@ const ProductList = (props) => {
     products, filteredProducts, isLoading, requestStatus, children
   } = props;
   const [isFetching, setFetching] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const dispatch = useDispatch();
   const filter = useSelector((state) => state.filter);
 
@@ -57,20 +58,24 @@ const ProductList = (props) => {
     }
   };
 
+  // 初始載入
   useEffect(() => {
-    if (products.items.length === 0 || !products.lastRefKey) {
+    if (products.items.length === 0 && !hasActiveFilters()) {
       fetchProducts();
     }
-
+    setIsInitialLoad(false);
     window.scrollTo(0, 0);
     return () => dispatch(setLoading(false));
   }, []);
 
   // 監聽篩選條件變化，重新載入商品
   useEffect(() => {
+    // 跳過初始載入
+    if (isInitialLoad) return;
+
     if (hasActiveFilters()) {
       fetchProductsWithFilters();
-    } else if (products.items.length > 0) {
+    } else {
       // 清除篩選時，重新載入初始商品
       dispatch(getProductsSuccess({
         products: [],

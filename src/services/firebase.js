@@ -286,11 +286,9 @@ class Firebase {
 
         try {
           let query = this.db.collection("products");
+          const hasFilters = !!(filters.region || filters.category || filters.system);
 
           // 應用基本篩選條件（Firestore 支援的等值查詢）
-          // 注意：Firestore 有限制，只能有一個 orderBy 和 where 條件組合
-
-          // 優先順序：region > category > system
           if (filters.region) {
             query = query.where("region", "==", filters.region);
           }
@@ -301,8 +299,13 @@ class Firebase {
             query = query.where("system", "==", filters.system);
           }
 
-          // 排序（與原本一致）
-          query = query.orderBy("dateAdded", "desc");
+          // 只有在有篩選條件時才加上排序（需要複合索引）
+          // 如果 Firestore 拋出索引錯誤，會在 catch 中處理
+          if (hasFilters) {
+            query = query.orderBy("dateAdded", "desc");
+          } else {
+            query = query.orderBy("dateAdded", "desc");
+          }
 
           // 執行查詢（不設 limit，載入所有符合條件的商品）
           const snapshot = await query.get();
@@ -320,13 +323,52 @@ class Firebase {
             resolve({
               products,
               total: products.length,
-              isFiltered: !!(filters.region || filters.category || filters.system)
+              isFiltered: hasFilters
             });
           }
         } catch (e) {
           if (didTimeout) return;
-          console.error("Firebase query error:", e);
-          reject(e?.message || ":( 取得商品失敗。");
+
+          // 檢查是否為索引錯誤
+          if (e.code === 'failed-precondition' || e.message?.includes('index')) {
+            console.warn("Firestore 需要建立索引，請按照錯誤訊息中的連結建立索引");
+            console.warn("暫時改用不排序的查詢");
+
+            // 降級方案：不使用 orderBy，在前端排序
+            try {
+              let fallbackQuery = this.db.collection("products");
+
+              if (filters.region) {
+                fallbackQuery = fallbackQuery.where("region", "==", filters.region);
+              }
+              if (filters.category) {
+                fallbackQuery = fallbackQuery.where("category", "==", filters.category);
+              }
+              if (filters.system) {
+                fallbackQuery = fallbackQuery.where("system", "==", filters.system);
+              }
+
+              const fallbackSnapshot = await fallbackQuery.get();
+              const products = [];
+              fallbackSnapshot.forEach((doc) =>
+                products.push({ id: doc.id, ...doc.data() })
+              );
+
+              // 在前端排序
+              products.sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0));
+
+              resolve({
+                products,
+                total: products.length,
+                isFiltered: !!(filters.region || filters.category || filters.system)
+              });
+            } catch (fallbackError) {
+              reject(fallbackError?.message || ":( 取得商品失敗。");
+            }
+          } else {
+            console.error("Firebase query error:", e);
+            reject(e?.message || ":( 取得商品失敗。");
+          }
         }
       })();
     });
