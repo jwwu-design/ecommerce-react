@@ -177,6 +177,114 @@ class AnalyticsService {
       return [];
     }
   }
+
+  // 記錄商品瀏覽
+  async trackProductView(productId, productName) {
+    try {
+      const today = this.getTodayDateString();
+      const analyticsRef = firebase.db.collection('productAnalytics').doc(today);
+
+      // 取得今日資料
+      const doc = await analyticsRef.get();
+
+      if (doc.exists) {
+        // 更新現有資料
+        await analyticsRef.update({
+          totalViews: firebase.db.FieldValue.increment(1),
+          lastUpdated: new Date().getTime(),
+          [`products.${productId}.views`]: firebase.db.FieldValue.increment(1),
+          [`products.${productId}.name`]: productName,
+          [`products.${productId}.lastViewed`]: new Date().getTime()
+        });
+      } else {
+        // 建立新的每日資料
+        await analyticsRef.set({
+          date: today,
+          totalViews: 1,
+          products: {
+            [productId]: {
+              views: 1,
+              name: productName,
+              lastViewed: new Date().getTime()
+            }
+          },
+          createdAt: new Date().getTime(),
+          lastUpdated: new Date().getTime()
+        });
+      }
+
+      console.log(`📊 Product view tracked: ${productName} (${productId})`);
+    } catch (error) {
+      console.error('Failed to track product view:', error);
+    }
+  }
+
+  // 取得熱門商品
+  async getTopProducts(days = 7, limit = 10) {
+    try {
+      const dates = this.getDateRange(days);
+      const promises = dates.map(date =>
+        firebase.db.collection('productAnalytics').doc(date).get()
+      );
+
+      const snapshots = await Promise.all(promises);
+      const productsMap = {};
+
+      // 合併所有天數的商品資料
+      snapshots.forEach(snapshot => {
+        if (snapshot.exists) {
+          const data = snapshot.data();
+          if (data.products) {
+            Object.entries(data.products).forEach(([productId, productData]) => {
+              if (!productsMap[productId]) {
+                productsMap[productId] = {
+                  productId,
+                  name: productData.name,
+                  views: 0
+                };
+              }
+              productsMap[productId].views += productData.views || 0;
+            });
+          }
+        }
+      });
+
+      // 轉換為陣列並排序
+      return Object.values(productsMap)
+        .sort((a, b) => b.views - a.views)
+        .slice(0, limit);
+    } catch (error) {
+      console.error('Failed to get top products:', error);
+      return [];
+    }
+  }
+
+  // 取得商品總瀏覽數
+  async getProductTotalViews(productId, days = 30) {
+    try {
+      const dates = this.getDateRange(days);
+      const promises = dates.map(date =>
+        firebase.db.collection('productAnalytics').doc(date).get()
+      );
+
+      const snapshots = await Promise.all(promises);
+      let totalViews = 0;
+
+      snapshots.forEach(snapshot => {
+        if (snapshot.exists) {
+          const data = snapshot.data();
+          if (data.products && data.products[productId]) {
+            totalViews += data.products[productId].views || 0;
+          }
+        }
+      });
+
+      return totalViews;
+    } catch (error) {
+      console.error('Failed to get product total views:', error);
+      return 0;
+    }
+  }
 }
 
 const analyticsService = new AnalyticsService();

@@ -13,6 +13,7 @@ import {
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Select from 'react-select';
+import analyticsService from '@/services/analytics';
 
 const ViewProduct = () => {
   const { id } = useParams();
@@ -35,6 +36,11 @@ const ViewProduct = () => {
 
   useEffect(() => {
     setSelectedImage(product?.image);
+
+    // 追蹤商品瀏覽
+    if (product?.id && product?.name) {
+      analyticsService.trackProductView(product.id, product.name);
+    }
   }, [product]);
 
   const onSelectedSizeChange = (newValue) => {

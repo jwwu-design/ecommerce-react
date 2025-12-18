@@ -11,6 +11,11 @@ const usePageTracking = () => {
       const pagePath = location.pathname;
       const pageTitle = document.title;
 
+      // 排除 admin 頁面的追蹤（管理後台流量沒有統計意義）
+      if (pagePath.startsWith('/admin')) {
+        return;
+      }
+
       // 記錄頁面瀏覽
       await analyticsService.trackPageView(pagePath, pageTitle);
 

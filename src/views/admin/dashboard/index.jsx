@@ -40,6 +40,7 @@ const Dashboard = () => {
 
   const [analyticsData, setAnalyticsData] = useState([]);
   const [topPages, setTopPages] = useState([]);
+  const [topProducts, setTopProducts] = useState([]);
   const [analyticsLoading, setAnalyticsLoading] = useState(true);
   const [analyticsTimeRange, setAnalyticsTimeRange] = useState(7); // 1, 7, 30
 
@@ -67,9 +68,15 @@ const Dashboard = () => {
 
       setAnalyticsData(formattedData);
 
-      // 載入熱門頁面
+      // 載入熱門頁面（排除 admin）
       const pages = await analyticsService.getTopPages(analyticsTimeRange);
-      setTopPages(pages);
+      // 過濾掉 admin 相關頁面
+      const filteredPages = pages.filter(page => !page.page.startsWith('/admin'));
+      setTopPages(filteredPages);
+
+      // 載入熱門商品
+      const products = await analyticsService.getTopProducts(analyticsTimeRange, 10);
+      setTopProducts(products);
     } catch (error) {
       console.error('Failed to load analytics data:', error);
     } finally {
@@ -346,16 +353,16 @@ const Dashboard = () => {
               </ResponsiveContainer>
             </div>
 
-            {/* 熱門頁面 */}
+            {/* 熱門商品 */}
             <div className="chart-container">
               <h3 className="chart-title">
-                <RiseOutlined /> 熱門頁面 Top 5
+                <RiseOutlined /> 熱門商品 Top 10
               </h3>
-              {topPages.length > 0 ? (
+              {topProducts.length > 0 ? (
                 <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={topPages}>
+                  <BarChart data={topProducts}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis dataKey="page" stroke="#6b7280" style={{ fontSize: '0.75rem' }} />
+                    <XAxis dataKey="name" stroke="#6b7280" style={{ fontSize: '0.75rem' }} angle={-45} textAnchor="end" height={100} />
                     <YAxis stroke="#6b7280" style={{ fontSize: '0.875rem' }} />
                     <Tooltip
                       contentStyle={{
@@ -365,12 +372,12 @@ const Dashboard = () => {
                         fontSize: '0.875rem'
                       }}
                     />
-                    <Bar dataKey="views" fill="#6366f1" radius={[8, 8, 0, 0]} />
+                    <Bar dataKey="views" fill="#8b5cf6" radius={[8, 8, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               ) : (
                 <div className="empty-state">
-                  <p>尚無流量數據</p>
+                  <p>尚無商品瀏覽數據</p>
                 </div>
               )}
             </div>
