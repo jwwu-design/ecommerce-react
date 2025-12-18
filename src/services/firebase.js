@@ -142,7 +142,7 @@ class Firebase {
           try {
             const query = this.db
               .collection("products")
-              .orderBy(app.firestore.FieldPath.documentId())
+              .orderBy("dateAdded", "desc")
               .startAfter(lastRefKey)
               .limit(12);
 
@@ -168,7 +168,7 @@ class Firebase {
             const total = totalQuery.docs.length;
             const query = this.db
               .collection("products")
-              .orderBy(app.firestore.FieldPath.documentId())
+              .orderBy("dateAdded", "desc")
               .limit(12);
             const snapshot = await query.get();
 
@@ -272,6 +272,65 @@ class Firebase {
       .where("isRecommended", "==", true)
       .limit(itemsCount)
       .get();
+
+  // 根據篩選條件查詢商品
+  getProductsWithFilters = (filters = {}) => {
+    let didTimeout = false;
+
+    return new Promise((resolve, reject) => {
+      (async () => {
+        const timeout = setTimeout(() => {
+          didTimeout = true;
+          reject(new Error("請求逾時，請稍後再試"));
+        }, 15000);
+
+        try {
+          let query = this.db.collection("products");
+
+          // 應用基本篩選條件（Firestore 支援的等值查詢）
+          // 注意：Firestore 有限制，只能有一個 orderBy 和 where 條件組合
+
+          // 優先順序：region > category > system
+          if (filters.region) {
+            query = query.where("region", "==", filters.region);
+          }
+          if (filters.category) {
+            query = query.where("category", "==", filters.category);
+          }
+          if (filters.system) {
+            query = query.where("system", "==", filters.system);
+          }
+
+          // 排序（與原本一致）
+          query = query.orderBy("dateAdded", "desc");
+
+          // 執行查詢（不設 limit，載入所有符合條件的商品）
+          const snapshot = await query.get();
+
+          clearTimeout(timeout);
+
+          if (!didTimeout) {
+            const products = [];
+            snapshot.forEach((doc) =>
+              products.push({ id: doc.id, ...doc.data() })
+            );
+
+            // 返回所有符合基本條件的商品
+            // 複雜篩選（價格範圍、日期範圍、關鍵字）由前端 selector 處理
+            resolve({
+              products,
+              total: products.length,
+              isFiltered: !!(filters.region || filters.category || filters.system)
+            });
+          }
+        } catch (e) {
+          if (didTimeout) return;
+          console.error("Firebase query error:", e);
+          reject(e?.message || ":( 取得商品失敗。");
+        }
+      })();
+    });
+  };
 
   addProduct = (id, product) =>
     this.db.collection("products").doc(id).set(product);
