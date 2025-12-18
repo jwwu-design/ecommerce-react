@@ -156,7 +156,28 @@ const OrderConfirmation = () => {
               {order.items.map((item) => (
                 <div key={item.id} className="order-item">
                   <div className="order-item-info">
-                    <h4>{item.name}</h4>
+                    <h4>
+                      <Link
+                        to={`/product/${item.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          color: '#1890ff',
+                          textDecoration: 'none',
+                          transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.textDecoration = 'underline';
+                          e.target.style.color = '#40a9ff';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.textDecoration = 'none';
+                          e.target.style.color = '#1890ff';
+                        }}
+                      >
+                        {item.name}
+                      </Link>
+                    </h4>
                     <p className="text-subtle">
                       日期: {item.selectedSize} | 數量: {item.quantity}
                     </p>
@@ -202,7 +223,7 @@ const OrderConfirmation = () => {
                 </div>
                 {order.payment && order.payment.PaymentDate && (
                   <p className="text-subtle" style={{ marginTop: '0.5rem' }}>
-                    付款時間: {order.payment.PaymentDate}
+                    付款時間: {new Date(order.payment.PaymentDate.replace(/\//g, '-')).toLocaleString('zh-TW')}
                   </p>
                 )}
                 {order.payment && order.payment.TradeNo && (
@@ -359,7 +380,7 @@ const OrderConfirmation = () => {
               電子郵件: <a href={`mailto:ares@ares-cert.com`}>ares@ares-cert.com</a>
             </p>
             <p>
-              電話：06-2959696
+              電話: 06-2959696
             </p>
           </div>
 

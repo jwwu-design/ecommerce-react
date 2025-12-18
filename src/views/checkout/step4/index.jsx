@@ -129,12 +129,7 @@ const Payment = () => {
       <div className="checkout">
         <StepTracker current={4} />
         <div className="checkout-step-4">
-          <ECPayPayment />
-
-          <Total
-            isInternational={false}
-            subtotal={Number(orderData?.totalAmount) || 0}
-          />
+          <ECPayPayment orderData={orderData} />
 
           <div className="payment-actions">
             <button
@@ -168,7 +163,7 @@ const Payment = () => {
     <div className="checkout">
       <StepTracker current={4} />
       <div className="checkout-step-4">
-        <ECPayPayment />
+        <ECPayPayment orderData={null} />
 
         <Total
           isInternational={shipping.isInternational}

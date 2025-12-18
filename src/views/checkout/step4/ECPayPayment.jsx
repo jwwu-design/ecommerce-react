@@ -1,10 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { displayMoney } from '@/helpers/utils';
+import { Link } from 'react-router-dom';
 
-const ECPayPayment = () => {
+const ECPayPayment = ({ orderData }) => {
   return (
     <div className="ecpay-payment">
       <h3 className="payment-section-title">綠界支付</h3>
+
       <div className="payment-info-box">
         <div className="payment-icon">
           <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
@@ -26,6 +29,87 @@ const ECPayPayment = () => {
         </div>
       </div>
 
+      {orderData && (
+        <div className="order-summary-section">
+          <h4 className="order-summary-title">訂單摘要</h4>
+
+          <div className="order-info-grid">
+            <div className="order-info-item">
+              <span className="order-info-label">訂單編號</span>
+              <span className="order-info-value">{orderData.orderId}</span>
+            </div>
+
+            {orderData.customerInfo && (
+              <>
+                <div className="order-info-item">
+                  <span className="order-info-label">收件人</span>
+                  <span className="order-info-value">{orderData.customerInfo.fullname}</span>
+                </div>
+
+                <div className="order-info-item">
+                  <span className="order-info-label">聯絡電話</span>
+                  <span className="order-info-value">{orderData.customerInfo.mobile?.value || '-'}</span>
+                </div>
+
+                <div className="order-info-item">
+                  <span className="order-info-label">電子郵件</span>
+                  <span className="order-info-value">{orderData.customerInfo.email}</span>
+                </div>
+              </>
+            )}
+          </div>
+
+          {orderData.items && orderData.items.length > 0 && (
+            <div className="order-items-list">
+              <h5 className="order-items-title">訂購商品</h5>
+              {orderData.items.map((item) => (
+                <div key={item.id} className="order-item">
+                  <div className="order-item-image">
+                    {item.image && <img src={item.image} alt={item.name} />}
+                  </div>
+                  <div className="order-item-details">
+                    <Link
+                      to={`/product/${item.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="order-item-name"
+                    >
+                      {item.name}
+                    </Link>
+                    {item.selectedSize && (
+                      <span className="order-item-size">日期：{item.selectedSize}</span>
+                    )}
+                  </div>
+                  <div className="order-item-quantity">
+                    x {item.quantity}
+                  </div>
+                  <div className="order-item-price">
+                    {displayMoney(item.price * item.quantity)}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="order-total-section">
+            <div className="order-total-row">
+              <span>商品小計</span>
+              <span>{displayMoney(orderData.subtotal || 0)}</span>
+            </div>
+            {orderData.shipping && (
+              <div className="order-total-row">
+                <span>運費</span>
+                <span>{displayMoney(orderData.shipping || 0)}</span>
+              </div>
+            )}
+            <div className="order-total-row order-total-final">
+              <span>訂單總計</span>
+              <span className="total-amount">{displayMoney(orderData.totalAmount || 0)}</span>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="payment-notice">
         <p>
           <strong>付款說明：</strong>
@@ -41,6 +125,26 @@ const ECPayPayment = () => {
   );
 };
 
-ECPayPayment.propTypes = {};
+ECPayPayment.propTypes = {
+  orderData: PropTypes.shape({
+    orderId: PropTypes.string,
+    totalAmount: PropTypes.number,
+    subtotal: PropTypes.number,
+    shipping: PropTypes.number,
+    items: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+      price: PropTypes.number,
+      quantity: PropTypes.number,
+      image: PropTypes.string,
+      selectedSize: PropTypes.string
+    })),
+    customerInfo: PropTypes.shape({
+      fullname: PropTypes.string,
+      email: PropTypes.string,
+      mobile: PropTypes.object
+    })
+  })
+};
 
 export default ECPayPayment;

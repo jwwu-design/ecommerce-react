@@ -466,5 +466,347 @@
   background-position: 175px 115px;
 }
 
+// Step 4 - Payment
+.checkout-step-4 {
+  width: 80rem;
+  margin: auto;
+
+  @include tablet {
+    width: 100%;
+  }
+}
+
+.ecpay-payment {
+  background: $white;
+  border-radius: 8px;
+  padding: 3rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  @include mobile {
+    padding: 2rem 1.5rem;
+  }
+}
+
+.payment-section-title {
+  font-size: 2.4rem;
+  font-weight: 600;
+  margin: 0 0 2rem 0;
+  color: $black;
+}
+
+.payment-info-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 2.5rem;
+
+  @include mobile {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+  }
+}
+
+.payment-icon {
+  flex-shrink: 0;
+}
+
+.payment-description {
+  flex: 1;
+
+  h4 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: $black;
+  }
+
+  p {
+    font-size: 1.4rem;
+    color: $gray-20;
+    margin: 0 0 1.5rem 0;
+  }
+}
+
+.payment-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.8rem;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+
+  li {
+    font-size: 1.3rem;
+    color: $gray-20;
+  }
+}
+
+// Order Summary Section
+.order-summary-section {
+  background: #fafbfc;
+  border-radius: 8px;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  font-family: 'Tajawal', Helvetica, Arial, sans-serif;
+
+  @include mobile {
+    padding: 1.5rem;
+  }
+}
+
+.order-summary-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin: 0 0 2rem 0;
+  color: $black;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e1e4e8;
+}
+
+.order-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+.order-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.order-info-label {
+  font-size: 1.2rem;
+  color: $gray-20;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.order-info-value {
+  font-size: 1.5rem;
+  color: $black;
+  font-weight: bold;
+}
+
+.order-items-list {
+  margin-bottom: 2rem;
+}
+
+.order-items-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin: 0 0 1.5rem 0;
+  color: $black;
+}
+
+.order-item {
+  display: grid;
+  grid-template-columns: 60px 1fr auto auto;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.5rem;
+  background: $white;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  border: 1px solid #e1e4e8;
+
+  @include mobile {
+    grid-template-columns: 50px 1fr;
+    gap: 1rem;
+    padding: 1rem;
+  }
+}
+
+.order-item-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #f1f1f1;
+
+  @include mobile {
+    width: 50px;
+    height: 50px;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.order-item-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  @include mobile {
+    grid-column: 2;
+  }
+}
+
+.order-item-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1890ff;
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #40a9ff;
+    text-decoration: underline;
+  }
+}
+
+.order-item-size {
+  font-size: 1.3rem;
+  color: $gray-20;
+  font-weight: bold;
+}
+
+.order-item-quantity {
+  font-size: 1.4rem;
+  color: $gray-20;
+  font-weight: bold;
+
+  @include mobile {
+    grid-column: 1;
+    grid-row: 2;
+    padding-left: 1rem;
+  }
+}
+
+.order-item-price {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: $black;
+  text-align: right;
+
+  @include mobile {
+    grid-column: 2;
+    grid-row: 2;
+    text-align: right;
+  }
+}
+
+.order-total-section {
+  background: $white;
+  border-radius: 6px;
+  padding: 2rem;
+  border: 1px solid #e1e4e8;
+}
+
+.order-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  font-size: 1.5rem;
+  color: $gray-20;
+  font-weight: bold;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #f1f1f1;
+  }
+}
+
+.order-total-final {
+  padding-top: 1.5rem;
+  margin-top: 0.5rem;
+  border-top: 2px solid #e1e4e8 !important;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: $black;
+
+  .total-amount {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #00AA5B;
+  }
+}
+
+.payment-notice {
+  background: #fff8e1;
+  border-left: 4px solid #ffc107;
+  padding: 1.5rem 2rem;
+  border-radius: 4px;
+
+  @include mobile {
+    padding: 1rem 1.5rem;
+  }
+
+  p {
+    margin: 0 0 1rem 0;
+    font-size: 1.4rem;
+    color: $black;
+    font-weight: bold;
+
+    strong {
+      font-weight: bold;
+    }
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 2rem;
+
+    li {
+      font-size: 1.3rem;
+      color: $gray-20;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.payment-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+
+  .button-large {
+    min-width: 300px;
+    padding: 1.5rem 3rem;
+    font-size: 1.6rem;
+    font-weight: 600;
+
+    @include mobile {
+      width: 100%;
+      min-width: unset;
+    }
+  }
+}
+
+.payment-secure-notice {
+  font-size: 1.3rem;
+  color: $gray-20;
+  margin: 0;
+  text-align: center;
+}
+
 // Order Confirmation
 @import './order-confirmation';
