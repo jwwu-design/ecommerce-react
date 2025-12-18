@@ -68,9 +68,12 @@ export const selectFilter = (products, filter) => {
       return a.name > b.name ? 1 : -1;
     } else if (filter.sortBy === 'price-desc') {
       return a.price < b.price ? 1 : -1;
+    } else if (filter.sortBy === 'price-asc') {
+      return a.price > b.price ? 1 : -1;
     }
 
-    return a.price > b.price ? 1 : -1;
+    // 如果沒有指定排序，保持原始順序（Firebase 已按 dateAdded 降序排序）
+    return 0;
   });
 };
 
