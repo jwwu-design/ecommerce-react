@@ -5,6 +5,7 @@ import { createBrowserHistory } from 'history';
 import React from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
 import * as view from '@/views';
+import { usePageTracking } from '@/hooks';
 import AdminRoute from './AdminRoute';
 import ClientRoute from './ClientRoute';
 import PublicRoute from './PublicRoute';
@@ -13,9 +14,16 @@ import PublicRoute from './PublicRoute';
 // v5.0 breaks navigation
 export const history = createBrowserHistory();
 
+// PageTracker component to use the hook inside Router
+const PageTracker = () => {
+  usePageTracking();
+  return null;
+};
+
 const AppRouter = () => (
   <Router history={history}>
     <>
+      <PageTracker />
       <Navigation />
       <Basket />
       <Switch>
