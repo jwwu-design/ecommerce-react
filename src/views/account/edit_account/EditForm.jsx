@@ -39,7 +39,6 @@ const EditForm = ({ isLoading, authProvider }) => {
         style={{ textTransform: 'capitalize' }}
       />
       <CustomMobileInput
-        defaultValue={values.mobile}
         name="mobile"
         disabled={isLoading}
         label="手機號碼（將用於結帳）"

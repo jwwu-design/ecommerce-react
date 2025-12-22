@@ -20,13 +20,8 @@ const FormSchema = Yup.object().shape({
     .email('電子郵件格式不正確。')
     .required('電子郵件為必填欄位。'),
   address: Yup.string(),
-  mobile: Yup.object()
-    .shape({
-      country: Yup.string(),
-      countryCode: Yup.string(),
-      dialCode: Yup.string(),
-      value: Yup.string()
-    })
+  mobile: Yup.string()
+    .matches(/^09\d{8}$/, '請輸入正確的台灣手機號碼格式（例：0912345678）')
 });
 
 const EditProfile = () => {
@@ -46,11 +41,22 @@ const EditProfile = () => {
     isLoading: state.app.loading
   }));
 
+  // 轉換舊格式的 mobile 資料（物件 -> 字串）
+  const convertMobile = (mobile) => {
+    if (!mobile) return '';
+    if (typeof mobile === 'string') return mobile;
+    // 舊格式：{ value: '0912345678', dialCode: '886', ... }
+    if (typeof mobile === 'object' && mobile.value) {
+      return mobile.value;
+    }
+    return '';
+  };
+
   const initFormikValues = {
     fullname: profile.fullname || '',
     email: profile.email || '',
     address: profile.address || '',
-    mobile: profile.mobile || {}
+    mobile: convertMobile(profile.mobile)
   };
 
   const update = (form, credentials = {}) => {

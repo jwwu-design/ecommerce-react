@@ -26,14 +26,9 @@ const FormSchema = Yup.object().shape({
   email: Yup.string()
     .email('Email 格式不正確。')
     .required('請輸入電子郵件。'),
-  mobile: Yup.object()
-    .shape({
-      country: Yup.string(),
-      countryCode: Yup.string(),
-      dialCode: Yup.string().required('請輸入聯絡電話。'),
-      value: Yup.string().required('請輸入聯絡電話。')
-    })
-    .required('請輸入聯絡電話。'),
+  mobile: Yup.string()
+    .required('請輸入聯絡電話。')
+    .matches(/^09\d{8}$/, '請輸入正確的台灣手機號碼格式（例：0912345678）'),
   invoiceInfo: Yup.string()
     .required('請輸入發票抬頭或統編。'),
   address: Yup.string()
@@ -69,11 +64,22 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  // 轉換舊格式的 mobile 資料（物件 -> 字串）
+  const convertMobile = (mobile) => {
+    if (!mobile) return '';
+    if (typeof mobile === 'string') return mobile;
+    // 舊格式：{ value: '0912345678', dialCode: '886', ... }
+    if (typeof mobile === 'object' && mobile.value) {
+      return mobile.value;
+    }
+    return '';
+  };
+
   const initFormikValues = {
     fullname: shipping.fullname || profile.fullname || '',
     companyName: shipping.companyName || '',
     email: shipping.email || profile.email || '',
-    mobile: shipping.mobile || profile.mobile || {},
+    mobile: convertMobile(shipping.mobile || profile.mobile),
     invoiceInfo: shipping.invoiceInfo || '',
     address: shipping.address || profile.address || '',
     englishName: shipping.englishName || '',

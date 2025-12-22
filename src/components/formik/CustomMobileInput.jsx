@@ -2,43 +2,43 @@
 import { useField } from 'formik';
 import PropType from 'prop-types';
 import React from 'react';
-import PhoneInput from 'react-phone-input-2';
 
 const CustomMobileInput = (props) => {
-  const [field, meta, helpers] = useField(props);
-  const { label, placeholder, defaultValue } = props;
+  const [field, meta] = useField(props);
+  const { label, placeholder, disabled } = props;
   const { touched, error } = meta;
-  const { setValue } = helpers;
 
-  const handleChange = (value, data) => {
-    const mob = {
-      dialCode: data.dialCode,
-      countryCode: data.countryCode,
-      country: data.name,
-      value
-    };
+  // 格式化手機號碼：只允許數字
+  const handleChange = (e) => {
+    const value = e.target.value.replace(/\D/g, ''); // 只保留數字
+    field.onChange({ target: { name: field.name, value } });
+  };
 
-    setValue(mob);
+  // 安全地處理錯誤訊息
+  const getErrorMessage = () => {
+    if (!error) return '';
+    if (typeof error === 'string') return error;
+    return '請輸入正確的手機號碼。';
   };
 
   return (
     <div className="input-group">
       {touched && error ? (
-        <span className="label-input label-error">{error?.value || error?.dialCode}</span>
+        <span className="label-input label-error">{getErrorMessage()}</span>
       ) : (
         <label className="label-input" htmlFor={field.name}>{label}</label>
       )}
-      <PhoneInput
+      <input
+        type="tel"
+        id={field.name}
         name={field.name}
-        country="tw"
-        inputClass="input-form d-block"
-        style={{
-          border: touched && error ? '1px solid red' : '1px solid #cacaca'
-        }}
-        inputExtraProps={{ required: true }}
+        className={`input-form ${touched && error ? 'input-error' : ''}`}
+        value={field.value || ''}
         onChange={handleChange}
+        onBlur={field.onBlur}
         placeholder={placeholder}
-        value={defaultValue.value}
+        disabled={disabled}
+        maxLength={10}
       />
     </div>
   );
@@ -46,13 +46,14 @@ const CustomMobileInput = (props) => {
 
 CustomMobileInput.defaultProps = {
   label: '* 聯絡電話',
-  placeholder: '09254461351'
+  placeholder: '0912345678',
+  disabled: false
 };
 
 CustomMobileInput.propTypes = {
   label: PropType.string,
   placeholder: PropType.string,
-  defaultValue: PropType.object.isRequired
+  disabled: PropType.bool
 };
 
 export default CustomMobileInput;

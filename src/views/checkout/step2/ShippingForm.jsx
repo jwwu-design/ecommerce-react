@@ -35,7 +35,7 @@ const ShippingForm = () => {
         {/* 聯絡電話 & 電子郵件 */}
         <div className="checkout-fieldset">
           <div className="d-block checkout-field">
-            <CustomMobileInput name="mobile" defaultValue={values.mobile} label="* 聯絡電話" />
+            <CustomMobileInput name="mobile" label="* 聯絡電話" />
           </div>
           <div className="d-block checkout-field">
             <Field

@@ -10,7 +10,20 @@ import defaultAvatar from '@/images/defaultAvatar.jpg';
 import defaultBanner from '@/images/defaultBanner.jpg';
 const UserProfile = (props) => {
   const profile = useSelector((state) => state.profile);
-  
+
+  // 轉換舊格式的 mobile 資料（物件 -> 字串）
+  const getMobileDisplay = (mobile) => {
+    if (!mobile) return null;
+    if (typeof mobile === 'string') return mobile;
+    // 舊格式：{ value: '0912345678', ... }
+    if (typeof mobile === 'object' && mobile.value) {
+      return mobile.value;
+    }
+    return null;
+  };
+
+  const mobileDisplay = getMobileDisplay(profile.mobile);
+
   return (
     <div className="user-profile">
       <div className="user-profile-block">
@@ -51,8 +64,8 @@ const UserProfile = (props) => {
           )}
           <span>手機號碼</span>
           <br />
-          {profile.mobile ? (
-            <h5>{profile.mobile.value}</h5>
+          {mobileDisplay ? (
+            <h5>{mobileDisplay}</h5>
           ) : (
             <h5 className="text-subtle text-italic">尚未設定手機號碼</h5>
           )}

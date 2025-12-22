@@ -189,9 +189,9 @@ const OrderDetail = () => {
             <span className="info-label">聯絡電話：</span>
             <span className="info-value">
               {order.customerInfo?.mobile
-                ? (typeof order.customerInfo.mobile === 'object'
-                  ? order.customerInfo.mobile.value || order.customerInfo.mobile.dialCode + order.customerInfo.mobile.value || '-'
-                  : order.customerInfo.mobile)
+                ? (typeof order.customerInfo.mobile === 'string'
+                  ? order.customerInfo.mobile
+                  : order.customerInfo.mobile.value || '-')
                 : '-'}
             </span>
           </div>
