@@ -10,6 +10,8 @@ import { updateProfile } from '@/redux/actions/profileActions';
 import * as Yup from 'yup';
 import ConfirmModal from './ConfirmModal';
 import EditForm from './EditForm';
+import defaultAvatar from '@/images/defaultAvatar.jpg';
+import defaultBanner from '@/images/defaultBanner.jpg';
 
 const FormSchema = Yup.object().shape({
   fullname: Yup.string()
@@ -110,14 +112,14 @@ const EditProfile = () => {
                   <ImageLoader
                     alt="橫幅圖片"
                     className="user-profile-banner-img"
-                    src={profile.banner}
+                    src={profile.banner || defaultBanner}
                   />
                 </div>
                 <div className="user-profile-avatar-wrapper">
                   <ImageLoader
                     alt="大頭貼"
                     className="user-profile-img"
-                    src={profile.avatar}
+                    src={profile.avatar || defaultAvatar}
                   />
                 </div>
               </div>
