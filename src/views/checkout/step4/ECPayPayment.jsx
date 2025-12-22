@@ -48,7 +48,11 @@ const ECPayPayment = ({ orderData }) => {
 
                 <div className="order-info-item">
                   <span className="order-info-label">聯絡電話</span>
-                  <span className="order-info-value">{orderData.customerInfo.mobile?.value || '-'}</span>
+                  <span className="order-info-value">
+                    {typeof orderData.customerInfo.mobile === 'string'
+                      ? orderData.customerInfo.mobile
+                      : orderData.customerInfo.mobile?.value || '-'}
+                  </span>
                 </div>
 
                 <div className="order-info-item">
@@ -142,7 +146,7 @@ ECPayPayment.propTypes = {
     customerInfo: PropTypes.shape({
       fullname: PropTypes.string,
       email: PropTypes.string,
-      mobile: PropTypes.object
+      mobile: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
     })
   })
 };

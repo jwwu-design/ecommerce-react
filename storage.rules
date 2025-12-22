@@ -38,10 +38,17 @@ service firebase.storage {
     }
 
     // 報名表單範本：所有人可讀取，只有管理員可上傳/刪除
-    match /registration-forms/{fileName} {
+    match /registration-forms/template.docx {
       allow read: if true; // 所有人都可以下載報名表單範本
       allow write: if isAdmin(); // 只有管理員可上傳範本
       allow delete: if isAdmin(); // 只有管理員可刪除範本
+    }
+
+    // 用戶報名表單：用戶可上傳和讀取自己的報名表單，管理員可讀取所有
+    match /registration-forms/{userFolder}/{fileName} {
+      allow read: if request.auth != null || isAdmin(); // 已登入用戶可讀取，管理員可讀取所有
+      allow write: if request.auth != null && fileSizeUnder(10); // 已登入用戶可上傳，限制 10MB
+      allow delete: if isAdmin(); // 只有管理員可刪除
     }
   }
 }
