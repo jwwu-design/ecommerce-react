@@ -2,26 +2,50 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // This rule allows anyone on the internet to view, edit, and delete
-    // all data in your Firestore database. It is useful for getting
-    // started, but it is configured to expire after 30 days because it
-    // leaves your app open to attackers. At that time, all client
-    // requests to your Firestore database will be denied.
-    //
-    // Make sure to write security rules for your app before that time, or else
-    // your app will lose access to your Firestore database
-    //match /{document=**} {
-    //  allow read, write: if request.time < timestamp.date(2020, 4, 21);
-    //}
-    
-    match /users/{userId} {
-      allow read, update: if request.auth.uid != null && request.auth.uid == userId;
-    	allow create: if request.auth.uid != null;
+    // 輔助函式：檢查是否為管理員
+    function isAdmin() {
+      return request.auth != null &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'ADMIN';
     }
-    
+
+    // 使用者資料
+    match /users/{userId} {
+      // 用戶可以讀取和更新自己的資料，管理員可以讀取所有用戶資料
+      allow read: if (request.auth != null && request.auth.uid == userId) || isAdmin();
+      allow update: if (request.auth != null && request.auth.uid == userId) || isAdmin();
+      allow create: if request.auth != null;
+    }
+
+    // 商品資料
     match /products/{productId} {
-      allow create,update,delete: if request.auth.uid != null;
-    	allow read: if true;
+      allow create, update, delete: if isAdmin(); // 只有管理員可以新增/編輯/刪除商品
+      allow read: if true; // 所有人都可以瀏覽商品
+    }
+
+    // 訂單資料
+    match /orders/{orderId} {
+      allow create: if true; // 允許未登入用戶建立訂單（訪客結帳）
+      allow read: if request.auth.uid != null || isAdmin(); // 登入用戶或管理員可查看訂單
+      allow update: if isAdmin(); // 只有管理員可更新訂單
+      allow delete: if isAdmin(); // 只有管理員可刪除訂單
+    }
+
+    // 頁面流量統計（analytics）
+    match /analytics/{date} {
+      allow read: if request.auth.uid != null; // 只有登入用戶可讀取（管理員查看統計）
+      allow write: if true; // 允許所有人寫入（追蹤訪客）
+    }
+
+    // 商品瀏覽統計（productAnalytics）
+    match /productAnalytics/{date} {
+      allow read: if request.auth.uid != null; // 只有登入用戶可讀取（管理員查看統計）
+      allow write: if true; // 允許所有人寫入（追蹤商品瀏覽）
+    }
+
+    // 備份日誌（backupLogs）
+    match /backupLogs/{logId} {
+      allow read: if request.auth.uid != null; // 只有登入用戶可讀取
+      allow write: if false; // 只允許 Cloud Functions 寫入（使用 Admin SDK）
     }
   }
 }

@@ -1,7 +1,47 @@
+rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    match /{allPaths=**} {
-      allow read, write: if request.auth!=null;
+
+    // 輔助函式：檢查是否為管理員（使用 Custom Claims）
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    // 輔助函式：檢查檔案大小（MB）
+    function fileSizeUnder(sizeMB) {
+      return request.resource.size < sizeMB * 1024 * 1024;
+    }
+
+    // 輔助函式：檢查是否為圖片
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+
+    // 商品圖片：所有人可讀取，只有管理員可上傳/刪除
+    match /products/{allPaths=**} {
+      allow read: if true; // 所有人都可以看商品圖片
+      allow write: if isAdmin() && isImage() && fileSizeUnder(5); // 管理員可上傳，限制 5MB 以下的圖片
+      allow delete: if isAdmin(); // 只有管理員可刪除
+    }
+
+    // 用戶頭像：所有人可讀取，用戶可上傳自己的頭像
+    match /avatars/{userId}/{fileName} {
+      allow read: if true; // 所有人都可以看頭像
+      allow write: if (request.auth.uid == userId || isAdmin()) && isImage() && fileSizeUnder(2); // 本人或管理員可上傳，限制 2MB
+      allow delete: if request.auth.uid == userId || isAdmin(); // 本人或管理員可刪除
+    }
+
+    // Firestore 備份資料夾：只有 Cloud Functions 可以寫入（使用 Admin SDK）
+    match /firestore-backups/{allPaths=**} {
+      allow read: if isAdmin(); // 只有管理員可以讀取備份
+      allow write: if false; // 禁止直接寫入（只允許 Cloud Functions 使用 Admin SDK 寫入）
+    }
+
+    // 報名表單範本：所有人可讀取，只有管理員可上傳/刪除
+    match /registration-forms/{fileName} {
+      allow read: if true; // 所有人都可以下載報名表單範本
+      allow write: if isAdmin(); // 只有管理員可上傳範本
+      allow delete: if isAdmin(); // 只有管理員可刪除範本
     }
   }
 }

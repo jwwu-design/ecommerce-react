@@ -2,8 +2,75 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const crypto = require('crypto');
 const cors = require('cors')({ origin: true });
+const firestore = require('@google-cloud/firestore');
 
 admin.initializeApp();
+
+// Firestore 備份客戶端
+const firestoreClient = new firestore.v1.FirestoreAdminClient();
+
+// ==================== 使用者角色管理 ====================
+
+// 當用戶文檔的 role 欄位改變時，自動更新 Custom Claims
+exports.setUserRole = functions.firestore
+    .document('users/{userId}')
+    .onWrite(async (change, context) => {
+        const userId = context.params.userId;
+
+        // 如果文檔被刪除，移除所有 custom claims
+        if (!change.after.exists) {
+            try {
+                await admin.auth().setCustomUserClaims(userId, { admin: false });
+                console.log(`✅ Removed admin claim for deleted user: ${userId}`);
+            } catch (error) {
+                console.error(`❌ Error removing claims for user ${userId}:`, error);
+            }
+            return;
+        }
+
+        const userData = change.after.data();
+        const oldUserData = change.before.exists ? change.before.data() : {};
+
+        // 只有當 role 欄位改變時才更新
+        if (userData.role !== oldUserData.role) {
+            try {
+                const isAdmin = userData.role === 'ADMIN';
+                await admin.auth().setCustomUserClaims(userId, { admin: isAdmin });
+                console.log(`✅ Set admin claim to ${isAdmin} for user: ${userId}`);
+
+                // 更新一個特殊欄位來通知客戶端需要刷新 token
+                await admin.firestore().collection('users').doc(userId).update({
+                    refreshToken: admin.firestore.FieldValue.serverTimestamp()
+                });
+            } catch (error) {
+                console.error(`❌ Error setting custom claims for user ${userId}:`, error);
+            }
+        }
+    });
+
+// 手動為所有現有管理員設置 Custom Claims（初次設定用）
+exports.initAdminClaims = functions.https.onRequest(async (req, res) => {
+    cors(req, res, async () => {
+        try {
+            const usersSnapshot = await admin.firestore().collection('users').where('role', '==', 'ADMIN').get();
+            const promises = [];
+
+            usersSnapshot.forEach(doc => {
+                promises.push(
+                    admin.auth().setCustomUserClaims(doc.id, { admin: true })
+                        .then(() => console.log(`✅ Set admin claim for: ${doc.id}`))
+                        .catch(err => console.error(`❌ Error for ${doc.id}:`, err))
+                );
+            });
+
+            await Promise.all(promises);
+            res.status(200).json({ success: true, count: promises.length, message: `已為 ${promises.length} 位管理員設置權限` });
+        } catch (error) {
+            console.error('❌ Error in initAdminClaims:', error);
+            res.status(500).json({ success: false, error: error.message });
+        }
+    });
+});
 
 // 綠界金流設定
 // 環境切換：設定 USE_TEST_ENV = true 使用測試環境，false 使用正式環境
@@ -310,4 +377,134 @@ exports.lowercaseProductName = functions.firestore.document('/products/{document
 
         return snap.ref.set({ name_lower: lowercaseName }, { merge: true });
     });
+
+// ============================================================
+// Firestore 自動備份功能
+// ============================================================
+
+/**
+ * 定期備份 Firestore 資料到 Cloud Storage
+ * 執行時間：每天凌晨 2:00 (台北時間)
+ *
+ * 使用方式：
+ * 1. 先在 Firebase Console 建立 Cloud Storage bucket (例如：你的專案ID-backups)
+ * 2. 部署此 function: firebase deploy --only functions:scheduledFirestoreBackup
+ * 3. 系統會自動每天執行備份
+ *
+ * 手動觸發備份：
+ * firebase functions:shell
+ * > scheduledFirestoreBackup()
+ *
+ * 還原備份：
+ * firebase firestore:import gs://your-bucket/firestore-backups/2024-01-15
+ */
+exports.scheduledFirestoreBackup = functions.pubsub
+    .schedule('0 2 * * *')  // 每天凌晨 2:00 (Cron 格式)
+    .timeZone('Asia/Taipei')
+    .onRun(async (context) => {
+        try {
+            const projectId = process.env.GCP_PROJECT || process.env.GCLOUD_PROJECT;
+            const databaseName = firestoreClient.databasePath(projectId, '(default)');
+
+            // 使用預設的 Firebase Storage bucket (不需要額外建立)
+            const bucket = `gs://${projectId}.appspot.com`;
+
+            // 使用日期作為資料夾名稱
+            const timestamp = new Date().toISOString().split('T')[0]; // 格式：2025-12-18
+            const outputUriPrefix = `${bucket}/firestore-backups/${timestamp}`;
+
+            functions.logger.log('Starting Firestore backup...', {
+                database: databaseName,
+                output: outputUriPrefix
+            });
+
+            // 執行備份
+            const [operation] = await firestoreClient.exportDocuments({
+                name: databaseName,
+                outputUriPrefix: outputUriPrefix,
+                // 空陣列表示備份所有 collections
+                // 若只想備份特定 collections，可改為：
+                // collectionIds: ['products', 'orders', 'users']
+                collectionIds: []
+            });
+
+            functions.logger.log('Firestore backup started successfully', {
+                operationName: operation.name,
+                timestamp: timestamp
+            });
+
+            // 記錄備份到 Firestore（可選）
+            await admin.firestore().collection('backupLogs').add({
+                timestamp: new Date().getTime(),
+                date: timestamp,
+                status: 'started',
+                outputPath: outputUriPrefix,
+                operationName: operation.name
+            });
+
+            return {
+                success: true,
+                timestamp: timestamp,
+                path: outputUriPrefix
+            };
+        } catch (error) {
+            functions.logger.error('Firestore backup failed:', error);
+
+            // 記錄錯誤
+            await admin.firestore().collection('backupLogs').add({
+                timestamp: new Date().getTime(),
+                status: 'failed',
+                error: error.message
+            });
+
+            throw error;
+        }
+    });
+
+/**
+ * 手動觸發備份的 HTTP 端點 (選用)
+ * 使用方式：
+ * curl https://your-region-your-project.cloudfunctions.net/manualBackup
+ */
+exports.manualBackup = functions.https.onRequest(async (req, res) => {
+    return cors(req, res, async () => {
+        try {
+            const projectId = process.env.GCP_PROJECT || process.env.GCLOUD_PROJECT;
+            const databaseName = firestoreClient.databasePath(projectId, '(default)');
+            const bucket = `gs://${projectId}.appspot.com`;
+            const timestamp = new Date().toISOString().split('T')[0];
+            const outputUriPrefix = `${bucket}/firestore-backups/manual-${timestamp}-${Date.now()}`;
+
+            functions.logger.log('Manual backup requested', { output: outputUriPrefix });
+
+            const [operation] = await firestoreClient.exportDocuments({
+                name: databaseName,
+                outputUriPrefix: outputUriPrefix,
+                collectionIds: []
+            });
+
+            await admin.firestore().collection('backupLogs').add({
+                timestamp: new Date().getTime(),
+                date: timestamp,
+                status: 'manual_started',
+                outputPath: outputUriPrefix,
+                operationName: operation.name
+            });
+
+            res.status(200).json({
+                success: true,
+                message: 'Backup started successfully',
+                timestamp: timestamp,
+                path: outputUriPrefix,
+                operationName: operation.name
+            });
+        } catch (error) {
+            functions.logger.error('Manual backup failed:', error);
+            res.status(500).json({
+                success: false,
+                error: error.message
+            });
+        }
+    });
+});
 
