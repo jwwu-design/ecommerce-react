@@ -22,9 +22,6 @@ const RecommendedProducts = () => {
           <div className="banner-desc">
             <h1>推薦商品</h1>
           </div>
-          <div className="banner-img">
-            <img src={bannerImg} alt="橫幅" />
-          </div>
         </div>
         <div className="display">
           <div className="product-display-grid">

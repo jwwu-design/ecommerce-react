@@ -9,6 +9,7 @@ export const ADMIN_PRODUCTS = '/admin/products';
 export const ADMIN_ORDERS = '/admin/orders';
 export const ADMIN_ORDER_DETAIL = '/admin/orders/:id';
 export const ADMIN_REGISTRATION_FORM = '/admin/registration-form';
+export const ADMIN_BANNER_IMAGES = '/admin/banner-images';
 export const ADMIN_USERS = '/admin/users';
 export const ADD_PRODUCT = '/admin/add';
 export const EDIT_PRODUCT = '/admin/edit';

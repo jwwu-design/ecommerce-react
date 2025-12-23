@@ -7,6 +7,7 @@ export { default as Products } from './admin/products';
 export { default as OrderList } from './admin/orders';
 export { default as OrderDetail } from './admin/orders/OrderDetail';
 export { default as RegistrationFormManagement } from './admin/registration_form';
+export { default as BannerImagesManagement } from './admin/banner_images';
 export { default as UserManagement } from './admin/users';
 export { default as ForgotPassword } from './auth/forgot_password';
 export { default as SignIn } from './auth/signin';

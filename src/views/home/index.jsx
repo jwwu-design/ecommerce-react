@@ -1,4 +1,4 @@
-import { ArrowRightOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { MessageDisplay } from '@/components/common';
 import { ProductShowcaseGrid } from '@/components/product';
 import { FEATURED_PRODUCTS, RECOMMENDED_PRODUCTS, SHOP } from '@/constants/routes';
@@ -6,13 +6,19 @@ import {
   useDocumentTitle, useFeaturedProducts, useRecommendedProducts, useScrollTop
 } from '@/hooks';
 import bannerImg from '@/images/banner-girl.png';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import firebaseInstance from '@/services/firebase';
 
 
 const Home = () => {
   useDocumentTitle('首頁 | Ares');
   useScrollTop();
+
+  const [bannerImages, setBannerImages] = useState([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isLoadingBanner, setIsLoadingBanner] = useState(true);
+  const [autoPlayKey, setAutoPlayKey] = useState(0); // 用於重置自動輪播
 
   const {
     featuredProducts,
@@ -26,6 +32,54 @@ const Home = () => {
     isLoading: isLoadingRecommended,
     error: errorRecommended
   } = useRecommendedProducts(6);
+
+  // 載入輪播圖片
+  useEffect(() => {
+    const loadBannerImages = async () => {
+      try {
+        const images = await firebaseInstance.getBannerImages();
+        setBannerImages(images);
+      } catch (error) {
+        console.error('Failed to load banner images:', error);
+      } finally {
+        setIsLoadingBanner(false);
+      }
+    };
+
+    loadBannerImages();
+  }, []);
+
+  // 自動輪播
+  useEffect(() => {
+    if (bannerImages.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === bannerImages.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000); // 每 5 秒切換一次
+
+    return () => clearInterval(interval);
+  }, [bannerImages.length, autoPlayKey]); // 當 autoPlayKey 改變時重新建立計時器
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? bannerImages.length - 1 : prevIndex - 1
+    );
+    setAutoPlayKey((prev) => prev + 1); // 重置自動輪播計時器
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === bannerImages.length - 1 ? 0 : prevIndex + 1
+    );
+    setAutoPlayKey((prev) => prev + 1); // 重置自動輪播計時器
+  };
+
+  const handleDotClick = (index) => {
+    setCurrentImageIndex(index);
+    setAutoPlayKey((prev) => prev + 1); // 重置自動輪播計時器
+  };
 
   return (
     <main className="content">
@@ -45,7 +99,45 @@ const Home = () => {
               <ArrowRightOutlined />
             </Link>
           </div>
-          <div className="banner-img"><img src={bannerImg} alt="橫幅" /></div>
+          <div className="banner-img-container">
+            {isLoadingBanner ? (
+              <div className="banner-img"><img src={bannerImg} alt="橫幅" /></div>
+            ) : bannerImages.length > 0 ? (
+              <>
+                <div className="banner-carousel" style={{ transform: `translateX(-${currentImageIndex * 100}%)` }}>
+                  {bannerImages.map((image, index) => (
+                    <div
+                      key={image.id}
+                      className="banner-img"
+                    >
+                      <img src={image.url} alt={`輪播圖 ${index + 1}`} />
+                    </div>
+                  ))}
+                </div>
+                {bannerImages.length > 1 && (
+                  <>
+                    <button className="banner-arrow banner-arrow-left" onClick={handlePrevImage}>
+                      <LeftOutlined />
+                    </button>
+                    <button className="banner-arrow banner-arrow-right" onClick={handleNextImage}>
+                      <RightOutlined />
+                    </button>
+                    <div className="banner-dots">
+                      {bannerImages.map((_, index) => (
+                        <span
+                          key={index}
+                          className={`banner-dot ${index === currentImageIndex ? 'active' : ''}`}
+                          onClick={() => handleDotClick(index)}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+              </>
+            ) : (
+              <div className="banner-img"><img src={bannerImg} alt="橫幅" /></div>
+            )}
+          </div>
         </div>
         <div className="display">
           <div className="display-header">

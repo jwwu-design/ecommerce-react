@@ -112,14 +112,14 @@ const EditProfile = () => {
                   <ImageLoader
                     alt="橫幅圖片"
                     className="user-profile-banner-img"
-                    src={profile.banner || defaultBanner}
+                    src={defaultBanner}
                   />
                 </div>
                 <div className="user-profile-avatar-wrapper">
                   <ImageLoader
                     alt="大頭貼"
                     className="user-profile-img"
-                    src={profile.avatar || defaultAvatar}
+                    src={defaultAvatar}
                   />
                 </div>
               </div>

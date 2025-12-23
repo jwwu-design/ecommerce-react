@@ -47,5 +47,11 @@ service cloud.firestore {
       allow read: if request.auth.uid != null; // 只有登入用戶可讀取
       allow write: if false; // 只允許 Cloud Functions 寫入（使用 Admin SDK）
     }
+
+    // 網站設定（settings）
+    match /settings/{settingId} {
+      allow read: if true; // 所有人可讀取設定（例如首頁輪播圖片）
+      allow write: if isAdmin(); // 只有管理員可以修改設定
+    }
   }
 }

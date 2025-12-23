@@ -25,9 +25,20 @@ const ProductFeatured = ({ product }) => {
         </div>
         <div className="product-display-details">
           <h2>{product.name || <Skeleton width={80} />}</h2>
-          <p className="text-subtle text-italic">
-            {product.brand || <Skeleton width={40} />}
-          </p>
+          {product.id && (
+            <div className="product-card-info">
+              {product.region && (
+                <div className="info-item">
+                  <span className="info-value">{product.region}場</span>
+                </div>
+              )}
+              {product.category && (
+                <div className="info-item">
+                  <span className="info-value">{product.category}</span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </SkeletonTheme>
@@ -39,7 +50,9 @@ ProductFeatured.propTypes = {
     image: PropType.string,
     name: PropType.string,
     id: PropType.string,
-    brand: PropType.string
+    brand: PropType.string,
+    region: PropType.string,
+    category: PropType.string
   }).isRequired
 };
 

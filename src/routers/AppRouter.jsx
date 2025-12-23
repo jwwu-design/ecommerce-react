@@ -134,6 +134,10 @@ const AppRouter = () => (
           path={ROUTES.ADMIN_REGISTRATION_FORM}
         />
         <AdminRoute
+          component={view.BannerImagesManagement}
+          path={ROUTES.ADMIN_BANNER_IMAGES}
+        />
+        <AdminRoute
           component={view.UserManagement}
           path={ROUTES.ADMIN_USERS}
         />

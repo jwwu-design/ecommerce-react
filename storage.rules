@@ -2,9 +2,11 @@ rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
 
-    // 輔助函式：檢查是否為管理員（使用 Custom Claims）
+    // 輔助函式：檢查是否為管理員（使用 Custom Claims 或查詢 Firestore）
     function isAdmin() {
-      return request.auth != null && request.auth.token.admin == true;
+      return request.auth != null &&
+             (request.auth.token.admin == true ||
+              firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'ADMIN');
     }
 
     // 輔助函式：檢查檔案大小（MB）
@@ -48,6 +50,13 @@ service firebase.storage {
     match /registration-forms/{userFolder}/{fileName} {
       allow read: if request.auth != null || isAdmin(); // 已登入用戶可讀取，管理員可讀取所有
       allow write: if request.auth != null && fileSizeUnder(10); // 已登入用戶可上傳，限制 10MB
+      allow delete: if isAdmin(); // 只有管理員可刪除
+    }
+
+    // 首頁輪播圖片：所有人可讀取，只有管理員可上傳/刪除
+    match /banners/{allPaths=**} {
+      allow read: if true; // 所有人都可以看首頁輪播圖片
+      allow write: if isAdmin() && isImage() && fileSizeUnder(5); // 管理員可上傳，限制 5MB 以下的圖片
       allow delete: if isAdmin(); // 只有管理員可刪除
     }
   }

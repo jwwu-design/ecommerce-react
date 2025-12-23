@@ -427,6 +427,97 @@ class Firebase {
     }
   };
 
+  // ========== 首頁輪播圖片管理 ==========
+
+  // 獲取所有首頁輪播圖片
+  getBannerImages = async () => {
+    try {
+      const doc = await this.db.collection("settings").doc("bannerImages").get();
+      if (doc.exists) {
+        return doc.data().images || [];
+      }
+      return [];
+    } catch (error) {
+      console.error('❌ Failed to get banner images:', error);
+      throw new Error("無法取得首頁輪播圖片");
+    }
+  };
+
+  // 上傳首頁輪播圖片
+  uploadBannerImage = async (file) => {
+    try {
+      // 生成唯一 ID
+      const imageId = this.db.collection("settings").doc().id;
+      const timestamp = new Date().getTime();
+      const fileName = `banner-${imageId}-${timestamp}`;
+
+      // 上傳到 Storage
+      const imageRef = this.storage.ref(`banners/${fileName}`);
+      const snapshot = await imageRef.put(file);
+      const downloadURL = await snapshot.ref.getDownloadURL();
+
+      // 獲取現有圖片列表
+      const currentImages = await this.getBannerImages();
+
+      // 新增圖片資訊
+      const newImage = {
+        id: imageId,
+        url: downloadURL,
+        fileName: fileName,
+        uploadedAt: new Date().toISOString()
+      };
+
+      // 更新 Firestore
+      await this.db.collection("settings").doc("bannerImages").set({
+        images: [...currentImages, newImage],
+        updatedAt: new Date().toISOString()
+      });
+
+      console.log('✅ Banner image uploaded successfully:', downloadURL);
+      return newImage;
+    } catch (error) {
+      console.error('❌ Failed to upload banner image:', error);
+      throw new Error("上傳首頁圖片失敗，請稍後再試。");
+    }
+  };
+
+  // 刪除首頁輪播圖片
+  deleteBannerImage = async (imageId, fileName) => {
+    try {
+      // 從 Storage 刪除圖片
+      await this.storage.ref(`banners/${fileName}`).delete();
+
+      // 從 Firestore 刪除圖片資訊
+      const currentImages = await this.getBannerImages();
+      const updatedImages = currentImages.filter(img => img.id !== imageId);
+
+      await this.db.collection("settings").doc("bannerImages").set({
+        images: updatedImages,
+        updatedAt: new Date().toISOString()
+      });
+
+      console.log('✅ Banner image deleted successfully');
+    } catch (error) {
+      console.error('❌ Failed to delete banner image:', error);
+      throw new Error("刪除首頁圖片失敗，請稍後再試。");
+    }
+  };
+
+  // 更新首頁輪播圖片順序
+  updateBannerImagesOrder = async (images) => {
+    try {
+      await this.db.collection("settings").doc("bannerImages").set({
+        images: images,
+        updatedAt: new Date().toISOString()
+      });
+
+      console.log('✅ Banner images order updated successfully');
+    } catch (error) {
+      console.error('❌ Failed to update banner images order:', error);
+      throw new Error("更新圖片順序失敗，請稍後再試。");
+    }
+  };
+
   // 上傳使用者填寫的報名表單
   uploadRegistrationForm = async (userId, userEmail, file, orderId = null) => {
     try {
