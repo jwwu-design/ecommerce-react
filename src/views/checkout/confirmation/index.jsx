@@ -22,9 +22,10 @@ const OrderConfirmation = () => {
   const isPaymentSuccess = params.get('payment') === 'success';
 
   // 取得當前使用者資訊
-  const { uid, fullname } = useSelector((state) => ({
+  const { uid, fullname, email } = useSelector((state) => ({
     uid: state.auth.id,
-    fullname: state.profile.fullname || 'User'
+    fullname: state.profile.fullname || 'User',
+    email: state.profile.email || state.auth.email
   }));
 
   useEffect(() => {
@@ -75,7 +76,7 @@ const OrderConfirmation = () => {
       // 上傳檔案到 Firebase Storage
       const uploadResult = await firebase.uploadRegistrationForm(
         uid,
-        profile.email,  // 改用 email
+        email,
         selectedFile,
         orderId
       );
