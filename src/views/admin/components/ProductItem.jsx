@@ -23,7 +23,7 @@ const ProductItem = ({ product }) => {
 
   const onConfirmDelete = () => {
     dispatch(removeProduct(product.id));
-    displayActionMessage('商品已成功刪除');
+    displayActionMessage('課程已成功刪除');
     productRef.current.classList.remove('item-active');
   };
 
@@ -89,7 +89,7 @@ const ProductItem = ({ product }) => {
               刪除
             </button>
             <div className="item-action-confirm">
-              <h5>確定要刪除此商品嗎？</h5>
+              <h5>確定要刪除此課程嗎？</h5>
               <button
                 className="button button-small button-border"
                 onClick={onCancelDelete}

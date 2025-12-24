@@ -27,7 +27,7 @@ const FormSchema = Yup.object().shape({
 });
 
 const EditProfile = () => {
-  useDocumentTitle('編輯帳號資料 | Ares');
+  useDocumentTitle('編輯帳號資料 | Ares 亞瑞仕知識學苑');
   useScrollTop();
 
   const modal = useModal();

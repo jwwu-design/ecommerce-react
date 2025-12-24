@@ -219,8 +219,8 @@ exports.createECPayOrder = functions.https.onCall(async (data, context) => {
     const formHtml = `
         <form id="ecpay-form" method="post" action="${ECPAY_CONFIG.ApiUrl}">
             ${Object.keys(ecpayParams).map(key =>
-                `<input type="hidden" name="${key}" value="${ecpayParams[key]}" />`
-            ).join('\n')}
+        `<input type="hidden" name="${key}" value="${ecpayParams[key]}" />`
+    ).join('\n')}
         </form>
     `;
 
@@ -289,7 +289,7 @@ exports.ecpayCallback = functions.https.onRequest(async (req, res) => {
 
             functions.logger.log('Order payment status updated:', orderId, ecpayTradeNo, paymentStatus);
 
-            // 如果付款成功，減少商品庫存
+            // 如果付款成功，減少課程庫存
             if (paymentStatus === 'paid' && orderData.items && Array.isArray(orderData.items)) {
                 functions.logger.log('Payment successful, updating product quantities...');
 

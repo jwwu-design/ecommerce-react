@@ -78,7 +78,7 @@
   display: block;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; 
+  text-overflow: ellipsis;
 }
 
 .input-valid {
@@ -94,7 +94,13 @@
 }
 
 .text-subtle {
+  font-size: 1.8rem;
   color: $gray-10;
+}
+
+.text-subtle-2 {
+  font-size: 1.8rem;
+  color: black;
 }
 
 .padding-0 {

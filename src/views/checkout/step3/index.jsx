@@ -13,7 +13,7 @@ import RegistrationFormUpload from './RegistrationFormUpload';
 import Total from './Total';
 
 const RegistrationForm = () => {
-  useDocumentTitle('報名表單 | Ares');
+  useDocumentTitle('報名表單 | Ares 亞瑞仕知識學苑');
   useScrollTop();
   const history = useHistory();
   const location = useLocation();

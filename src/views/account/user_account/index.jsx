@@ -17,7 +17,7 @@ const Loader = () => (
 
 const UserAccount = () => {
   useScrollTop();
-  useDocumentTitle('我的帳號 | Ares');
+  useDocumentTitle('我的帳號 | Ares 亞瑞仕知識學苑');
 
   return (
     <UserTab>

@@ -155,7 +155,7 @@ class Firebase {
 
             resolve({ products, lastKey });
           } catch (e) {
-            reject(e?.message || ":( 取得商品失敗。");
+            reject(e?.message || ":( 取得課程失敗。");
           }
         } else {
           const timeout = setTimeout(() => {
@@ -184,7 +184,7 @@ class Firebase {
             }
           } catch (e) {
             if (didTimeout) return;
-            reject(e?.message || ":( 取得商品失敗。");
+            reject(e?.message || ":( 取得課程失敗。");
           }
         }
       })();
@@ -273,7 +273,7 @@ class Firebase {
       .limit(itemsCount)
       .get();
 
-  // 根據篩選條件查詢商品
+  // 根據篩選條件查詢課程
   getProductsWithFilters = (filters = {}) => {
     let didTimeout = false;
 
@@ -307,7 +307,7 @@ class Firebase {
             query = query.orderBy("dateAdded", "desc");
           }
 
-          // 執行查詢（不設 limit，載入所有符合條件的商品）
+          // 執行查詢（不設 limit，載入所有符合條件的課程）
           const snapshot = await query.get();
 
           clearTimeout(timeout);
@@ -318,7 +318,7 @@ class Firebase {
               products.push({ id: doc.id, ...doc.data() })
             );
 
-            // 返回所有符合基本條件的商品
+            // 返回所有符合基本條件的課程
             // 複雜篩選（價格範圍、日期範圍、關鍵字）由前端 selector 處理
             resolve({
               products,
@@ -361,7 +361,7 @@ class Firebase {
               // 在前端排序
               products.sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0));
 
-              console.info(`✅ 已使用前端排序載入 ${products.length} 個商品`);
+              console.info(`✅ 已使用前端排序載入 ${products.length} 個課程`);
 
               resolve({
                 products,
@@ -370,11 +370,11 @@ class Firebase {
               });
             } catch (fallbackError) {
               console.error("降級查詢也失敗:", fallbackError);
-              reject(fallbackError?.message || ":( 取得商品失敗。");
+              reject(fallbackError?.message || ":( 取得課程失敗。");
             }
           } else {
             console.error("Firebase query error:", e);
-            reject(e?.message || ":( 取得商品失敗。");
+            reject(e?.message || ":( 取得課程失敗。");
           }
         }
       })();
@@ -948,7 +948,7 @@ class Firebase {
           reason: reason || '報名資料不符合要求',
           support_email: 'ares@ares-cert.com',
           support_phone: '06-2959696',
-          company_name: 'Ares'
+          company_name: 'Ares 亞瑞仕知識學苑'
         },
         PUBLIC_KEY
       );
@@ -989,7 +989,7 @@ class Firebase {
           order_url: orderUrl,
           support_email: 'ares@ares-cert.com',
           support_phone: '06-2959696',
-          company_name: 'Ares'
+          company_name: 'Ares 亞瑞仕知識學苑'
         },
         PUBLIC_KEY
       );

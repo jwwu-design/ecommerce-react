@@ -26,7 +26,7 @@ service cloud.firestore {
     match /orders/{orderId} {
       allow create: if true; // 允許未登入用戶建立訂單（訪客結帳）
       allow read: if request.auth.uid != null || isAdmin(); // 登入用戶或管理員可查看訂單
-      allow update: if isAdmin(); // 只有管理員可更新訂單
+      allow update: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.userId); // 管理員或訂單所有者可更新訂單
       allow delete: if isAdmin(); // 只有管理員可刪除訂單
     }
 

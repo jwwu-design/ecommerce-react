@@ -5,7 +5,7 @@ import bannerImg from '@/images/banner-girl-1.png';
 import React from 'react';
 
 const RecommendedProducts = () => {
-  useDocumentTitle('推薦商品 | Ares');
+  useDocumentTitle('永續治理領袖前哨站 | Ares 亞瑞仕知識學苑');
   useScrollTop();
 
   const {
@@ -20,7 +20,7 @@ const RecommendedProducts = () => {
       <div className="featured">
         <div className="banner">
           <div className="banner-desc">
-            <h1>推薦商品</h1>
+            <h1>永續治理領袖前哨站</h1>
           </div>
         </div>
         <div className="display">

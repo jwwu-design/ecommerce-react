@@ -16,7 +16,7 @@ import { CATEGORY_OPTIONS, SYSTEM_OPTIONS_BY_CATEGORY } from '@/constants/produc
 
 // 預設品牌選項，可自行調整
 const brandOptions = [
-  { value: 'Ares', label: 'Ares' },
+  { value: 'Ares 亞瑞仕知識學苑', label: 'Ares 亞瑞仕知識學苑' },
   // { value: 'Salt Maalat', label: 'Salt Maalat' },
   // { value: 'Betsin Maalat', label: 'Betsin Maalat' },
   // { value: 'Sexbomb', label: 'Sexbomb' },
@@ -318,7 +318,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                   />
                   <label htmlFor="featured">
                     <h5 className="d-flex-grow-1 margin-0">
-                      &nbsp; 加入精選產品 &nbsp;
+                      &nbsp; 加入近期課程 &nbsp;
                     </h5>
                   </label>
                 </div>
@@ -332,7 +332,7 @@ const ProductForm = ({ product, onSubmit, isLoading }) => {
                   />
                   <label htmlFor="recommended">
                     <h5 className="d-flex-grow-1 margin-0">
-                      &nbsp; 加入推薦產品 &nbsp;
+                      &nbsp; 加入永續治理領袖前哨站 &nbsp;
                     </h5>
                   </label>
                 </div>

@@ -11,7 +11,7 @@ import { StepTracker } from '../components';
 import withCheckout from '../hoc/withCheckout';
 
 const OrderSummary = ({ basket, subtotal }) => {
-  useDocumentTitle('訂單摘要 | Ares');
+  useDocumentTitle('訂單摘要 | Ares 亞瑞仕知識學苑');
   useScrollTop();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -23,7 +23,7 @@ const OrderSummary = ({ basket, subtotal }) => {
       <StepTracker current={1} />
       <div className="checkout-step-1">
         <h3 className="text-center">訂單摘要</h3>
-        <span className="d-block text-center">檢視您購物車中的商品。</span>
+        <span className="d-block text-center">檢視您購物車中的課程。</span>
         <br />
         <div className="checkout-items">
           {basket.map((product) => (

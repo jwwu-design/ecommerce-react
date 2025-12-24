@@ -5,14 +5,13 @@ import { FEATURED_PRODUCTS, RECOMMENDED_PRODUCTS, SHOP } from '@/constants/route
 import {
   useDocumentTitle, useFeaturedProducts, useRecommendedProducts, useScrollTop
 } from '@/hooks';
-import bannerImg from '@/images/banner-girl.png';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import firebaseInstance from '@/services/firebase';
 
 
 const Home = () => {
-  useDocumentTitle('首頁 | Ares');
+  useDocumentTitle('首頁 | Ares 亞瑞仕知識學苑');
   useScrollTop();
 
   const [bannerImages, setBannerImages] = useState([]);
@@ -87,11 +86,11 @@ const Home = () => {
         <div className="banner">
           <div className="banner-desc">
             <h1 className="text-thin">
-              <strong>建立您的<br />稽核資格</strong>
+              <strong>接續國際標準<br />領航永續未來</strong>
+
             </h1>
             <p>
-              提供販賣驗證與培訓課程，幫助您建立專業的稽核資格。
-              無論是入門還是進階課程，我們都能為您的職業生涯加分。
+              從 ISO 理解、導入到稽核實戰，為企業與個人打造可落地的永續治理能力
             </p>
             <br />
             <Link to={SHOP} className="button">
@@ -101,7 +100,9 @@ const Home = () => {
           </div>
           <div className="banner-img-container">
             {isLoadingBanner ? (
-              <div className="banner-img"><img src={bannerImg} alt="橫幅" /></div>
+              <div className="loader" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+                <h3>載入中...</h3>
+              </div>
             ) : bannerImages.length > 0 ? (
               <>
                 <div className="banner-carousel" style={{ transform: `translateX(-${currentImageIndex * 100}%)` }}>
@@ -135,13 +136,15 @@ const Home = () => {
                 )}
               </>
             ) : (
-              <div className="banner-img"><img src={bannerImg} alt="橫幅" /></div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#999' }}>
+                <p>尚未上傳輪播圖片</p>
+              </div>
             )}
           </div>
         </div>
         <div className="display">
           <div className="display-header">
-            <h1>精選商品</h1>
+            <h1>近期課程</h1>
             <Link to={FEATURED_PRODUCTS}>查看全部</Link>
           </div>
           {(errorFeatured && !isLoadingFeatured) ? (
@@ -159,7 +162,7 @@ const Home = () => {
         </div>
         <div className="display">
           <div className="display-header">
-            <h1>推薦商品</h1>
+            <h1>永續治理領袖前哨站</h1>
             <Link to={RECOMMENDED_PRODUCTS}>查看全部</Link>
           </div>
           {(errorRecommended && !isLoadingRecommended) ? (

@@ -28,7 +28,7 @@ function* initRequest() {
 
 function* handleError(e) {
   yield put(setLoading(false));
-  yield put(setRequestStatus(e?.message || '取得商品失敗'));
+  yield put(setRequestStatus(e?.message || '取得課程失敗'));
   console.log('錯誤：', e);
 }
 
@@ -46,7 +46,7 @@ function* productSaga({ type, payload }) {
         const result = yield call(firebase.getProducts, payload);
 
         if (result.products.length === 0) {
-          yield handleError({ message: '查無商品。' });
+          yield handleError({ message: '查無課程。' });
         } else {
           yield put(getProductsSuccess({
             products: result.products,
@@ -93,11 +93,11 @@ function* productSaga({ type, payload }) {
           id: key,
           ...product
         }));
-        yield handleAction(ADMIN_PRODUCTS, '商品已成功新增', 'success');
+        yield handleAction(ADMIN_PRODUCTS, '課程已成功新增', 'success');
         yield put(setLoading(false));
       } catch (e) {
         yield handleError(e);
-        yield handleAction(undefined, `新增商品失敗：${e?.message}`, 'error');
+        yield handleAction(undefined, `新增課程失敗：${e?.message}`, 'error');
       }
       break;
     }
@@ -152,11 +152,11 @@ function* productSaga({ type, payload }) {
           id: payload.id,
           updates: newUpdates
         }));
-        yield handleAction(ADMIN_PRODUCTS, '商品已成功更新', 'success');
+        yield handleAction(ADMIN_PRODUCTS, '課程已成功更新', 'success');
         yield put(setLoading(false));
       } catch (e) {
         yield handleError(e);
-        yield handleAction(undefined, `編輯商品失敗：${e.message}`, 'error');
+        yield handleAction(undefined, `編輯課程失敗：${e.message}`, 'error');
       }
       break;
     }
@@ -166,10 +166,10 @@ function* productSaga({ type, payload }) {
         yield call(firebase.removeProduct, payload);
         yield put(removeProductSuccess(payload));
         yield put(setLoading(false));
-        yield handleAction(ADMIN_PRODUCTS, '商品已成功移除', 'success');
+        yield handleAction(ADMIN_PRODUCTS, '課程已成功移除', 'success');
       } catch (e) {
         yield handleError(e);
-        yield handleAction(undefined, `移除商品失敗：${e.message}`, 'error');
+        yield handleAction(undefined, `移除課程失敗：${e.message}`, 'error');
       }
       break;
     }

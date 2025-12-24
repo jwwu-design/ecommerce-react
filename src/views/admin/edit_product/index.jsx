@@ -9,7 +9,7 @@ import { editProduct } from '@/redux/actions/productActions';
 const ProductForm = lazy(() => import('../components/ProductForm'));
 
 const EditProduct = ({ match }) => {
-  useDocumentTitle('編輯商品 | Ares');
+  useDocumentTitle('編輯課程 | Ares 亞瑞仕知識學苑');
   useScrollTop();
   const { product, error, isLoading } = useProduct(match.params.id);
   const dispatch = useDispatch();
@@ -21,7 +21,7 @@ const EditProduct = ({ match }) => {
   return (
     <div className="product-form-container">
       {error && <Redirect to="/dashboard/products" />}
-      <h2>編輯商品</h2>
+      <h2>編輯課程</h2>
       {product && (
         <Suspense fallback={(
           <div className="loader" style={{ minHeight: '80vh' }}>

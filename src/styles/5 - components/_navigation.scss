@@ -28,7 +28,8 @@
   }
 
   .logo img {
-    width: 15rem;
+
+    width: 20rem;
     height: inherit;
     object-fit: contain;
   }
@@ -51,7 +52,7 @@
   display: flex;
   justify-content: space-between;
 
-  li{
+  li {
     padding: 1rem;
     margin-left: 2rem;
   }
@@ -73,13 +74,13 @@
 
   li {
     display: inline-block;
-    
-    
+
+
     a {
       padding: 10px 15px;
       font-size: 1.4rem;
       opacity: .5;
-      
+
       &:hover {
         background: $background-color-01;
       }

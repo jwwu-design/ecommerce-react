@@ -5,7 +5,7 @@ import bannerImg from '@/images/banner-guy.png';
 import React from 'react';
 
 const FeaturedProducts = () => {
-  useDocumentTitle('精選商品 | Ares');
+  useDocumentTitle('近期課程 | Ares 亞瑞仕知識學苑');
   useScrollTop();
 
   const {
@@ -20,7 +20,7 @@ const FeaturedProducts = () => {
       <div className="featured">
         <div className="banner">
           <div className="banner-desc">
-            <h1>精選商品</h1>
+            <h1>近期課程</h1>
           </div>
         </div>
         <div className="display">

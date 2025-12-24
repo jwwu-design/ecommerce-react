@@ -20,7 +20,7 @@ const ViewProduct = () => {
   const { product, isLoading, error } = useProduct(id);
   const { addToBasket, isItemOnBasket } = useBasket(id);
   useScrollTop();
-  useDocumentTitle(`查看商品：${product?.name || '商品'}`);
+  useDocumentTitle(`查看課程：${product?.name || '課程'}`);
 
   const [selectedImage, setSelectedImage] = useState(product?.image || '');
   const [selectedSize, setSelectedSize] = useState('');
@@ -37,7 +37,7 @@ const ViewProduct = () => {
   useEffect(() => {
     setSelectedImage(product?.image);
 
-    // 追蹤商品瀏覽
+    // 追蹤課程瀏覽
     if (product?.id && product?.name) {
       analyticsService.trackProductView(product.id, product.name);
     }
@@ -62,7 +62,7 @@ const ViewProduct = () => {
     <main className="content">
       {isLoading && (
         <div className="loader">
-          <h4>正在載入商品資料...</h4>
+          <h4>正在載入課程資料...</h4>
           <br />
           <LoadingOutlined style={{ fontSize: '3rem' }} />
         </div>
@@ -111,10 +111,10 @@ const ViewProduct = () => {
               <div className="divider" />
               <br />
               <div>
-                <span className="text-subtle">地區</span>
+                <span className="text-subtle">上課地區</span>
                 <br />
                 <br />
-                <span>{product.region}</span>
+                <span className="text-subtle-2">{product.region}</span>
               </div>
               <br />
               <div>
@@ -153,7 +153,7 @@ const ViewProduct = () => {
             </div>
           </div>
 
-          {/* 商品詳細資訊區塊 */}
+          {/* 課程詳細資訊區塊 */}
           <div className="product-detail-info">
             <div className="product-detail-info-item">
               <span className="text-subtle label">大類</span>
@@ -177,7 +177,7 @@ const ViewProduct = () => {
 
           <div style={{ marginTop: '10rem' }}>
             <div className="display-header">
-              <h1>推薦商品</h1>
+              <h1>永續治理領袖前哨站</h1>
               <Link to={RECOMMENDED_PRODUCTS}>查看全部</Link>
             </div>
             {errorFeatured && !isLoadingFeatured ? (

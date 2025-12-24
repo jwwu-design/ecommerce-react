@@ -16,7 +16,7 @@ const isDateInRange = (productDate, startDate, endDate) => {
   const filterStart = parseDate(startDate);
   const filterEnd = parseDate(endDate);
 
-  // 處理商品日期 (可能是單日 "12/15" 或區間 "12/15~12/17")
+  // 處理課程日期 (可能是單日 "12/15" 或區間 "12/15~12/17")
   if (productDate.includes('~')) {
     // 處理日期區間
     const [pStart, pEnd] = productDate.split('~');

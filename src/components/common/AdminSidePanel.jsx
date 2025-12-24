@@ -20,7 +20,7 @@ const SideNavigation = () => (
           className="sidenavigation-menu"
           to={ADMIN_PRODUCTS}
         >
-          商品管理
+          課程管理
         </NavLink>
       </div>
       <div className="sidenavigation-item">

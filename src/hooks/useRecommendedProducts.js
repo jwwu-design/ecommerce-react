@@ -17,7 +17,7 @@ const useRecommendedProducts = (itemsCount) => {
 
       if (docs.empty) {
         if (didMount) {
-          setError('查無推薦商品。');
+          setError('查無課程。');
           setLoading(false);
         }
       } else {
@@ -35,7 +35,7 @@ const useRecommendedProducts = (itemsCount) => {
       }
     } catch (e) {
       if (didMount) {
-        setError('取得推薦商品失敗。');
+        setError('取得課程失敗。');
         setLoading(false);
       }
     }

@@ -179,7 +179,7 @@ class AnalyticsService {
     }
   }
 
-  // 記錄商品瀏覽
+  // 記錄課程瀏覽
   async trackProductView(productId, productName) {
     try {
       const today = this.getTodayDateString();
@@ -220,7 +220,7 @@ class AnalyticsService {
     }
   }
 
-  // 取得熱門商品
+  // 取得熱門課程
   async getTopProducts(days = 7, limit = 10) {
     try {
       const dates = this.getDateRange(days);
@@ -231,7 +231,7 @@ class AnalyticsService {
       const snapshots = await Promise.all(promises);
       const productsMap = {};
 
-      // 合併所有天數的商品資料
+      // 合併所有天數的課程資料
       snapshots.forEach(snapshot => {
         if (snapshot.exists) {
           const data = snapshot.data();
@@ -260,7 +260,7 @@ class AnalyticsService {
     }
   }
 
-  // 取得商品總瀏覽數
+  // 取得課程總瀏覽數
   async getProductTotalViews(productId, days = 30) {
     try {
       const dates = this.getDateRange(days);

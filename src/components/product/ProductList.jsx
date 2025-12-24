@@ -26,7 +26,7 @@ const ProductList = (props) => {
     return !!(filter.region || filter.category || filter.system);
   };
 
-  // 使用篩選條件載入商品
+  // 使用篩選條件載入課程
   const fetchProductsWithFilters = async () => {
     try {
       setFetching(true);
@@ -40,7 +40,7 @@ const ProductList = (props) => {
       });
 
       if (result.products.length === 0) {
-        dispatch(setRequestStatus('查無符合條件的商品。'));
+        dispatch(setRequestStatus('查無符合條件的課程。'));
         dispatch(getProductsSuccess({
           products: [],
           lastKey: null,
@@ -48,7 +48,7 @@ const ProductList = (props) => {
           replace: true  // 使用替換模式
         }));
       } else {
-        // 使用替換模式更新商品列表
+        // 使用替換模式更新課程列表
         dispatch(getProductsSuccess({
           products: result.products,
           lastKey: null,
@@ -59,7 +59,7 @@ const ProductList = (props) => {
       }
     } catch (error) {
       console.error('Failed to fetch products with filters:', error);
-      dispatch(setRequestStatus(error?.message || '取得商品失敗'));
+      dispatch(setRequestStatus(error?.message || '取得課程失敗'));
     } finally {
       setFetching(false);
       dispatch(setLoading(false));
@@ -76,16 +76,16 @@ const ProductList = (props) => {
     return () => dispatch(setLoading(false));
   }, []);
 
-  // 監聽篩選條件變化，重新載入商品
+  // 監聽篩選條件變化，重新載入課程
   useEffect(() => {
     // 跳過初始載入
     if (isInitialLoad) return;
 
     if (hasActiveFilters()) {
-      // 有篩選條件：載入所有符合條件的商品
+      // 有篩選條件：載入所有符合條件的課程
       fetchProductsWithFilters();
     } else {
-      // 清除篩選時：使用替換模式重新載入初始商品
+      // 清除篩選時：使用替換模式重新載入初始課程
       setFetching(true);
       dispatch(setLoading(true));
       dispatch(setRequestStatus(null));
@@ -96,7 +96,7 @@ const ProductList = (props) => {
         total: 0,
         replace: true
       }));
-      // 重新載入初始商品
+      // 重新載入初始課程
       dispatch(getProducts(null));
     }
   }, [filter.region, filter.category, filter.system]);
@@ -107,7 +107,7 @@ const ProductList = (props) => {
 
   if (filteredProducts.length === 0 && !isLoading) {
     return (
-      <MessageDisplay message={requestStatus?.message || '找不到任何商品。'} />
+      <MessageDisplay message={requestStatus?.message || '找不到任何課程。'} />
     );
   } if (filteredProducts.length === 0 && requestStatus) {
     return (
@@ -130,14 +130,14 @@ const ProductList = (props) => {
             onClick={fetchProducts}
             type="button"
           >
-            {isFetching ? '正在載入商品...' : '顯示更多商品'}
+            {isFetching ? '正在載入課程...' : '顯示更多課程'}
           </button>
         </div>
       )}
       {/* Show info when filters are applied and all products are loaded */}
       {hasActiveFilters() && filteredProducts.length > 0 && !isLoading && (
         <div className="d-flex-center padding-l">
-          <p className="text-subtle">已顯示全部 {filteredProducts.length} 項符合條件的商品</p>
+          <p className="text-subtle">已顯示全部 {filteredProducts.length} 項符合條件的課程</p>
         </div>
       )}
     </Boundary>

@@ -33,7 +33,7 @@ const ProductAppliedFilters = ({ filteredProductsCount }) => {
         <div className="product-list-header-title">
           <h5>
             {filteredProductsCount > 0
-              && `找到 ${filteredProductsCount} 件 ${filteredProductsCount > 1 ? '商品' : '商品'}`}
+              && `找到 ${filteredProductsCount} 件 ${filteredProductsCount > 1 ? '課程' : '課程'}`}
           </h5>
         </div>
       </div>

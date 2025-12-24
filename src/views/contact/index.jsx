@@ -3,7 +3,7 @@ import { PhoneOutlined, MailOutlined, EnvironmentOutlined, PrinterOutlined } fro
 import { useDocumentTitle, useScrollTop } from '@/hooks';
 
 const ContactUs = () => {
-  useDocumentTitle('聯絡我們 | Ares');
+  useDocumentTitle('聯絡我們 | Ares 亞瑞仕知識學苑');
   useScrollTop();
 
   return (

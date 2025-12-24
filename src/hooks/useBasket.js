@@ -11,10 +11,10 @@ const useBasket = () => {
   const addToBasket = (product) => {
     if (isItemOnBasket(product.id)) {
       dispatch(removeFromBasket(product.id));
-      displayActionMessage('商品已從購物車移除', 'info');
+      displayActionMessage('課程已從購物車移除', 'info');
     } else {
       dispatch(dispatchAddToBasket(product));
-      displayActionMessage('商品已加入購物車', 'success');
+      displayActionMessage('課程已加入購物車', 'success');
     }
   };
 

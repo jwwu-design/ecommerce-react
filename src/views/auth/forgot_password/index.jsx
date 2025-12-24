@@ -16,7 +16,7 @@ const ForgotPassword = () => {
   const [field, setField] = useState({ email: '', error: '' });
 
   useScrollTop();
-  useDocumentTitle('忘記密碼 | Ares');
+  useDocumentTitle('忘記密碼 | Ares 亞瑞仕知識學苑');
 
   useEffect(() => {
     if (didMount) {

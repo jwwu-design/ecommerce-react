@@ -74,7 +74,7 @@ const Dashboard = () => {
       const filteredPages = pages.filter(page => !page.page.startsWith('/admin'));
       setTopPages(filteredPages);
 
-      // 載入熱門商品
+      // 載入熱門課程
       const products = await analyticsService.getTopProducts(analyticsTimeRange, 10);
       setTopProducts(products);
     } catch (error) {
@@ -244,9 +244,9 @@ const Dashboard = () => {
           </div>
           <div className="stat-content">
             <h3 className="stat-value">{stats.totalProducts}</h3>
-            <p className="stat-label">商品數量</p>
+            <p className="stat-label">課程數量</p>
             <div className="stat-detail">
-              <span className="products-count">總商品數</span>
+              <span className="products-count">總課程數</span>
             </div>
           </div>
         </div>
@@ -353,10 +353,10 @@ const Dashboard = () => {
               </ResponsiveContainer>
             </div>
 
-            {/* 熱門商品 */}
+            {/* 熱門課程 */}
             <div className="chart-container">
               <h3 className="chart-title">
-                <RiseOutlined /> 熱門商品 Top 10
+                <RiseOutlined /> 熱門課程 Top 10
               </h3>
               {topProducts.length > 0 ? (
                 <ResponsiveContainer width="100%" height={300}>
@@ -377,7 +377,7 @@ const Dashboard = () => {
                 </ResponsiveContainer>
               ) : (
                 <div className="empty-state">
-                  <p>尚無商品瀏覽數據</p>
+                  <p>尚無課程瀏覽數據</p>
                 </div>
               )}
             </div>
@@ -454,8 +454,8 @@ const Dashboard = () => {
             onClick={() => history.push(ADMIN_PRODUCTS)}
           >
             <FileTextOutlined className="action-icon" />
-            <h3>商品管理</h3>
-            <p>新增或編輯商品資訊</p>
+            <h3>課程管理</h3>
+            <p>新增或編輯課程資訊</p>
           </button>
           <button
             className="action-card"

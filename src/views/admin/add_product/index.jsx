@@ -9,7 +9,7 @@ const ProductForm = lazy(() => import('../components/ProductForm'));
 
 const AddProduct = () => {
   useScrollTop();
-  useDocumentTitle('新增產品 | Ares');
+  useDocumentTitle('新增產品 | Ares 亞瑞仕知識學苑');
   const isLoading = useSelector((state) => state.app.loading);
   const dispatch = useDispatch();
 

@@ -5,7 +5,7 @@ import firebaseInstance from '@/services/firebase';
 import { displayActionMessage } from '@/helpers/utils';
 
 const BannerImagesManagement = () => {
-  useDocumentTitle('首頁圖片管理 | Ares 管理後台');
+  useDocumentTitle('首頁圖片管理 | Ares 亞瑞仕知識學苑管理後台');
 
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(true);

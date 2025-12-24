@@ -10,7 +10,7 @@ import { ProductsNavbar } from '../components';
 import ProductsTable from '../components/ProductsTable';
 
 const Products = () => {
-  useDocumentTitle('商品管理 | Ares 管理後台');
+  useDocumentTitle('課程管理 | Ares 管理後台');
   useScrollTop();
 
   const store = useSelector((state) => ({

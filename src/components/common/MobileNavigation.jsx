@@ -23,7 +23,7 @@ const Navigation = (props) => {
       <div className="mobile-navigation-main">
         <div className="mobile-navigation-logo">
           <Link onClick={onClickLink} to={HOME}>
-            <h2>ARES</h2>
+            <h2>Ares 亞瑞仕知識學苑</h2>
           </Link>
         </div>
 

@@ -65,7 +65,7 @@ const ECPayPayment = ({ orderData }) => {
 
           {orderData.items && orderData.items.length > 0 && (
             <div className="order-items-list">
-              <h5 className="order-items-title">訂購商品</h5>
+              <h5 className="order-items-title">訂購課程</h5>
               {orderData.items.map((item) => (
                 <div key={item.id} className="order-item">
                   <div className="order-item-image">
@@ -97,7 +97,7 @@ const ECPayPayment = ({ orderData }) => {
 
           <div className="order-total-section">
             <div className="order-total-row">
-              <span>商品小計</span>
+              <span>課程小計</span>
               <span>{displayMoney(orderData.subtotal || 0)}</span>
             </div>
             {orderData.shipping && (

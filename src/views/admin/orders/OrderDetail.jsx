@@ -232,14 +232,14 @@ const OrderDetail = () => {
         </div>
       </div>
 
-      {/* 訂購商品列表 */}
+      {/* 訂購課程列表 */}
       <div className="order-detail-section">
-        <h3>訂購商品</h3>
+        <h3>訂購課程</h3>
         <div className="order-items-table-container">
           <table className="order-items-table">
             <thead>
               <tr>
-                <th>商品名稱</th>
+                <th>課程名稱</th>
                 <th>日期</th>
                 <th>數量</th>
                 <th>單價</th>
@@ -260,7 +260,7 @@ const OrderDetail = () => {
               ) : (
                 <tr>
                   <td colSpan="5" className="empty-cell">
-                    無商品資料
+                    無課程資料
                   </td>
                 </tr>
               )}
@@ -274,7 +274,7 @@ const OrderDetail = () => {
         <h3>金額明細</h3>
         <div className="order-amount-summary">
           <div className="amount-row">
-            <span className="amount-label">商品小計：</span>
+            <span className="amount-label">課程小計：</span>
             <span className="amount-value">{displayMoney(order.totalAmount || 0)}</span>
           </div>
           <div className="amount-row amount-total">

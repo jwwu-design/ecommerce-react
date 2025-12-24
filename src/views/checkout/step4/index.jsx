@@ -10,7 +10,7 @@ import Total from './Total';
 import firebase from '@/services/firebase';
 
 const Payment = () => {
-  useDocumentTitle('付款 | Ares');
+  useDocumentTitle('付款 | Ares 亞瑞仕知識學苑');
   useScrollTop();
 
   const location = useLocation();

@@ -55,7 +55,7 @@ const ProductSearch = () => {
             className="product-search-input"
             onChange={onSearchChange}
             onKeyUp={onKeyUp}
-            placeholder="搜尋商品..."
+            placeholder="搜尋課程..."
             ref={searchInput}
             type="text"
           />

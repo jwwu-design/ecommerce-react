@@ -50,7 +50,7 @@ const Search = ({ match }) => {
               <div className="product-list-header">
                 <div className="product-list-header-title">
                   <h5>
-                    {`找到 ${store.products.length} 個商品（關鍵字：${searchKey}）`}
+                    {`找到 ${store.products.length} 個課程（關鍵字：${searchKey}）`}
                   </h5>
                 </div>
               </div>
@@ -65,7 +65,7 @@ const Search = ({ match }) => {
   return (
     <main className="content">
       <div className="loader">
-        <h4>正在搜尋商品…</h4>
+        <h4>正在搜尋課程…</h4>
         <br />
         <LoadingOutlined style={{ fontSize: '3rem' }} />
       </div>

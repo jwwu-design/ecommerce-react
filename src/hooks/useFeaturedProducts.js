@@ -17,7 +17,7 @@ const useFeaturedProducts = (itemsCount) => {
 
       if (docs.empty) {
         if (didMount) {
-          setError('查無精選商品。');
+          setError('查無近期課程。');
           setLoading(false);
         }
       } else {
@@ -35,7 +35,7 @@ const useFeaturedProducts = (itemsCount) => {
       }
     } catch (e) {
       if (didMount) {
-        setError('取得精選商品失敗。');
+        setError('取得近期課程失敗。');
         setLoading(false);
       }
     }

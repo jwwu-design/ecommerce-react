@@ -8,7 +8,7 @@ import { displayMoney } from '@/helpers/utils';
 import { displayActionMessage } from '@/helpers/utils';
 
 const OrderConfirmation = () => {
-  useDocumentTitle('訂單確認 | Ares');
+  useDocumentTitle('訂單確認 | Ares 亞瑞仕知識學苑');
   useScrollTop();
   const { orderId } = useParams();
   const location = useLocation();

@@ -25,7 +25,7 @@ const Basket = () => {
     if (didMount && firebase.auth.currentUser && basket.length !== 0) {
       firebase.saveBasketItems(basket, firebase.auth.currentUser.uid)
         .then(() => {
-          console.log('商品已儲存到購物車');
+          console.log('課程已儲存到購物車');
         })
         .catch((e) => {
           console.log(e);
@@ -87,7 +87,7 @@ const Basket = () => {
               我的購物車 &nbsp;
               <span>
                 (
-                {` ${basket.length} ${basket.length > 1 ? '件商品' : '件商品'}`}
+                {` ${basket.length} ${basket.length > 1 ? '件課程' : '件課程'}`}
                 )
               </span>
             </h3>
