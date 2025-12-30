@@ -1,6 +1,9 @@
 // 固定的大類選項
 export const CATEGORY_OPTIONS = ['ESG項目', '資安項目', '品質系統'];
 
+// 地區選項
+export const REGION_OPTIONS = ['台北', '台南'];
+
 // 根據選中的大類提供系統選項
 export const SYSTEM_OPTIONS_BY_CATEGORY = {
   'ESG項目': [

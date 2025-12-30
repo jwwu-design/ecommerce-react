@@ -444,7 +444,7 @@ class Firebase {
   };
 
   // 上傳首頁輪播圖片
-  uploadBannerImage = async (file) => {
+  uploadBannerImage = async (file, link = '') => {
     try {
       // 生成唯一 ID
       const imageId = this.db.collection("settings").doc().id;
@@ -464,6 +464,7 @@ class Firebase {
         id: imageId,
         url: downloadURL,
         fileName: fileName,
+        link: link || '',
         uploadedAt: new Date().toISOString()
       };
 
@@ -515,6 +516,26 @@ class Firebase {
     } catch (error) {
       console.error('❌ Failed to update banner images order:', error);
       throw new Error("更新圖片順序失敗，請稍後再試。");
+    }
+  };
+
+  // 更新單張輪播圖片的超連結
+  updateBannerImageLink = async (imageId, link) => {
+    try {
+      const currentImages = await this.getBannerImages();
+      const updatedImages = currentImages.map(img =>
+        img.id === imageId ? { ...img, link: link || '' } : img
+      );
+
+      await this.db.collection("settings").doc("bannerImages").set({
+        images: updatedImages,
+        updatedAt: new Date().toISOString()
+      });
+
+      console.log('✅ Banner image link updated successfully');
+    } catch (error) {
+      console.error('❌ Failed to update banner image link:', error);
+      throw new Error("更新圖片連結失敗，請稍後再試。");
     }
   };
 

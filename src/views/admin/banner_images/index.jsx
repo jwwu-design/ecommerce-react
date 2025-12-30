@@ -14,6 +14,8 @@ const BannerImagesManagement = () => {
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [tempImages, setTempImages] = useState([]);
   const [hasChanges, setHasChanges] = useState(false);
+  const [editingLinkId, setEditingLinkId] = useState(null);
+  const [editingLinkValue, setEditingLinkValue] = useState('');
 
   useEffect(() => {
     loadBannerImages();
@@ -164,6 +166,32 @@ const BannerImagesManagement = () => {
     displayActionMessage('已取消變更', 'info');
   };
 
+  // 開始編輯超連結
+  const handleEditLink = (imageId, currentLink) => {
+    setEditingLinkId(imageId);
+    setEditingLinkValue(currentLink || '');
+  };
+
+  // 儲存超連結
+  const handleSaveLink = async (imageId) => {
+    try {
+      await firebaseInstance.updateBannerImageLink(imageId, editingLinkValue);
+      displayActionMessage('超連結已更新', 'success');
+      await loadBannerImages();
+      setEditingLinkId(null);
+      setEditingLinkValue('');
+    } catch (error) {
+      console.error('Save link failed:', error);
+      displayActionMessage(error.message || '儲存超連結失敗', 'error');
+    }
+  };
+
+  // 取消編輯超連結
+  const handleCancelEditLink = () => {
+    setEditingLinkId(null);
+    setEditingLinkValue('');
+  };
+
   return (
     <div className="banner-images-management">
       <div className="page-header">
@@ -195,6 +223,56 @@ const BannerImagesManagement = () => {
                     <p className="text-subtle" style={{ fontSize: '12px', marginBottom: '8px' }}>
                       上傳時間：{new Date(image.uploadedAt).toLocaleString('zh-TW')}
                     </p>
+
+                    {/* 超連結編輯區 */}
+                    <div style={{ marginBottom: '8px' }}>
+                      {editingLinkId === image.id ? (
+                        <div>
+                          <input
+                            type="url"
+                            value={editingLinkValue}
+                            onChange={(e) => setEditingLinkValue(e.target.value)}
+                            placeholder="輸入超連結（選填）"
+                            className="input-text"
+                            style={{ width: '100%', marginBottom: '8px', fontSize: '12px', padding: '6px' }}
+                          />
+                          <div style={{ display: 'flex', gap: '4px' }}>
+                            <button
+                              onClick={() => handleSaveLink(image.id)}
+                              className="button button-small"
+                              style={{ flex: 1, fontSize: '12px', padding: '4px 8px' }}
+                            >
+                              儲存
+                            </button>
+                            <button
+                              onClick={handleCancelEditLink}
+                              className="button button-small button-muted"
+                              style={{ flex: 1, fontSize: '12px', padding: '4px 8px' }}
+                            >
+                              取消
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div>
+                          <p className="text-subtle" style={{ fontSize: '11px', marginBottom: '4px' }}>
+                            {image.link ? (
+                              <>連結：<a href={image.link} target="_blank" rel="noopener noreferrer" style={{ color: '#1890ff', wordBreak: 'break-all' }}>{image.link}</a></>
+                            ) : (
+                              '未設定連結'
+                            )}
+                          </p>
+                          <button
+                            onClick={() => handleEditLink(image.id, image.link)}
+                            className="button button-small button-muted"
+                            style={{ width: '100%', fontSize: '12px', padding: '4px 8px', marginBottom: '4px' }}
+                          >
+                            {image.link ? '編輯連結' : '新增連結'}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
                     <button
                       onClick={() => handleDelete(image.id, image.fileName)}
                       className="button button-small button-danger"

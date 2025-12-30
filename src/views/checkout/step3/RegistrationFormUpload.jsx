@@ -34,11 +34,11 @@ const RegistrationFormUpload = ({ userId, userEmail, orderId, onUploadComplete }
     if (!file) return;
 
     // 驗證檔案格式
-    const validExtensions = ['.docx'];
+    const validExtensions = ['.docx', '.doc', '.pdf', '.jpg', '.jpeg', '.png'];
     const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
 
     if (!validExtensions.includes(fileExtension)) {
-      displayActionMessage('請上傳 Word 檔案（.docx）', 'error');
+      displayActionMessage('請上傳支援的檔案格式（Word、PDF、圖片）', 'error');
       return;
     }
 
@@ -116,13 +116,16 @@ const RegistrationFormUpload = ({ userId, userEmail, orderId, onUploadComplete }
 
       <div className="registration-form-section">
         <h3>步驟 2：上傳填寫完成的表單</h3>
-        <p className="text-subtle">請選擇您填寫完成的報名表單檔案（支援 .docx 格式）</p>
+        <p className="text-subtle">請選擇您填寫完成的報名表單檔案</p>
+        <p className="text-subtle" style={{ fontSize: '12px', marginTop: '4px' }}>
+          支援格式：Word (.doc, .docx)、PDF (.pdf)、圖片 (.jpg, .jpeg, .png)
+        </p>
 
         <div className="file-upload-area">
           <input
             type="file"
             id="registration-form-file"
-            accept=".docx"
+            accept=".docx,.doc,.pdf,.jpg,.jpeg,.png"
             onChange={handleFileSelect}
             disabled={uploading || uploadedFile}
             style={{ display: 'none' }}

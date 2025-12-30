@@ -111,7 +111,18 @@ const Home = () => {
                       key={image.id}
                       className="banner-img"
                     >
-                      <img src={image.url} alt={`輪播圖 ${index + 1}`} />
+                      {image.link ? (
+                        <a
+                          href={image.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ display: 'block', width: '100%', height: '100%' }}
+                        >
+                          <img src={image.url} alt={`輪播圖 ${index + 1}`} style={{ cursor: 'pointer' }} />
+                        </a>
+                      ) : (
+                        <img src={image.url} alt={`輪播圖 ${index + 1}`} />
+                      )}
                     </div>
                   ))}
                 </div>

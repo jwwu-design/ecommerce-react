@@ -347,14 +347,37 @@ const OrderDetail = () => {
                 📥 下載表單
               </a>
 
-              <a
-                href={`https://docs.google.com/viewer?url=${encodeURIComponent(order.registrationForm.fileURL)}&embedded=true`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="button button-small button-muted"
-              >
-                👁️ 線上預覽
-              </a>
+              {(() => {
+                const fileName = order.registrationForm.originalFileName || '';
+                const fileExtension = fileName.substring(fileName.lastIndexOf('.')).toLowerCase();
+                const isImage = ['.jpg', '.jpeg', '.png'].includes(fileExtension);
+
+                if (isImage) {
+                  // 圖片檔：直接開啟圖片
+                  return (
+                    <a
+                      href={order.registrationForm.fileURL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="button button-small button-muted"
+                    >
+                      👁️ 線上預覽
+                    </a>
+                  );
+                } else {
+                  // 文件檔：使用 Google Docs Viewer
+                  return (
+                    <a
+                      href={`https://docs.google.com/viewer?url=${encodeURIComponent(order.registrationForm.fileURL)}&embedded=true`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="button button-small button-muted"
+                    >
+                      👁️ 線上預覽
+                    </a>
+                  );
+                }
+              })()}
 
               {(!order.reviewStatus || order.reviewStatus === 'pending') && (
                 <>

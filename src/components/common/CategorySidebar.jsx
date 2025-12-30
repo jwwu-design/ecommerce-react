@@ -2,7 +2,7 @@ import PropType from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { applyFilter } from '@/redux/actions/filterActions';
-import { CATEGORY_OPTIONS, SYSTEM_OPTIONS_BY_CATEGORY } from '@/constants/productCategories';
+import { CATEGORY_OPTIONS, SYSTEM_OPTIONS_BY_CATEGORY, REGION_OPTIONS } from '@/constants/productCategories';
 
 const CategorySidebar = () => {
   const { filter } = useSelector((state) => ({
@@ -13,12 +13,14 @@ const CategorySidebar = () => {
 
   const [selectedCategory, setSelectedCategory] = useState(filter.category || '');
   const [selectedSystem, setSelectedSystem] = useState(filter.system || '');
+  const [selectedRegion, setSelectedRegion] = useState(filter.region || '');
 
   const systemOptions = selectedCategory ? (SYSTEM_OPTIONS_BY_CATEGORY[selectedCategory] || []) : [];
 
   useEffect(() => {
     setSelectedCategory(filter.category || '');
     setSelectedSystem(filter.system || '');
+    setSelectedRegion(filter.region || '');
   }, [filter]);
 
   const handleCategoryChange = (category) => {
@@ -43,14 +45,26 @@ const CategorySidebar = () => {
     }));
   };
 
+  const handleRegionChange = (region) => {
+    const newRegion = region === selectedRegion ? '' : region;
+    setSelectedRegion(newRegion);
+
+    dispatch(applyFilter({
+      ...filter,
+      region: newRegion
+    }));
+  };
+
   const handleClearFilters = () => {
     setSelectedCategory('');
     setSelectedSystem('');
+    setSelectedRegion('');
 
     dispatch(applyFilter({
       ...filter,
       category: '',
-      system: ''
+      system: '',
+      region: ''
     }));
   };
 
@@ -58,7 +72,7 @@ const CategorySidebar = () => {
     <div className="category-sidebar">
       <div className="category-sidebar-header">
         <h3>課程分類</h3>
-        {(selectedCategory || selectedSystem) && (
+        {(selectedCategory || selectedSystem || selectedRegion) && (
           <button
             type="button"
             className="clear-filters-btn"
@@ -67,6 +81,24 @@ const CategorySidebar = () => {
             清除篩選
           </button>
         )}
+      </div>
+
+      {/* 地區 */}
+      <div className="category-section">
+        <h4>地區</h4>
+        <ul className="category-list">
+          {REGION_OPTIONS.map((region) => (
+            <li key={region}>
+              <button
+                type="button"
+                className={`category-item ${selectedRegion === region ? 'active' : ''}`}
+                onClick={() => handleRegionChange(region)}
+              >
+                {region}
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
 
       {/* 大類 */}
