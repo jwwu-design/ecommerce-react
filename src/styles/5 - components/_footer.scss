@@ -16,6 +16,19 @@
 
   a {
     text-decoration: underline;
+    color: $black;
+    margin: 0 0.5rem;
+    font-size: 1.4rem;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: $gray-20;
+    }
+
+    @include mobile {
+      display: block;
+      margin: 0.5rem 0;
+    }
   }
 }
 

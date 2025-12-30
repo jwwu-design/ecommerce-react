@@ -3,6 +3,7 @@
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   grid-gap: $s-size;
   justify-content: center;
+  margin-bottom: 0rem;
 
   @include mobile {
     grid-template-columns: repeat(2, 1fr) !important;
@@ -50,20 +51,22 @@
 .product-card {
   width: 100%;
   max-width: 320px;
-  height: 300px;
+  max-height: 350px;
   border: 1px solid $border-color;
   text-align: center;
   position: relative;
   background: $white;
   overflow: hidden;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
 
   &:hover {
     cursor: pointer;
   }
 
   @include mobile {
-    height: 300px;
+    min-height: 300px;
     max-width: none;
   }
 }
@@ -74,10 +77,11 @@
 
 .product-card:hover .product-card-button {
   bottom: 0;
+  opacity: 1;
 }
 
 .product-card:hover .product-card-img-wrapper {
-  height: 8rem;
+  height: 14rem;
   padding: 1rem;
 }
 
@@ -113,7 +117,7 @@
 
 .product-card-img-wrapper {
   width: 100%;
-  height: 100px;
+  height: 150px;
   padding: 0 $m-size;
   margin: auto;
   position: relative;
@@ -127,6 +131,10 @@
 
 .product-details {
   padding: $m-size;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .product-card-price {
@@ -135,10 +143,11 @@
 
 .product-card-name {
   width: 100%;
-  height: 20px;
+  min-height: 20px;
   margin: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.4;
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 .product-card-brand {
@@ -185,6 +194,7 @@
   position: absolute;
   bottom: -100%;
   font-size: $font-small;
+  opacity: 0;
   transition: all .4s ease-in-out;
 
   @include mobile {
@@ -241,18 +251,35 @@
   }
 }
 
+.product-modal-images-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 2fr 1fr;
+  gap: 0;
+  width: 50%;
+  min-height: 600px;
+
+  @include tablet {
+    width: 100%;
+    grid-template-rows: auto auto;
+    min-height: auto;
+  }
+}
+
 .product-modal-image-wrapper {
-  width: 40rem;
-  // height: 40rem;
-  height: inherit;
-  flex-grow: 1;
+  width: 100%;
+  height: 400px;
   position: relative;
   background: #f8f8f8;
+  grid-row: 1;
+
+  @include tablet {
+    min-height: 300px;
+    order: 1;
+  }
 
   @include mobile {
-    width: 100%;
-    height: 20rem;
-    margin: auto;
+    min-height: 20rem;
   }
 
   input[type="color"] {
@@ -266,33 +293,31 @@
 }
 
 .product-modal-image-collection {
-  width: 150px;
-  height: inherit;
+  width: 100%;
+  height: 100%;
   background: #fff;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   padding: 10px;
-  overflow-y: scroll;
+  overflow-x: auto;
+  overflow-y: hidden;
   position: relative;
+  border-top: 1px solid #e1e1e1;
+  grid-row: 2;
 
   @include tablet {
-    width: 100%;
-    height: auto;
     order: 2;
-    overflow-x: scroll;
-    overflow-y: unset;
     flex-direction: row;
   }
 }
 
 .product-modal-image-collection::-webkit-scrollbar {
-  width: 10px;
+  height: 10px;
 }
 
 .product-modal-image-collection::-webkit-scrollbar-thumb {
   background-color: #1a1a1a;
   outline: 1px solid #f8f8f8;
-  // border-radius: .6rem;
 }
 
 .product-modal-image-collection::-webkit-scrollbar-track {
@@ -300,10 +325,12 @@
 }
 
 .product-modal-image-collection-wrapper {
-  width: 100%;
-  height: 100px;
+  width: 120px;
+  height: 100%;
+  max-height: 150px;
   border: 1px solid #e1e1e1;
-  margin-bottom: 5px;
+  margin-right: 10px;
+  flex-shrink: 0;
   position: relative;
 
   &:hover {
@@ -312,7 +339,6 @@
   }
 
   @include tablet {
-    order: 1;
     width: 100px;
   }
 }
@@ -330,8 +356,9 @@
 }
 
 .product-modal-details {
-  width: 500px;
+  width: 50%;
   padding: $l-size;
+  overflow-y: auto;
 
   @include tablet {
     width: 100%;
@@ -555,6 +582,7 @@
 
 .product-display {
   width: 100%;
+  max-width: 320px;
   height: 600px;
   max-height: 35rem;
   border: 1px solid $border-color;

@@ -48,7 +48,7 @@ const ProductItem = ({ product, isItemOnBasket, addToBasket }) => {
             ) : <Skeleton width="100%" height="90%" />}
           </div>
           <div className="product-details">
-            <h5 className="product-card-name text-overflow-ellipsis margin-auto">
+            <h5 className="product-card-name margin-auto">
               {product.name || <Skeleton width={80} />}
             </h5>
             <p className="product-card-brand">

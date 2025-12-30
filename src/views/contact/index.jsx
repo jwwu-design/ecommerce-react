@@ -11,7 +11,10 @@ const ContactUs = () => {
       <div className="contact-us-wrapper">
         <div className="contact-header">
           <h1>聯絡我們</h1>
-          <p className="subtitle">歡迎與我們聯繫，我們將竭誠為您服務</p>
+          <p className="subtitle">亞瑞仕國際驗證以高標準精進服務，誠摯邀請您的回饋</p>
+          <p className="subtitle">與我們一同持續優化、共創更佳服務品質。</p>
+          <p className="subtitle">客服專線:+886 800-666728</p>
+          <p className="subtitle">客服信箱:ares@ares-cert.com</p>
         </div>
 
         <div className="contact-content">
@@ -165,10 +168,10 @@ const ContactUs = () => {
             <div className="hours-grid">
               <div className="hours-item">
                 <span className="day">週一至週五</span>
-                <span className="time">09:00 - 18:00</span>
+                <span className="time">09:00 - 17:30</span>
               </div>
               <div className="hours-item">
-                <span className="day">週六、週日</span>
+                <span className="day">週六、週日及國定假日</span>
                 <span className="time">公休</span>
               </div>
             </div>
