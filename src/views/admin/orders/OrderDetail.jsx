@@ -275,11 +275,29 @@ const OrderDetail = () => {
         <div className="order-amount-summary">
           <div className="amount-row">
             <span className="amount-label">課程小計：</span>
-            <span className="amount-value">{displayMoney(order.totalAmount || 0)}</span>
+            <span className="amount-value">{displayMoney(order.subtotal || order.totalAmount || 0)}</span>
           </div>
+          {order.shippingFee > 0 && (
+            <div className="amount-row">
+              <span className="amount-label">運費：</span>
+              <span className="amount-value">{displayMoney(order.shippingFee)}</span>
+            </div>
+          )}
+          {order.discount > 0 && (
+            <div className="amount-row" style={{ color: '#52c41a' }}>
+              <span className="amount-label">優惠折扣：</span>
+              <span className="amount-value">- {displayMoney(order.discount)}</span>
+            </div>
+          )}
+          {order.coupon && (
+            <div className="amount-row" style={{ fontSize: '1.2rem', color: '#666' }}>
+              <span className="amount-label">優惠碼：{order.coupon.code}</span>
+              <span className="amount-value">已節省 {displayMoney(order.discount)}</span>
+            </div>
+          )}
           <div className="amount-row amount-total">
             <span className="amount-label">訂單總額：</span>
-            <span className="amount-value">{displayMoney(order.totalAmount || 0)}</span>
+            <span className="amount-value">{displayMoney(order.totalAmount || order.total || 0)}</span>
           </div>
         </div>
       </div>

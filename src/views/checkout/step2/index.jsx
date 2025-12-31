@@ -41,10 +41,10 @@ const FormSchema = Yup.object().shape({
     .oneOf(['葷', '素(蛋奶素)', '素(全素)'], '請選擇有效的選項'),
   couponType: Yup.string()
     .required('請選擇優惠券選項。')
-    .oneOf(['無', '其他'], '請選擇有效的選項'),
+    .oneOf(['無', '序號'], '請選擇有效的選項'),
   couponCode: Yup.string()
     .when('couponType', {
-      is: '其他',
+      is: '序號',
       then: Yup.string().required('請輸入優惠券序號。')
     }),
   infoSource: Yup.string()
@@ -89,7 +89,8 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
     infoSource: shipping.infoSource || '',
     infoSourceOther: shipping.infoSourceOther || '',
     isInternational: shipping.isInternational || false,
-    isDone: shipping.isDone || false
+    isDone: shipping.isDone || false,
+    appliedCoupon: shipping.appliedCoupon || null
   };
 
   const onSubmitForm = (form) => {
@@ -107,6 +108,7 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
       infoSource: form.infoSource,
       infoSourceOther: form.infoSourceOther,
       isInternational: form.isInternational,
+      appliedCoupon: form.appliedCoupon,
       isDone: true
     }));
     history.push(CHECKOUT_STEP_3);

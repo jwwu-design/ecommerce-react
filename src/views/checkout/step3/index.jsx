@@ -36,8 +36,30 @@ const RegistrationForm = () => {
 
   // 計算總額
   const shippingFee = shipping?.isInternational ? 50 : 0;
-  const subtotal = calculateTotal(basket.map((product) => product.price * product.quantity));
-  const total = subtotal + shippingFee;
+  const subtotal = Number(calculateTotal(basket.map((product) => product.price * product.quantity)));
+
+  // 計算優惠券折扣（從 Step 2 儲存的 appliedCoupon）
+  const [discount, setDiscount] = useState(0);
+  useEffect(() => {
+    console.log('📦 Step 3 - Full shipping object:', shipping);
+    console.log('🎟️ Step 3 - Checking appliedCoupon:', shipping?.appliedCoupon);
+    if (shipping?.appliedCoupon) {
+      const coupon = shipping.appliedCoupon;
+      let calculatedDiscount = 0;
+      if (coupon.discountType === 'fixed') {
+        calculatedDiscount = coupon.discountValue;
+      } else if (coupon.discountType === 'percentage') {
+        calculatedDiscount = Math.floor(subtotal * (coupon.discountValue / 100));
+      }
+      console.log('💰 Step 3 - Calculated discount:', calculatedDiscount);
+      setDiscount(calculatedDiscount);
+    } else {
+      console.log('⚠️ Step 3 - No appliedCoupon found');
+      setDiscount(0);
+    }
+  }, [shipping?.appliedCoupon, subtotal]);
+
+  const total = Math.max(0, subtotal + shippingFee - discount);
 
   // 取得當前使用者資訊
   const { uid, fullname } = useSelector((state) => ({
@@ -108,7 +130,8 @@ const RegistrationForm = () => {
         items: basket,
         subtotal: subtotal,
         shippingFee: shippingFee,
-        total: total,
+        discount: discount, // 新增折扣金額
+        total: total, // 已扣除折扣的最終金額
         shipping: {
           fullname: shipping.fullname,
           companyName: shipping.companyName,
@@ -125,11 +148,30 @@ const RegistrationForm = () => {
           isInternational: shipping.isInternational
         },
         registrationForm: reuploadedFormData,
-        orderId: tempOrderId
+        orderId: tempOrderId,
+        // 新增優惠券資訊
+        coupon: shipping?.appliedCoupon ? {
+          id: shipping.appliedCoupon.id,
+          code: shipping.appliedCoupon.code,
+          discountType: shipping.appliedCoupon.discountType,
+          discountValue: shipping.appliedCoupon.discountValue,
+          discountAmount: discount
+        } : null
       };
 
       const result = await firebase.createOrder(newOrderData);
       console.log('✅ Order created:', result.orderId);
+
+      // 如果有使用優惠券，增加使用次數
+      if (shipping?.appliedCoupon?.id) {
+        try {
+          await firebase.incrementCouponUsage(shipping.appliedCoupon.id);
+          console.log('✅ Coupon usage incremented');
+        } catch (error) {
+          console.error('❌ Failed to increment coupon usage:', error);
+          // 不中斷流程，因為訂單已經建立成功
+        }
+      }
 
       // 清空購物籃
       dispatch(clearBasket());
@@ -244,7 +286,8 @@ const RegistrationForm = () => {
 
         <Total
           isInternational={shipping.isInternational}
-          subtotal={Number(total)}
+          subtotal={subtotal}
+          discount={discount}
         />
 
         <div className="checkout-shipping-action">

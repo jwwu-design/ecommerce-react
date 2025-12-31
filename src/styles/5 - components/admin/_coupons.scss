@@ -1,0 +1,212 @@
+.coupons-management {
+  padding: $l-size;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  @include mobile {
+    padding: $m-size;
+  }
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $xl-size;
+
+  h2 {
+    margin: 0;
+  }
+
+  @include mobile {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $m-size;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+.coupon-form-card {
+  background: $white;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  padding: $l-size;
+  margin-bottom: $xl-size;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: $l-size;
+    color: $heading-color;
+  }
+
+  @include mobile {
+    padding: $m-size;
+  }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $m-size;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: $heading-color;
+    font-size: 1.4rem;
+  }
+
+  .text-subtle {
+    margin-top: 0.4rem;
+    font-size: 1.2rem;
+  }
+}
+
+.form-actions {
+  display: flex;
+  gap: $m-size;
+
+  @include mobile {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+.coupons-list {
+  h3 {
+    margin-bottom: $m-size;
+    color: $heading-color;
+  }
+}
+
+.coupons-table {
+  background: $white;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+      background: $background-color;
+
+      th {
+        padding: $m-size;
+        text-align: left;
+        font-weight: bold;
+        color: $heading-color;
+        font-size: 1.3rem;
+        border-bottom: 2px solid $border-color;
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid $border-color;
+        transition: background 0.2s ease;
+
+        &:hover {
+          background: $background-color-01;
+        }
+
+        &.inactive-row {
+          opacity: 0.6;
+          background: #fafafa;
+        }
+
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+
+      td {
+        padding: $m-size;
+        font-size: 1.3rem;
+        color: $paragraph-color;
+        vertical-align: middle;
+
+        strong {
+          color: $heading-color;
+          font-size: 1.4rem;
+        }
+      }
+    }
+  }
+
+  @include tablet {
+    overflow-x: auto;
+
+    table {
+      min-width: 900px;
+    }
+  }
+
+  @include mobile {
+    overflow-x: auto;
+
+    table {
+      min-width: 900px;
+    }
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  button {
+    white-space: nowrap;
+  }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 1.2rem;
+  font-weight: 600;
+
+  &.badge-success {
+    background: #f6ffed;
+    color: #52c41a;
+    border: 1px solid #b7eb8f;
+  }
+
+  &.badge-error {
+    background: #fff2f0;
+    color: #ff4d4f;
+    border: 1px solid #ffccc7;
+  }
+}
+
+.button-success {
+  background: #52c41a;
+  color: $white;
+  border-color: #52c41a;
+
+  &:hover {
+    background: darken(#52c41a, 5%);
+  }
+}

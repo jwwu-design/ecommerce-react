@@ -201,6 +201,22 @@ const OrderConfirmation = () => {
                   <span>{displayMoney(order.shippingFee)}</span>
                 </div>
               )}
+              {order.discount > 0 && (
+                <div className="order-total-row" style={{ color: '#52c41a' }}>
+                  <span>優惠折扣</span>
+                  <span>- {displayMoney(order.discount)}</span>
+                </div>
+              )}
+              {order.coupon && (
+                <div className="order-total-row">
+                  <span className="text-subtle" style={{ fontSize: '1.2rem' }}>
+                    優惠碼: {order.coupon.code}
+                  </span>
+                  <span className="text-subtle" style={{ fontSize: '1.2rem' }}>
+                    已節省 {displayMoney(order.discount)}
+                  </span>
+                </div>
+              )}
               <div className="order-total-row total">
                 <span><strong>總計</strong></span>
                 <span><strong>{displayMoney(order.totalAmount || order.total)}</strong></span>

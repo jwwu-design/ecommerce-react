@@ -138,6 +138,10 @@ const AppRouter = () => (
           path={ROUTES.ADMIN_BANNER_IMAGES}
         />
         <AdminRoute
+          component={view.CouponsManagement}
+          path={ROUTES.ADMIN_COUPONS}
+        />
+        <AdminRoute
           component={view.UserManagement}
           path={ROUTES.ADMIN_USERS}
         />

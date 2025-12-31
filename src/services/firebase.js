@@ -802,6 +802,8 @@ class Firebase {
         totalAmount: orderData.total || 0,
         subtotal: orderData.subtotal || 0,
         shippingFee: orderData.shippingFee || 0,
+        discount: orderData.discount || 0,  // 新增折扣金額
+        coupon: orderData.coupon || null,   // 新增優惠券資訊
         reviewStatus: 'pending',
         orderStatus: 'processing',
         paymentStatus: 'pending',
@@ -1041,6 +1043,178 @@ class Firebase {
     } catch (error) {
       console.error("❌ Failed to update payment status:", error);
       throw new Error("更新付款狀態失敗");
+    }
+  };
+
+  // COUPON ACTIONS ------------
+
+  // 取得所有優惠券
+  getAllCoupons = async () => {
+    try {
+      const snapshot = await this.db.collection("coupons").orderBy("createdAt", "desc").get();
+      const coupons = [];
+      snapshot.forEach((doc) => {
+        coupons.push({ id: doc.id, ...doc.data() });
+      });
+      return coupons;
+    } catch (error) {
+      console.error("❌ Failed to get coupons:", error);
+      throw new Error("取得優惠券列表失敗");
+    }
+  };
+
+  // 生成隨機優惠碼
+  generateCouponCode = () => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code = '';
+    for (let i = 0; i < 8; i++) {
+      code += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return code;
+  };
+
+  // 檢查優惠碼是否已存在
+  checkCouponCodeExists = async (code) => {
+    try {
+      const snapshot = await this.db.collection("coupons").where("code", "==", code).get();
+      return !snapshot.empty;
+    } catch (error) {
+      console.error("❌ Failed to check coupon code:", error);
+      return false;
+    }
+  };
+
+  // 新增優惠券
+  createCoupon = async (couponData) => {
+    try {
+      // 檢查優惠碼是否已存在
+      const exists = await this.checkCouponCodeExists(couponData.code);
+      if (exists) {
+        throw new Error("此優惠碼已存在，請使用其他代碼");
+      }
+
+      const couponId = this.db.collection("coupons").doc().id;
+      const timestamp = new Date().getTime();
+
+      const coupon = {
+        ...couponData,
+        id: couponId,
+        usedCount: 0,
+        isActive: true,
+        createdAt: timestamp,
+        updatedAt: timestamp
+      };
+
+      await this.db.collection("coupons").doc(couponId).set(coupon);
+      console.log(`✅ Created coupon: ${couponData.code}`);
+      return coupon;
+    } catch (error) {
+      console.error("❌ Failed to create coupon:", error);
+      throw error;
+    }
+  };
+
+  // 更新優惠券
+  updateCoupon = async (couponId, updates) => {
+    try {
+      await this.db.collection("coupons").doc(couponId).update({
+        ...updates,
+        updatedAt: new Date().getTime()
+      });
+      console.log(`✅ Updated coupon ${couponId}`);
+    } catch (error) {
+      console.error("❌ Failed to update coupon:", error);
+      throw new Error("更新優惠券失敗");
+    }
+  };
+
+  // 刪除優惠券
+  deleteCoupon = async (couponId) => {
+    try {
+      await this.db.collection("coupons").doc(couponId).delete();
+      console.log(`✅ Deleted coupon ${couponId}`);
+    } catch (error) {
+      console.error("❌ Failed to delete coupon:", error);
+      throw new Error("刪除優惠券失敗");
+    }
+  };
+
+  // 驗證優惠券（供前端使用）
+  validateCoupon = async (code, orderAmount) => {
+    try {
+      const snapshot = await this.db.collection("coupons").where("code", "==", code.toUpperCase()).get();
+
+      if (snapshot.empty) {
+        return { valid: false, message: "優惠碼不存在" };
+      }
+
+      const couponDoc = snapshot.docs[0];
+      const coupon = { id: couponDoc.id, ...couponDoc.data() };
+
+      // 檢查是否啟用
+      if (!coupon.isActive) {
+        return { valid: false, message: "此優惠碼已失效" };
+      }
+
+      // 檢查有效期限
+      const now = new Date().getTime();
+      if (coupon.startDate && now < coupon.startDate) {
+        return { valid: false, message: "優惠碼尚未生效" };
+      }
+      if (coupon.endDate && now > coupon.endDate) {
+        return { valid: false, message: "優惠碼已過期" };
+      }
+
+      // 檢查使用次數限制
+      if (coupon.maxUses && coupon.usedCount >= coupon.maxUses) {
+        return { valid: false, message: "優惠碼已達使用上限" };
+      }
+
+      // 檢查最低消費金額
+      if (coupon.minPurchase && orderAmount < coupon.minPurchase) {
+        return {
+          valid: false,
+          message: `需滿 NT$ ${coupon.minPurchase.toLocaleString()} 才能使用此優惠碼`
+        };
+      }
+
+      // 計算折扣金額
+      let discountAmount = 0;
+      if (coupon.discountType === 'fixed') {
+        discountAmount = coupon.discountValue;
+      } else if (coupon.discountType === 'percentage') {
+        discountAmount = Math.floor(orderAmount * (coupon.discountValue / 100));
+      }
+
+      return {
+        valid: true,
+        coupon,
+        discountAmount,
+        message: "優惠碼驗證成功"
+      };
+    } catch (error) {
+      console.error("❌ Failed to validate coupon:", error);
+      return { valid: false, message: "驗證優惠碼時發生錯誤" };
+    }
+  };
+
+  // 增加優惠券使用次數
+  incrementCouponUsage = async (couponId) => {
+    try {
+      const couponRef = this.db.collection("coupons").doc(couponId);
+      const doc = await couponRef.get();
+
+      if (doc.exists) {
+        const currentCount = doc.data().usedCount || 0;
+        await couponRef.update({
+          usedCount: currentCount + 1,
+          updatedAt: new Date().getTime()
+        });
+        console.log(`✅ Incremented usage count for coupon ${couponId}`);
+      }
+    } catch (error) {
+      console.error("❌ Failed to increment coupon usage:", error);
+      // 不拋出錯誤，因為訂單已經建立成功
     }
   };
 }
