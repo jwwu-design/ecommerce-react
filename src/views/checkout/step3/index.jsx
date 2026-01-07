@@ -1,9 +1,9 @@
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
-import { CHECKOUT_STEP_2, SIGNIN } from '@/constants/routes';
+import { CHECKOUT_STEP_2, SIGNIN, SHOPPING_GUIDE } from '@/constants/routes';
 import { useDocumentTitle, useScrollTop } from '@/hooks';
 import { displayActionMessage } from '@/helpers/utils';
 import React, { useState, useEffect } from 'react';
-import { Redirect, useHistory, useLocation } from 'react-router-dom';
+import { Redirect, useHistory, useLocation, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { clearBasket } from '@/redux/actions/basketActions';
 import { calculateTotal } from '@/helpers/utils';
@@ -22,6 +22,7 @@ const RegistrationForm = () => {
   const [creatingOrder, setCreatingOrder] = useState(false);
   const [orderData, setOrderData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [agreeShoppingGuide, setAgreeShoppingGuide] = useState(false);
 
   // 從 Redux 取得資料
   const isAuth = useSelector(state => !!state.auth.id && !!state.auth.role);
@@ -290,6 +291,25 @@ const RegistrationForm = () => {
           discount={discount}
         />
 
+        <div className="auth-agreements" style={{ marginTop: '2rem' }}>
+          <div className="agreement-item">
+            <input
+              type="checkbox"
+              name="agreeShoppingGuide"
+              id="agreeShoppingGuide"
+              checked={agreeShoppingGuide}
+              onChange={(e) => setAgreeShoppingGuide(e.target.checked)}
+            />
+            <label htmlFor="agreeShoppingGuide">
+              我已閱讀並同意
+              <Link to={SHOPPING_GUIDE} target="_blank" rel="noopener noreferrer">《購物須知》</Link>
+            </label>
+            {!agreeShoppingGuide && formData && (
+              <span className="agreement-error">請閱讀並同意購物須知。</span>
+            )}
+          </div>
+        </div>
+
         <div className="checkout-shipping-action">
           <button
             className="button button-muted"
@@ -302,7 +322,7 @@ const RegistrationForm = () => {
           </button>
           <button
             className="button button-icon"
-            disabled={!formData || creatingOrder}
+            disabled={!formData || !agreeShoppingGuide || creatingOrder}
             onClick={handleContinue}
             type="button"
           >

@@ -6,7 +6,7 @@ import { CHECKOUT_STEP_1, CHECKOUT_STEP_3 } from '@/constants/routes';
 import { Form, Formik } from 'formik';
 import { useDocumentTitle, useScrollTop } from '@/hooks';
 import PropType from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { setShippingDetails } from '@/redux/actions/checkoutActions';
@@ -15,6 +15,7 @@ import { StepTracker } from '../components';
 import withCheckout from '../hoc/withCheckout';
 import ShippingForm from './ShippingForm';
 import ShippingTotal from './ShippingTotal';
+import ConfirmationModal from './ConfirmationModal';
 
 const FormSchema = Yup.object().shape({
   fullname: Yup.string()
@@ -63,6 +64,8 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
   useScrollTop();
   const dispatch = useDispatch();
   const history = useHistory();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pendingFormData, setPendingFormData] = useState(null);
 
   // 轉換舊格式的 mobile 資料（物件 -> 字串）
   const convertMobile = (mobile) => {
@@ -94,24 +97,37 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
   };
 
   const onSubmitForm = (form) => {
+    // 儲存表單資料並開啟確認彈窗
+    setPendingFormData(form);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirm = () => {
+    // 確認後才真正提交資料
     dispatch(setShippingDetails({
-      fullname: form.fullname,
-      companyName: form.companyName,
-      email: form.email,
-      mobile: form.mobile,
-      invoiceInfo: form.invoiceInfo,
-      address: form.address,
-      englishName: form.englishName,
-      dietPreference: form.dietPreference,
-      couponType: form.couponType,
-      couponCode: form.couponCode,
-      infoSource: form.infoSource,
-      infoSourceOther: form.infoSourceOther,
-      isInternational: form.isInternational,
-      appliedCoupon: form.appliedCoupon,
+      fullname: pendingFormData.fullname,
+      companyName: pendingFormData.companyName,
+      email: pendingFormData.email,
+      mobile: pendingFormData.mobile,
+      invoiceInfo: pendingFormData.invoiceInfo,
+      address: pendingFormData.address,
+      englishName: pendingFormData.englishName,
+      dietPreference: pendingFormData.dietPreference,
+      couponType: pendingFormData.couponType,
+      couponCode: pendingFormData.couponCode,
+      infoSource: pendingFormData.infoSource,
+      infoSourceOther: pendingFormData.infoSourceOther,
+      isInternational: pendingFormData.isInternational,
+      appliedCoupon: pendingFormData.appliedCoupon,
       isDone: true
     }));
+    setIsModalOpen(false);
     history.push(CHECKOUT_STEP_3);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setPendingFormData(null);
   };
 
   return (
@@ -157,6 +173,16 @@ const ShippingDetails = ({ profile, shipping, subtotal }) => {
             )}
           </Formik>
         </div>
+
+        {/* 確認彈窗 */}
+        {pendingFormData && (
+          <ConfirmationModal
+            isOpen={isModalOpen}
+            onClose={handleCloseModal}
+            onConfirm={handleConfirm}
+            formData={pendingFormData}
+          />
+        )}
       </div>
     </Boundary>
   );

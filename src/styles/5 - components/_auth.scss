@@ -250,7 +250,7 @@
     // Keep the global checkbox styles working properly
     input[type="checkbox"]+label {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       cursor: pointer;
       font-size: 1.3rem;
       line-height: 1.6;
@@ -259,7 +259,7 @@
 
       // Fix the tick mark position for multi-line labels
       &:after {
-        top: 1.7rem !important;
+        top: 35% !important;
         bottom: auto !important;
         margin: 0 !important;
       }

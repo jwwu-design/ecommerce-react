@@ -1,6 +1,6 @@
 import { ArrowRightOutlined, LoadingOutlined } from '@ant-design/icons';
 import { CustomInput } from '@/components/formik';
-import { SIGNIN, TERMS, SHOPPING_GUIDE, PRIVACY_POLICY } from '@/constants/routes';
+import { SIGNIN, TERMS, PRIVACY_POLICY } from '@/constants/routes';
 import { Field, Form, Formik } from 'formik';
 import { useDocumentTitle, useScrollTop } from '@/hooks';
 import PropType from 'prop-types';
@@ -24,12 +24,8 @@ const SignUpSchema = Yup.object().shape({
     .min(2, '姓名至少需 2 個字元。'),
   agreeTerms: Yup.boolean()
     .oneOf([true], '請閱讀並同意會員條款。'),
-  agreeShoppingGuide: Yup.boolean()
-    .oneOf([true], '請閱讀並同意購物須知。'),
   agreePrivacy: Yup.boolean()
-    .oneOf([true], '請閱讀並同意隱私權政策。'),
-  agreeMarketing: Yup.boolean()
-    .oneOf([true], '請同意行銷資訊使用條款。')
+    .oneOf([true], '請閱讀並同意隱私權政策。')
 });
 
 const SignUp = ({ history }) => {
@@ -83,9 +79,7 @@ const SignUp = ({ history }) => {
                   email: '',
                   password: '',
                   agreeTerms: false,
-                  agreeShoppingGuide: false,
-                  agreePrivacy: false,
-                  agreeMarketing: false
+                  agreePrivacy: false
                 }}
                 validateOnChange
                 validationSchema={SignUpSchema}
@@ -137,16 +131,6 @@ const SignUp = ({ history }) => {
                         )}
                       </div>
                       <div className="agreement-item">
-                        <Field type="checkbox" name="agreeShoppingGuide" id="agreeShoppingGuide" />
-                        <label htmlFor="agreeShoppingGuide">
-                          我已閱讀並同意
-                          <Link to={SHOPPING_GUIDE} target="_blank" rel="noopener noreferrer">《購物須知》</Link>
-                        </label>
-                        {errors.agreeShoppingGuide && touched.agreeShoppingGuide && (
-                          <span className="agreement-error">{errors.agreeShoppingGuide}</span>
-                        )}
-                      </div>
-                      <div className="agreement-item">
                         <Field type="checkbox" name="agreePrivacy" id="agreePrivacy" />
                         <label htmlFor="agreePrivacy">
                           我已閱讀並同意
@@ -154,15 +138,6 @@ const SignUp = ({ history }) => {
                         </label>
                         {errors.agreePrivacy && touched.agreePrivacy && (
                           <span className="agreement-error">{errors.agreePrivacy}</span>
-                        )}
-                      </div>
-                      <div className="agreement-item">
-                        <Field type="checkbox" name="agreeMarketing" id="agreeMarketing" />
-                        <label htmlFor="agreeMarketing">
-                          我同意亞瑞仕國際驗證股份有限公司依《個人資料保護法》相關規定，於合理且必要範圍內使用本人所提供之聯絡資訊（包含電子郵件、電話、地址等），寄送課程資訊、優惠活動及行銷宣傳訊息；本人得隨時以書面或電子郵件通知撤回同意。
-                        </label>
-                        {errors.agreeMarketing && touched.agreeMarketing && (
-                          <span className="agreement-error">{errors.agreeMarketing}</span>
                         )}
                       </div>
                     </div>
@@ -173,9 +148,7 @@ const SignUp = ({ history }) => {
                         disabled={
                           isAuthenticating ||
                           !values.agreeTerms ||
-                          !values.agreeShoppingGuide ||
-                          !values.agreePrivacy ||
-                          !values.agreeMarketing
+                          !values.agreePrivacy
                         }
                         type="submit"
                       >

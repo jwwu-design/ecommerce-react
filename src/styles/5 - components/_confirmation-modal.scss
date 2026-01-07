@@ -1,0 +1,202 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 2rem;
+  overflow-y: auto;
+
+  @include mobile {
+    padding: 1rem;
+  }
+}
+
+.modal-content {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-width: 700px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalSlideIn 0.3s ease-out;
+
+  @include mobile {
+    max-width: 100%;
+    max-height: 95vh;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.confirmation-modal {
+  .modal-header {
+    background: $gray-20;
+    color: white;
+    padding: 2rem;
+    border-radius: 8px 8px 0 0;
+    text-align: center;
+
+    @include mobile {
+      padding: 1.5rem;
+    }
+
+    .modal-title {
+      font-size: 2rem;
+      margin: 0 0 0.5rem 0;
+      font-weight: 700;
+
+      @include mobile {
+        font-size: 1.6rem;
+      }
+    }
+
+    .modal-subtitle {
+      font-size: 1.3rem;
+      margin: 0;
+      opacity: 0.95;
+
+      @include mobile {
+        font-size: 1.1rem;
+      }
+    }
+  }
+
+  .modal-body {
+    padding: 2rem;
+
+    @include mobile {
+      padding: 1.5rem;
+    }
+  }
+
+  .confirmation-section {
+    margin-bottom: 2rem;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      color: $heading-color;
+      margin: 0 0 1rem 0;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid $border-color;
+      font-weight: 600;
+
+      @include mobile {
+        font-size: 1.3rem;
+      }
+    }
+
+    .confirmation-item {
+      display: flex;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid lighten($border-color, 5%);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      @include mobile {
+        flex-direction: column;
+        padding: 0.6rem 0;
+      }
+
+      .label {
+        font-weight: 600;
+        color: $gray-10;
+        min-width: 150px;
+        flex-shrink: 0;
+        font-size: 1.3rem;
+
+        @include mobile {
+          min-width: auto;
+          margin-bottom: 0.3rem;
+          font-size: 1.2rem;
+        }
+      }
+
+      .value {
+        color: $heading-color;
+        font-weight: 500;
+        word-break: break-word;
+        font-size: 1.3rem;
+
+        @include mobile {
+          font-size: 1.2rem;
+        }
+      }
+    }
+  }
+
+  .confirmation-warning {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    font-size: 1.3rem;
+    line-height: 1.6;
+    color: #856404;
+
+    @include mobile {
+      padding: 1.2rem;
+      font-size: 1.2rem;
+    }
+
+    strong {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 1.4rem;
+
+      @include mobile {
+        font-size: 1.3rem;
+      }
+    }
+  }
+
+  .modal-footer {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid $border-color;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    background: $background-color-01;
+    border-radius: 0 0 8px 8px;
+
+    @include mobile {
+      padding: 1.2rem 1.5rem;
+      flex-direction: column-reverse;
+      gap: 0.8rem;
+    }
+
+    button {
+      min-width: 120px;
+      font-size: 1.4rem;
+      padding: 1rem 2rem;
+
+      @include mobile {
+        width: 100%;
+        min-width: auto;
+      }
+    }
+  }
+}

@@ -46,6 +46,12 @@
     width: 100%;
     position: static;
     max-height: none;
+    opacity: 0;
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
   }
 }
 
