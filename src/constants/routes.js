@@ -25,3 +25,7 @@ export const CHECKOUT_STEP_3 = '/checkout/step3';
 export const CHECKOUT_STEP_4 = '/checkout/step4';
 export const VIEW_PRODUCT = '/product/:id';
 export const CONTACT = '/contact';
+export const PRIVACY_POLICY = '/privacy-policy';
+export const TERMS = '/terms';
+export const SHOPPING_GUIDE = '/shopping-guide';
+export const FAQ = '/faq';

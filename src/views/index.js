@@ -21,6 +21,13 @@ export { default as OrderConfirmation } from './checkout/confirmation';
 
 // Contact
 export { default as ContactUs } from './contact';
+
+// Policy Pages
+export { default as PrivacyPolicy } from './privacy';
+export { default as Terms } from './terms';
+export { default as ShoppingGuide } from './shopping-guide';
+export { default as FAQ } from './faq';
+
 export { default as PageNotFound } from './error/PageNotFound';
 export { default as FeaturedProducts } from './featured';
 export { default as Home } from './home';

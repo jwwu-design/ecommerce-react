@@ -1,14 +1,18 @@
 import * as Route from '@/constants/routes';
 import logo from '@/images/logo-full.png';
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 
 const Footer = () => {
   const { pathname } = useLocation();
 
   const visibleOnlyPath = [
     Route.HOME,
-    Route.SHOP
+    Route.SHOP,
+    Route.PRIVACY_POLICY,
+    Route.TERMS,
+    Route.SHOPPING_GUIDE,
+    Route.FAQ
   ];
 
   return !visibleOnlyPath.includes(pathname) ? null : (
@@ -16,12 +20,12 @@ const Footer = () => {
       <div className="footer-col-1">
         <strong>
           <span>
-            <a href="/files/亞瑞仕知識學苑_隱私權政策.docx" download="亞瑞仕知識學苑_隱私權政策.docx">
+            <Link to={Route.PRIVACY_POLICY}>
               隱私權政策
-            </a>
-            <a href="/files/亞瑞仕知識學苑_會員條款.docx" download="亞瑞仕知識學苑_會員條款.docx">
+            </Link>
+            <Link to={Route.TERMS}>
               會員條款
-            </a>
+            </Link>
           </span>
         </strong>
       </div>
@@ -36,12 +40,12 @@ const Footer = () => {
       <div className="footer-col-3">
         <strong>
           <span>
-            <a href="/files/亞瑞仕知識學苑_購物須知.docx" download="亞瑞仕知識學苑_購物須知.docx">
+            <Link to={Route.SHOPPING_GUIDE}>
               購物須知
-            </a>
-            <a href="/files/亞瑞仕知識學苑_常見問題.docx" download="亞瑞仕知識學苑_常見問題.docx">
+            </Link>
+            <Link to={Route.FAQ}>
               常見問題
-            </a>
+            </Link>
           </span>
         </strong>
       </div>

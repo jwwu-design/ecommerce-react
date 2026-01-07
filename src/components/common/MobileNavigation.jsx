@@ -1,5 +1,6 @@
 import { BasketToggle } from '@/components/basket';
-import { HOME, SIGNIN, SHOP, FEATURED_PRODUCTS, RECOMMENDED_PRODUCTS, CONTACT, ACCOUNT, SIGNOUT } from '@/constants/routes';
+import { HOME, SIGNIN, SHOP, FEATURED_PRODUCTS, RECOMMENDED_PRODUCTS, CONTACT, ACCOUNT, SIGNOUT, SEARCH } from '@/constants/routes';
+import logo from '@/images/logo-full.png';
 import PropType from 'prop-types';
 import React, { useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
@@ -31,7 +32,7 @@ const Navigation = (props) => {
       <div className="mobile-navigation-main">
         <div className="mobile-navigation-logo">
           <Link onClick={onClickLink} to={HOME}>
-            <h2>亞瑞仕知識學苑</h2>
+            <img alt="亞瑞仕知識學苑" src={logo} />
           </Link>
         </div>
 
@@ -63,11 +64,13 @@ const Navigation = (props) => {
 
       <div className="mobile-navigation-sec">
         <SearchBar />
-        <FiltersToggle>
-          <button className="button-link button-small" type="button">
-            <i className="fa fa-filter" />
-          </button>
-        </FiltersToggle>
+        {(pathname === SHOP || pathname === SEARCH) && (
+          <FiltersToggle>
+            <button className="button-link button-small" type="button">
+              <i className="fa fa-filter" />
+            </button>
+          </FiltersToggle>
+        )}
       </div>
 
       {/* Hamburger Drawer */}

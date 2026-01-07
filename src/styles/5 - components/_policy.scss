@@ -1,0 +1,271 @@
+// Policy Pages Styles (Privacy, Terms, Shopping Guide, FAQ)
+.policy-page {
+  min-height: calc(100vh - 200px);
+  padding: 3rem 0;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+.policy-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 2rem;
+}
+
+.policy-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+.policy-content {
+  background: white;
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  line-height: 1.8;
+
+  // Typography
+  h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin: 2.5rem 0 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 3px solid #667eea;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    color: #444;
+    margin: 2rem 0 1rem;
+    font-weight: 600;
+  }
+
+  p {
+    font-size: 1.5rem;
+    color: #555;
+    margin: 1rem 0;
+    text-align: justify;
+  }
+
+  ul {
+    margin: 1rem 0;
+    padding-left: 2rem;
+
+    li {
+      font-size: 1.5rem;
+      color: #555;
+      margin: 0.75rem 0;
+      line-height: 1.8;
+      position: relative;
+      padding-left: 0.5rem;
+
+      &::marker {
+        color: #667eea;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .note {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 4px;
+    font-size: 1.4rem;
+    color: #856404;
+  }
+
+  .last-updated {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid #e0e0e0;
+    text-align: center;
+    font-size: 1.4rem;
+    color: #999;
+    font-style: italic;
+  }
+}
+
+// FAQ Specific Styles
+.faq-page {
+  .faq-section {
+    margin-bottom: 3rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    h2 {
+      font-size: 2rem;
+      color: #333;
+      margin: 2.5rem 0 2rem;
+      padding: 1rem 1.5rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 8px;
+      border-bottom: none;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+
+  .faq-item {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #f0f0f0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transform: translateX(5px);
+    }
+
+    h3 {
+      font-size: 1.6rem;
+      color: #667eea;
+      margin: 0 0 1rem;
+      font-weight: 700;
+    }
+
+    p {
+      font-size: 1.5rem;
+      color: #555;
+      margin: 0.75rem 0;
+      text-align: left;
+    }
+
+    ul {
+      margin: 1rem 0;
+
+      li {
+        font-size: 1.4rem;
+        margin: 0.5rem 0;
+      }
+    }
+
+    .note {
+      margin: 1rem 0;
+      font-size: 1.3rem;
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .policy-page {
+    padding: 1.5rem 0;
+  }
+
+  .policy-wrapper {
+    padding: 0 1rem;
+  }
+
+  .policy-header {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+
+    h1 {
+      font-size: 1.8rem;
+    }
+  }
+
+  .policy-content {
+    padding: 2rem 1.5rem;
+
+    h2 {
+      font-size: 1.5rem;
+      margin: 2rem 0 1rem;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      margin: 1.5rem 0 0.75rem;
+    }
+
+    p {
+      font-size: 1.4rem;
+      text-align: left;
+    }
+
+    ul {
+      padding-left: 1.5rem;
+
+      li {
+        font-size: 1.4rem;
+        margin: 0.5rem 0;
+      }
+    }
+  }
+
+  .faq-page {
+    .faq-section {
+      h2 {
+        font-size: 1.6rem;
+        padding: 0.75rem 1rem;
+      }
+    }
+
+    .faq-item {
+      padding: 1rem;
+
+      h3 {
+        font-size: 1.4rem;
+      }
+
+      p {
+        font-size: 1.4rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .policy-header {
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .policy-content {
+    padding: 1.5rem 1rem;
+
+    h2 {
+      font-size: 1.4rem;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+    }
+
+    p,
+    li {
+      font-size: 1.3rem;
+    }
+  }
+}

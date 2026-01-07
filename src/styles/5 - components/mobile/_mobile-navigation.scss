@@ -57,6 +57,15 @@
   flex-grow: 1;
   padding-left: .5rem;
   margin-right: $xl-size;
+  display: flex;
+  align-items: center;
+
+  img {
+    margin-top: 15px;
+    height: 100px;
+    width: auto;
+    object-fit: contain;
+  }
 }
 
 .mobile-navigation-search {
@@ -110,6 +119,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }

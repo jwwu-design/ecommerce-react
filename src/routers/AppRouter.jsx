@@ -73,6 +73,26 @@ const AppRouter = () => (
           component={view.ContactUs}
           path={ROUTES.CONTACT}
         />
+        <Route
+          component={view.PrivacyPolicy}
+          exact
+          path={ROUTES.PRIVACY_POLICY}
+        />
+        <Route
+          component={view.Terms}
+          exact
+          path={ROUTES.TERMS}
+        />
+        <Route
+          component={view.ShoppingGuide}
+          exact
+          path={ROUTES.SHOPPING_GUIDE}
+        />
+        <Route
+          component={view.FAQ}
+          exact
+          path={ROUTES.FAQ}
+        />
         <ClientRoute
           component={view.UserAccount}
           exact

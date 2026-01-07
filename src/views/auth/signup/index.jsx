@@ -1,11 +1,12 @@
 import { ArrowRightOutlined, LoadingOutlined } from '@ant-design/icons';
 import { CustomInput } from '@/components/formik';
-import { SIGNIN } from '@/constants/routes';
+import { SIGNIN, TERMS, SHOPPING_GUIDE, PRIVACY_POLICY } from '@/constants/routes';
 import { Field, Form, Formik } from 'formik';
 import { useDocumentTitle, useScrollTop } from '@/hooks';
 import PropType from 'prop-types';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { signUp } from '@/redux/actions/authActions';
 import { setAuthenticating, setAuthStatus } from '@/redux/actions/miscActions';
 import * as Yup from 'yup';
@@ -20,7 +21,15 @@ const SignUpSchema = Yup.object().shape({
     .matches(/[A-Z\W]/g, '密碼需至少包含 1 個大寫字母或特殊字元。'),
   fullname: Yup.string()
     .required('請輸入全名。')
-    .min(2, '姓名至少需 2 個字元。')
+    .min(2, '姓名至少需 2 個字元。'),
+  agreeTerms: Yup.boolean()
+    .oneOf([true], '請閱讀並同意會員條款。'),
+  agreeShoppingGuide: Yup.boolean()
+    .oneOf([true], '請閱讀並同意購物須知。'),
+  agreePrivacy: Yup.boolean()
+    .oneOf([true], '請閱讀並同意隱私權政策。'),
+  agreeMarketing: Yup.boolean()
+    .oneOf([true], '請同意行銷資訊使用條款。')
 });
 
 const SignUp = ({ history }) => {
@@ -72,13 +81,17 @@ const SignUp = ({ history }) => {
                 initialValues={{
                   fullname: '',
                   email: '',
-                  password: ''
+                  password: '',
+                  agreeTerms: false,
+                  agreeShoppingGuide: false,
+                  agreePrivacy: false,
+                  agreeMarketing: false
                 }}
                 validateOnChange
                 validationSchema={SignUpSchema}
                 onSubmit={onFormSubmit}
               >
-                {() => (
+                {({ values, errors, touched }) => (
                   <Form>
                     <div className="auth-field">
                       <Field
@@ -112,10 +125,58 @@ const SignUp = ({ history }) => {
                       />
                     </div>
                     <br />
+                    <div className="auth-agreements">
+                      <div className="agreement-item">
+                        <Field type="checkbox" name="agreeTerms" id="agreeTerms" />
+                        <label htmlFor="agreeTerms">
+                          我已閱讀並同意
+                          <Link to={TERMS} target="_blank" rel="noopener noreferrer">《會員條款》</Link>
+                        </label>
+                        {errors.agreeTerms && touched.agreeTerms && (
+                          <span className="agreement-error">{errors.agreeTerms}</span>
+                        )}
+                      </div>
+                      <div className="agreement-item">
+                        <Field type="checkbox" name="agreeShoppingGuide" id="agreeShoppingGuide" />
+                        <label htmlFor="agreeShoppingGuide">
+                          我已閱讀並同意
+                          <Link to={SHOPPING_GUIDE} target="_blank" rel="noopener noreferrer">《購物須知》</Link>
+                        </label>
+                        {errors.agreeShoppingGuide && touched.agreeShoppingGuide && (
+                          <span className="agreement-error">{errors.agreeShoppingGuide}</span>
+                        )}
+                      </div>
+                      <div className="agreement-item">
+                        <Field type="checkbox" name="agreePrivacy" id="agreePrivacy" />
+                        <label htmlFor="agreePrivacy">
+                          我已閱讀並同意
+                          <Link to={PRIVACY_POLICY} target="_blank" rel="noopener noreferrer">《隱私權政策》</Link>
+                        </label>
+                        {errors.agreePrivacy && touched.agreePrivacy && (
+                          <span className="agreement-error">{errors.agreePrivacy}</span>
+                        )}
+                      </div>
+                      <div className="agreement-item">
+                        <Field type="checkbox" name="agreeMarketing" id="agreeMarketing" />
+                        <label htmlFor="agreeMarketing">
+                          我同意亞瑞仕國際驗證股份有限公司依《個人資料保護法》相關規定，於合理且必要範圍內使用本人所提供之聯絡資訊（包含電子郵件、電話、地址等），寄送課程資訊、優惠活動及行銷宣傳訊息；本人得隨時以書面或電子郵件通知撤回同意。
+                        </label>
+                        {errors.agreeMarketing && touched.agreeMarketing && (
+                          <span className="agreement-error">{errors.agreeMarketing}</span>
+                        )}
+                      </div>
+                    </div>
+                    <br />
                     <div className="auth-field auth-action auth-action-signup">
                       <button
                         className="button auth-button"
-                        disabled={isAuthenticating}
+                        disabled={
+                          isAuthenticating ||
+                          !values.agreeTerms ||
+                          !values.agreeShoppingGuide ||
+                          !values.agreePrivacy ||
+                          !values.agreeMarketing
+                        }
                         type="submit"
                       >
                         {isAuthenticating ? '註冊中' : '註冊'}
